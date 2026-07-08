@@ -6,7 +6,7 @@
       "links": [
         {
           "rel": "self",
-          "href": "https://github.com/cehbrecht/woodpecker/blob/main/plugins/woodpecker-atlas-plugin/src/woodpecker_atlas_plugin/recipes/atlas_basic_recipe.json",
+          "href": "https://github.com/roocs/woodpecker/blob/main/plugins/woodpecker-atlas-plugin/src/woodpecker_atlas_plugin/recipes/atlas_basic_recipe.json",
           "title": "Source recipe document"
         }
       ],

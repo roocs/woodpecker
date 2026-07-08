@@ -87,7 +87,7 @@ def build_prov_document(
 
     doc = ProvDocument()
     doc.set_default_namespace("urn:woodpecker:")
-    doc.add_namespace("woodpecker", "https://github.com/macpingu/woodpecker#")
+    doc.add_namespace("woodpecker", "https://github.com/roocs/woodpecker#")
 
     activity_id = f"activity-{run_id}"
     activity_attrs: dict[str, Any] = {

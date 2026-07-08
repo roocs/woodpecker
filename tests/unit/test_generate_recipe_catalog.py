@@ -48,7 +48,7 @@ def test_generate_recipe_catalog_loads_single_yaml_recipe_source(tmp_path):
     assert catalog[0]["source_files"] == [(recipe_dir / "cmip6_core_recipe.yaml").as_posix()]
     assert (
         f"[{(recipe_dir / 'cmip6_core_recipe.yaml').as_posix()}]"
-        f"(https://github.com/cehbrecht/woodpecker/blob/main/"
+        f"(https://github.com/roocs/woodpecker/blob/main/"
         f"{(recipe_dir / 'cmip6_core_recipe.yaml').as_posix()})"
     ) in markdown
     assert "woodpecker.normalize_tas_units_to_kelvin" in markdown

@@ -9,7 +9,7 @@ from woodpecker.recipes.models import Recipe
 from woodpecker.stores.json_store import JsonRecipeStore
 
 DEFAULT_RECIPE_DIR = Path("tests/integration/recipes")
-GITHUB_BLOB_BASE_URL = "https://github.com/cehbrecht/woodpecker/blob/main"
+GITHUB_BLOB_BASE_URL = "https://github.com/roocs/woodpecker/blob/main"
 DOCS_RECIPE_ENV = "_WOODPECKER_DOCS_RECIPE_PATH"
 
 

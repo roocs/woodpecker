@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.6.0 (2026-07-08)
+
+- Transferred project links, generated recipe source links, README badges, docs links, and provenance namespace references to the `roocs/woodpecker` repository.
+- Bumped the core package and bundled plugin packages to `0.6.0`.
+- Updated bundled plugin dependency bounds for the `0.6.x` core release line.
+- Refreshed the docs structure and examples after the cleanup work since `0.5.0`.
+
 ## 0.5.0 (2026-06-24)
 
 - Renamed fix-plan terminology and public surfaces to recipe terminology across code, CLI, tests, docs, and bundled examples.

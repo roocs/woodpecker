@@ -20,4 +20,4 @@ findings = woodpecker.recipe.check(dataset, recipe)
 
 The notebooks use `woodpecker.testing` factories such as `make_cmip6()` and
 `make_atlas()`. Raw notebook files are also available on
-[nbviewer](https://nbviewer.org/github/cehbrecht/woodpecker/tree/main/docs/notebooks/).
+[nbviewer](https://nbviewer.org/github/roocs/woodpecker/tree/main/docs/notebooks/).
