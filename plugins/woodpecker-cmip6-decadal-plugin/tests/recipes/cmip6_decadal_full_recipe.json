@@ -6,7 +6,7 @@
       "links": [
         {
           "rel": "self",
-          "href": "https://github.com/cehbrecht/woodpecker/blob/main/plugins/woodpecker-cmip6-decadal-plugin/tests/recipes/cmip6_decadal_full_recipe.json",
+          "href": "https://github.com/roocs/woodpecker/blob/main/plugins/woodpecker-cmip6-decadal-plugin/tests/recipes/cmip6_decadal_full_recipe.json",
           "title": "Source recipe document"
         }
       ],

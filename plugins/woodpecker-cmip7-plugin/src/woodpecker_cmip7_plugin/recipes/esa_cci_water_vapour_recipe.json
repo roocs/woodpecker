@@ -7,12 +7,12 @@
       "links": [
         {
           "rel": "self",
-          "href": "https://github.com/cehbrecht/woodpecker/blob/main/plugins/woodpecker-cmip7-plugin/src/woodpecker_cmip7_plugin/recipes/esa_cci_water_vapour_recipe.json",
+          "href": "https://github.com/roocs/woodpecker/blob/main/plugins/woodpecker-cmip7-plugin/src/woodpecker_cmip7_plugin/recipes/esa_cci_water_vapour_recipe.json",
           "title": "Source recipe document"
         },
         {
           "rel": "issue",
-          "href": "https://github.com/cehbrecht/woodpecker/issues",
+          "href": "https://github.com/roocs/woodpecker/issues",
           "title": "Track ESA CCI fix discussions"
         }
       ],
@@ -47,7 +47,7 @@
       "links": [
         {
           "rel": "self",
-          "href": "https://github.com/cehbrecht/woodpecker/blob/main/plugins/woodpecker-cmip7-plugin/src/woodpecker_cmip7_plugin/recipes/esa_cci_water_vapour_recipe.json",
+          "href": "https://github.com/roocs/woodpecker/blob/main/plugins/woodpecker-cmip7-plugin/src/woodpecker_cmip7_plugin/recipes/esa_cci_water_vapour_recipe.json",
           "title": "Source recipe document"
         }
       ],

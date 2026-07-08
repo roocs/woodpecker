@@ -2,7 +2,7 @@ recipes:
   - id: cmip6.core_units
     links:
       - rel: self
-        href: https://github.com/cehbrecht/woodpecker/blob/main/tests/integration/recipes/cmip6_core_recipe.yaml
+        href: https://github.com/roocs/woodpecker/blob/main/tests/integration/recipes/cmip6_core_recipe.yaml
         title: Source recipe document
     match:
       dataset_id_patterns:

@@ -2,11 +2,11 @@
 
 **Small, precise fixes for climate data.**
 
-[![CI](https://github.com/cehbrecht/woodpecker/actions/workflows/ci.yml/badge.svg)](https://github.com/cehbrecht/woodpecker/actions/workflows/ci.yml)
-[![Docs](https://github.com/cehbrecht/woodpecker/actions/workflows/docs.yml/badge.svg)](https://github.com/cehbrecht/woodpecker/actions/workflows/docs.yml)
-[![Online Docs](https://img.shields.io/badge/docs-online-blue)](https://cehbrecht.github.io/woodpecker/)
-[![License](https://img.shields.io/github/license/cehbrecht/woodpecker)](https://github.com/cehbrecht/woodpecker/blob/main/LICENSE)
-[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://github.com/cehbrecht/woodpecker/blob/main/pyproject.toml)
+[![CI](https://github.com/roocs/woodpecker/actions/workflows/ci.yml/badge.svg)](https://github.com/roocs/woodpecker/actions/workflows/ci.yml)
+[![Docs](https://github.com/roocs/woodpecker/actions/workflows/docs.yml/badge.svg)](https://github.com/roocs/woodpecker/actions/workflows/docs.yml)
+[![Online Docs](https://img.shields.io/badge/docs-online-blue)](https://roocs.github.io/woodpecker/)
+[![License](https://img.shields.io/github/license/roocs/woodpecker)](https://github.com/roocs/woodpecker/blob/main/LICENSE)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://github.com/roocs/woodpecker/blob/main/pyproject.toml)
 
 Woodpecker checks and applies known climate-data fixes through a small Python
 API, CLI, and recipe system. Use it when a dataset needs a documented repair
@@ -52,11 +52,11 @@ woodpecker fix ./data --recipe-id cmip6.core_units --dry-run
 
 ## Docs
 
-- [Full docs](https://cehbrecht.github.io/woodpecker/)
-- [Concepts](https://cehbrecht.github.io/woodpecker/concepts/)
-- [Recipes](https://cehbrecht.github.io/woodpecker/recipes/)
-- [CLI](https://cehbrecht.github.io/woodpecker/cli/)
-- [Contributing](https://cehbrecht.github.io/woodpecker/CONTRIBUTING_GUIDE/)
+- [Full docs](https://roocs.github.io/woodpecker/)
+- [Concepts](https://roocs.github.io/woodpecker/concepts/)
+- [Recipes](https://roocs.github.io/woodpecker/recipes/)
+- [CLI](https://roocs.github.io/woodpecker/cli/)
+- [Contributing](https://roocs.github.io/woodpecker/CONTRIBUTING_GUIDE/)
 
 ## Project Map
 
