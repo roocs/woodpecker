@@ -4,10 +4,11 @@
 
 ## 0.6.0 (2026-07-08)
 
-- Transferred project links, generated recipe source links, README badges, docs links, and provenance namespace references to the `roocs/woodpecker` repository.
-- Bumped the core package and bundled plugin packages to `0.6.0`.
-- Updated bundled plugin dependency bounds for the `0.6.x` core release line.
-- Refreshed the docs structure and examples after the cleanup work since `0.5.0`.
+- Transferred project references to the `roocs/woodpecker` GitHub repository and `roocs.github.io` docs site.
+- Cleaned up the README, overview, concepts, CLI, plugin, test, and code documentation pages.
+- Refreshed notebook documentation and added the missing notebook to the MkDocs navigation.
+- Added `TODO.md` for follow-up work and release planning notes.
+- Bumped the core package and bundled plugin packages to `0.6.0`, with plugin dependencies updated for the `0.6.x` core line.
 
 ## 0.5.0 (2026-06-24)
 
