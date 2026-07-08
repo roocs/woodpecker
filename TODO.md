@@ -1,200 +1,65 @@
-# Todo: Project Cleanup
+# Todo: Next Work
 
-Goal: make Woodpecker easier to enter, scan, and maintain by reducing repeated
-explanation. Start with documentation because reviewers will see that first,
-then clean up code comments, names, and helper structure where it is too
-talkative.
+## Common Rule
 
-## Why This Matters
+Keep code and docs simple and short. Prefer small APIs, short examples, and one
+clear path.
 
-- Reviewers are happy with the feature set, but the project currently asks them
-  to read too much before they can understand the basics.
-- `README.md` should be the main entry point and the only document needed to get
-  started.
-- Detailed docs should stay available, but they should be clearly secondary:
-  linked when needed, not required up front.
-- Code should explain intent through names and structure first. Comments and
-  docstrings should clarify non-obvious behavior, not restate each line.
+## Priority
 
-## Cleanup Principles
+- [ ] Prepare the next Woodpecker release for use in rook WPS.
+- [ ] Publish to PyPI first.
+- [ ] Add or update the conda-forge feedstock after the PyPI release.
+- [ ] Integrate Woodpecker into the rook WPS service.
+- [ ] Replace the old rook fixing modules with Woodpecker calls.
+- [ ] Make `woodpecker-cmip6-decadal-plugin` ready for real WPS usage.
+- [ ] Make `woodpecker-atlas-plugin` ready for real WPS usage.
 
-- Prefer one clear path over many parallel introductions.
-- Keep the README short, practical, and precise.
-- Move detail to topic pages instead of repeating it.
-- Make headings action-oriented and easy to scan.
-- Prefer bullets, small tables, and one simple Mermaid diagram where they reduce
-  reading time.
-- Keep examples minimal and runnable.
-- Remove prose that explains the obvious.
-- Keep technical precision where behavior, safety, or API contracts depend on it.
+## Rook Integration
 
-## Phase 1: README First
+- [ ] Identify the current rook fixing entry points.
+- [ ] Map each old fixing module to a Woodpecker fix or recipe.
+- [ ] Decide the WPS-facing API shape: direct fix id, recipe id, or both.
+- [ ] Keep the WPS integration thin: load input, select fix or recipe, preview or
+  apply, return clear errors.
+- [ ] Add a minimal rook-side integration test with one CMIP6-decadal case and
+  one Atlas case.
+- [ ] Document only the operator-facing usage needed to run and debug the WPS
+  integration.
 
-- [x] Rewrite `README.md` as the single getting-started entry point.
-- [x] Target about 60 to 80 lines instead of the current 130+ lines.
-- [x] Keep the opening promise short:
-  `Woodpecker checks and applies known climate-data fixes through a small Python API, CLI, and recipes.`
-- [x] Keep badges if useful, but avoid letting them dominate the first screen.
-- [x] Replace the long documentation link list with 3 to 5 links:
-  - Full docs
-  - Concepts
-  - Recipes
-  - CLI
-  - Contributing
-- [x] Keep one install/setup block.
-- [x] Keep one recipe-based Python example.
-- [x] Keep one CLI example.
-- [x] Keep a very short project map.
-- [x] Move local docs build details and extended contributor setup to
-  `docs/docs-development.md` or `docs/CONTRIBUTING_GUIDE.md`.
-- [x] Remove duplicated wording that also appears in `docs/OVERVIEW.md`.
+## Release Checklist
 
-## Phase 2: Docs Structure
+- [ ] Confirm version numbers for core and plugins.
+- [ ] Run `make lint`.
+- [ ] Run `make test`.
+- [ ] Run `make docs`.
+- [ ] Build source and wheel distributions.
+- [ ] Publish Woodpecker to PyPI.
+- [ ] Verify install from PyPI in a clean environment.
+- [ ] Update conda-forge after PyPI is available.
+- [ ] Add short release notes focused on rook/WPS readiness and plugin status.
 
-- [x] Decide whether `docs/OVERVIEW.md` is still needed after the README rewrite.
-  If it remains, make it a short conceptual overview, not another README.
-- [x] Simplify `docs/index.md` into a compact docs map.
-- [x] Reduce the MkDocs "Getting Started" section to the smallest useful path:
-  - Overview or Start Here
-  - Concepts
-  - Recipes
-  - CLI
-  - Plugins
-- [x] Move `docs/user-friendliness.md` out of the main getting-started path.
-  It is useful backlog material, but not something a new user needs first.
-- [x] Keep generated references under Reference only.
-- [x] Make notebooks/examples easy to find without making them part of the first
-  reading path.
-- [x] Check for repeated descriptions of fixes, recipes, plugins, stores, and
-  catalogs across `README.md`, `docs/index.md`, `docs/OVERVIEW.md`,
-  `docs/concepts.md`, and `docs/recipes.md`.
-- [x] Replace repeated explanations with short summaries plus links to the one
-  canonical page.
-- [x] Add one compact Mermaid diagram to show the basic flow, for example:
+## Plugin Readiness
 
-```mermaid
-flowchart LR
-    D["Dataset"] --> C["check"]
-    C --> F["findings"]
-    F --> R["recipe or fix"]
-    R --> P["dry-run preview"]
-    P --> A["apply"]
-```
+- [ ] Check CMIP6-decadal fixes against real or representative WPS inputs.
+- [ ] Check Atlas fixes against real or representative WPS inputs.
+- [ ] Keep plugin README examples short and executable.
+- [ ] Prefer recipe ids for user workflows; keep direct fix ids for debugging and
+  contributors.
+- [ ] Review plugin dependencies and data I/O assumptions for server use.
+- [ ] Decide whether `woodpecker-cmip6-decadal-plugin` should move to its own
+  repository before external patches are expected.
+- [ ] If split out, keep history, tests, package metadata, and release workflow
+  easy for external contributors.
 
-## Phase 3: Content Editing Pass
+## Open Design Notes
 
-- [x] For each hand-written docs page, remove paragraphs that repeat the page
-  title or obvious navigation context.
-- [x] Prefer bullets over long paragraphs when listing behavior, commands,
-  decisions, or links.
-- [x] Prefer short examples over multiple similar examples.
-- [x] Keep safety-related details, dry-run behavior, provenance, strict I/O, and
-  generated-reference caveats where they affect user decisions.
-- [x] Use consistent terms:
-  - fix
-  - recipe
-  - plugin
-  - catalog
-  - store
-  - finding
-- [x] Avoid introducing multiple names for the same thing.
-- [x] Make every page answer one primary question.
-
-## Phase 4: Test Cleanup
-
-- [x] Audit which tests are really needed before deleting or merging anything.
-- [x] Keep the most important functional tests: public API flows that check,
-  dry-run, apply, and verify fixes for representative dataset families.
-- [x] Keep focused unit tests for parsing, identifiers, selection, recipes,
-  stores, provenance, formatting, and other small logic that can fail in
-  isolation.
-- [x] Clearly separate test intent:
-  - unit tests: small, fast, isolated behavior in `tests/unit/`
-  - functional tests: end-to-end public API behavior in `tests/integration/`
-- [x] Keep the existing `tests/integration/` directory name, but document that
-  these are the functional end-to-end public API tests.
-- [x] Check for duplicated coverage between:
-  - `tests/unit/test_cli_*.py` and API usage examples
-  - `tests/unit/test_recipe*.py` and `tests/integration/test_api_recipes_*.py`
-  - family-specific fix tests and recipe tests that assert the same correction
-  - generated catalog tests and docs generation checks
-- [x] Keep one plain executable example test as the preferred style reference.
-- [x] Move broad workflow checks out of unit tests if they exercise multiple
-  subsystems.
-- [x] Move low-level edge cases out of functional tests if they do not need the
-  full public API path.
-- [x] Remove checked-in `__pycache__/` files if they are tracked, and make sure
-  cache files stay ignored.
-- [x] Add a short `tests/README.md` explaining the difference between unit and
-  functional tests, which suite to run first, and where new tests belong.
-- [x] Keep `tests/integration/README.md` or replace it with the new test README
-  after the structure is clear.
-
-## Phase 5: Code Cleanup
-
-- [x] Scan the main modules for comments and docstrings that restate the code:
-  - `woodpecker/api.py`
-  - `woodpecker/cli.py`
-  - `woodpecker/commands.py`
-  - `woodpecker/recipe.py`
-  - `woodpecker/runner.py`
-  - `woodpecker/selection.py`
-  - `woodpecker/recipes/*.py`
-  - `woodpecker/fixes/*.py`
-- [x] Keep docstrings for public APIs, CLI-facing behavior, and non-obvious
-  contracts.
-- [x] Shorten internal comments that explain simple assignments, branching, or
-  direct library calls.
-- [x] Prefer clearer helper names over explanatory comments.
-- [x] Look for verbose helper functions that can be simplified without changing
-  behavior.
-- [x] Do not combine this cleanup with feature changes.
-- [x] Run tests after code edits.
-
-## Phase 6: Validation
-
-- [x] Run `make lint`.
-- [x] Run `make test`.
-- [x] Run `make docs`.
-- [x] Skim the rendered docs navigation and first screen.
-- [x] Confirm a new user can answer these in under two minutes:
-  - What is Woodpecker?
-  - How do I install or set it up locally?
-  - How do I run a recipe?
-  - Where do I go for concepts, CLI details, plugins, and contributing?
-
-## Suggested First PR Scope
-
-- Rewrite `README.md`.
-- Trim or repurpose `docs/OVERVIEW.md`.
-- Simplify `docs/index.md`.
-- Update `mkdocs.yml` navigation if needed.
-- Add the docs flow diagram if it makes the first page easier to scan.
-- Do not touch code in the first PR unless required by generated docs.
-
-## Notes For The Next Codex Session
-
-- Keep the visible design simple: short headings, fewer links, fewer first-screen
-  choices.
-- Use bullets and diagrams to reduce reading, not to decorate the page.
-- Preserve detail, but move it behind deliberate links.
-- Treat the README as the project lobby: clear, calm, and quick to leave for the
-  right room.
-- Avoid broad rewrites of generated reference files unless the generator itself
-  changes.
-- Treat the test cleanup as a classification and duplication audit first. Delete
-  or merge tests only after the important public workflows are named.
-
-## Later Human-Readable Polish
-
-- [ ] Make generated reference pages friendlier by editing the generators, not
-  the generated files:
-  - shorter page titles such as `Fix Reference` and `Recipe Reference`
-  - shorter column names where possible
-  - one first sentence that explains when to use the page
-  - clearer separation between common user-facing ids and generated metadata
-- [ ] Consider future API aliases for the recipe lifecycle:
-  - `woodpecker.recipe.preview(...)` for dry-run behavior
-  - `woodpecker.recipe.apply(...)` for mutation
-- [ ] Consider future CLI grouped commands only if they make the user model
-  clearer than the current `check` and `fix` commands.
+- [ ] Consider `woodpecker.recipe.preview(...)` as a short alias for dry-run
+  recipe fixing.
+- [ ] Consider `woodpecker.recipe.apply(...)` as the mutation alias.
+- [ ] Keep `woodpecker.recipe.fix(...)` for compatibility.
+- [ ] Consider grouped CLI commands only if they make rook or user workflows
+  simpler.
+- [ ] Improve generated reference pages through generator changes only.
+- [ ] Consider fix dependencies later if CMIP6-decadal ordering needs become
+  hard to express with recipes.
