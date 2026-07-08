@@ -19,12 +19,15 @@ clear path.
 
 - [ ] Identify the current rook fixing entry points.
 - [ ] Map each old fixing module to a Woodpecker fix or recipe.
-- [ ] Decide the WPS-facing API shape: direct fix id, recipe id, or both.
-- [ ] Keep the WPS integration thin: load input, select fix or recipe, preview or
+- [x] Decide the WPS-facing API shape: recipe id for normal WPS runs, direct fix
+  id for debugging and contributor workflows.
+- [x] Keep the WPS integration thin: load input, select fix or recipe, preview or
   apply, return clear errors.
+- [x] Add a Woodpecker-side rook WPS usage guard with one CMIP6-decadal case and
+  one Atlas case.
 - [ ] Add a minimal rook-side integration test with one CMIP6-decadal case and
   one Atlas case.
-- [ ] Document only the operator-facing usage needed to run and debug the WPS
+- [x] Document only the operator-facing usage needed to run and debug the WPS
   integration.
 
 ## Release Checklist

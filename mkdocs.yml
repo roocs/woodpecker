@@ -36,6 +36,7 @@ nav:
       - Recipes: recipes.md
       - CLI: cli.md
       - Plugins: plugins.md
+      - Rook WPS Usage: rook-wps.md
   - Reference:
       - Fix Reference: FIXES.md
       - Recipe Reference: recipe-reference.md
