@@ -13,9 +13,12 @@ def test_public_import_surfaces_are_available():
         register_label,
     )
     from woodpecker.recipes import FixRef, Recipe, load_recipe
+    from woodpecker.recipes import apply as build_apply
     from woodpecker.recipes import document as build_document
+    from woodpecker.recipes import finalize as build_finalize
     from woodpecker.recipes import fix as build_fix
     from woodpecker.recipes import match as build_match
+    from woodpecker.recipes import prepare as build_prepare
     from woodpecker.recipes import recipe as build_recipe
     from woodpecker.runner import apply_recipe, run_fix
     from woodpecker.selection import select_fixes
@@ -54,6 +57,9 @@ def test_public_import_surfaces_are_available():
     assert callable(register_fix_function)
     assert callable(load_recipe)
     assert callable(build_fix)
+    assert callable(build_prepare)
+    assert callable(build_apply)
+    assert callable(build_finalize)
     assert callable(build_match)
     assert callable(build_recipe)
     assert callable(build_document)

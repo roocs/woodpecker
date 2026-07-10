@@ -5,9 +5,12 @@ from .builder import (
     FixStepBuilder,
     RecipeBuilder,
     RecipeDocumentBuilder,
+    apply,
     document,
+    finalize,
     fix,
     match,
+    prepare,
     recipe,
 )
 from .loaders import (
@@ -32,6 +35,9 @@ __all__ = [
     "RecipeBuilder",
     "RecipeDocumentBuilder",
     "fix",
+    "prepare",
+    "apply",
+    "finalize",
     "match",
     "recipe",
     "document",
