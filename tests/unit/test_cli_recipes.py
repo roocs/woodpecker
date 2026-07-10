@@ -237,6 +237,111 @@ def test_check_auto_store_uses_matching_registered_fix(
     assert "selected auto recipe" in result.output
 
 
+def test_apply_recipe_prepare_phase_selects_prepare_step(
+    isolated_cli_workspace: CliWorkspace,
+    monkeypatch,
+):
+    runner, make_placeholder_netcdf_path = isolated_cli_workspace
+    make_placeholder_netcdf_path("cmip6_case.nc")
+    captured = {}
+    write_recipe_document(
+        "recipes.json",
+        [
+            {
+                "id": "test.phased",
+                "steps": [
+                    {
+                        "id": "woodpecker.normalize_tas_units_to_kelvin",
+                        "phase": "prepare",
+                    },
+                    {"id": "woodpecker.ensure_latitude_is_increasing"},
+                ],
+            }
+        ],
+    )
+
+    def _fake_run_fix(context, **kwargs):
+        _ = kwargs
+        captured["identifiers"] = context.resolved_identifiers
+        return {"attempted": 1, "changed": 1, "preview": []}
+
+    monkeypatch.setattr("woodpecker.cli.execute_fix_context", _fake_run_fix)
+
+    result = runner.invoke(
+        cli,
+        [
+            "apply",
+            ".",
+            "--recipe",
+            "recipes.json",
+            "--recipe-id",
+            "test.phased",
+            "--phase",
+            "prepare",
+            "--dry-run",
+            "--no-provenance",
+            "--format",
+            "json",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert captured["identifiers"] == ("woodpecker.normalize_tas_units_to_kelvin",)
+
+
+def test_apply_recipe_without_phase_selects_full_recipe(
+    isolated_cli_workspace: CliWorkspace,
+    monkeypatch,
+):
+    runner, make_placeholder_netcdf_path = isolated_cli_workspace
+    make_placeholder_netcdf_path("cmip6_case.nc")
+    captured = {}
+    write_recipe_document(
+        "recipes.json",
+        [
+            {
+                "id": "test.phased",
+                "steps": [
+                    {
+                        "id": "woodpecker.normalize_tas_units_to_kelvin",
+                        "phase": "prepare",
+                    },
+                    {"id": "woodpecker.ensure_latitude_is_increasing"},
+                ],
+            }
+        ],
+    )
+
+    def _fake_run_fix(context, **kwargs):
+        _ = kwargs
+        captured["identifiers"] = context.resolved_identifiers
+        return {"attempted": 2, "changed": 2, "preview": []}
+
+    monkeypatch.setattr("woodpecker.cli.execute_fix_context", _fake_run_fix)
+
+    result = runner.invoke(
+        cli,
+        [
+            "apply",
+            ".",
+            "--recipe",
+            "recipes.json",
+            "--recipe-id",
+            "test.phased",
+            "--dry-run",
+            "--no-provenance",
+            "--format",
+            "json",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert captured["identifiers"] == (
+        "woodpecker.normalize_tas_units_to_kelvin",
+        "woodpecker.ensure_latitude_is_increasing",
+    )
+
+
 def test_load_recipes_from_recipe_document_into_json_store(
     isolated_cli_workspace: CliWorkspace,
 ):

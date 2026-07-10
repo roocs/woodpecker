@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 import xarray as xr
 
+import woodpecker.recipe as recipe_api
 from woodpecker.fixes.registry import FixFunction, FixFunctionRegistry, register_fix_function
 from woodpecker.recipes.matcher import recipe_matches_dataset
 from woodpecker.recipes.models import (
@@ -120,6 +121,128 @@ def test_load_recipe_from_yaml(tmp_path: Path):
 
     assert [f.id for f in recipe.steps] == ["plan_test.fix_method"]
     assert recipe.steps[0].options == {"level": "strict"}
+
+
+def test_recipe_step_missing_phase_defaults_to_apply():
+    step = FixRef(id="plan_test.fix_method")
+
+    assert step.phase == "apply"
+
+
+@pytest.mark.parametrize("phase", ["prepare", "apply", "finalize"])
+def test_recipe_step_valid_phases_parse(phase):
+    step = FixRef(id="plan_test.fix_method", phase=phase)
+
+    assert step.phase == phase
+
+
+def test_recipe_step_invalid_phase_fails_clearly():
+    with pytest.raises(ValueError, match="FixRef.phase must be one of: prepare, apply, finalize"):
+        FixRef(id="plan_test.fix_method", phase="cleanup")
+
+
+def test_recipe_apply_phase_none_runs_all_steps(monkeypatch):
+    captured = {}
+    recipe = Recipe.model_validate(
+        {
+            "id": "plan_test.phases",
+            "steps": [
+                {"id": "first", "phase": "prepare"},
+                {"id": "second"},
+                {"id": "third", "phase": "finalize"},
+            ],
+        }
+    )
+
+    def _fake_execute_fix(*args, **kwargs):
+        captured.update(kwargs)
+        return {"attempted": 3, "changed": 3}
+
+    monkeypatch.setattr(recipe_api, "execute_fix", _fake_execute_fix)
+
+    recipe_api.apply(xr.Dataset(), recipe)
+
+    assert captured["identifiers"] == (
+        "plan_test.first",
+        "plan_test.second",
+        "plan_test.third",
+    )
+
+
+def test_recipe_apply_prepare_phase_runs_only_prepare_steps(monkeypatch):
+    captured = {}
+    recipe = Recipe.model_validate(
+        {
+            "id": "plan_test.phases",
+            "steps": [
+                {"id": "first", "phase": "prepare"},
+                {"id": "second"},
+            ],
+        }
+    )
+
+    def _fake_execute_fix(*args, **kwargs):
+        captured.update(kwargs)
+        return {"attempted": 1, "changed": 1}
+
+    monkeypatch.setattr(recipe_api, "execute_fix", _fake_execute_fix)
+
+    recipe_api.apply(xr.Dataset(), recipe, phase="prepare")
+
+    assert captured["identifiers"] == ("plan_test.first",)
+
+
+def test_recipe_check_apply_phase_runs_default_apply_steps(monkeypatch):
+    captured = {}
+    recipe = Recipe.model_validate(
+        {
+            "id": "plan_test.phases",
+            "steps": [
+                {"id": "first", "phase": "prepare"},
+                {"id": "second"},
+                {"id": "third", "phase": "apply"},
+            ],
+        }
+    )
+
+    def _fake_execute_check(*args, **kwargs):
+        captured.update(kwargs)
+        return []
+
+    monkeypatch.setattr(recipe_api, "execute_check", _fake_execute_check)
+
+    recipe_api.check(xr.Dataset(), recipe, phase="apply")
+
+    assert captured["identifiers"] == ("plan_test.second", "plan_test.third")
+
+
+def test_recipe_phase_and_fixes_select_intersection_in_recipe_order(monkeypatch):
+    captured = {}
+    recipe = Recipe.model_validate(
+        {
+            "id": "plan_test.phases",
+            "steps": [
+                {"id": "first"},
+                {"id": "second", "phase": "prepare"},
+                {"id": "third", "phase": "prepare"},
+            ],
+        }
+    )
+
+    def _fake_execute_fix(*args, **kwargs):
+        captured.update(kwargs)
+        return {"attempted": 1, "changed": 1}
+
+    monkeypatch.setattr(recipe_api, "execute_fix", _fake_execute_fix)
+
+    recipe_api.apply(
+        xr.Dataset(),
+        recipe,
+        phase="prepare",
+        fixes=["plan_test.third", "plan_test.second"],
+    )
+
+    assert captured["identifiers"] == ("plan_test.second", "plan_test.third")
 
 
 def test_apply_plan_calls_matches_then_apply_and_passes_options():

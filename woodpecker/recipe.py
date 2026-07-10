@@ -72,9 +72,17 @@ def _resolve_recipe_source(
 def _resolve_recipe_selection(
     recipe: Recipe,
     fixes: str | Sequence[str] | None,
+    phase: str | None = None,
 ) -> tuple[tuple[str, ...], tuple[str, ...], dict[str, dict[str, Any]]]:
-    source_identifiers, source_fix_options = recipe.step_identifiers_and_options()
-    resolved_identifiers = _normalize_fixes(fixes) or source_identifiers
+    source_identifiers, source_fix_options = recipe.step_identifiers_and_options(phase=phase)
+    requested_identifiers = _normalize_fixes(fixes)
+    if requested_identifiers:
+        requested = set(requested_identifiers)
+        resolved_identifiers = tuple(
+            identifier for identifier in source_identifiers if identifier in requested
+        )
+    else:
+        resolved_identifiers = source_identifiers
     return resolved_identifiers, resolved_identifiers, dict(source_fix_options)
 
 
@@ -87,6 +95,7 @@ def check(
     dataset: str | None = None,
     categories: Sequence[str] = (),
     fixes: str | Sequence[str] | None = None,
+    phase: str | None = None,
     strict_io: bool = False,
 ) -> CheckResult:
     """Check inputs using fixes selected from a recipe."""
@@ -94,6 +103,7 @@ def check(
         resolved_identifiers, ordered_identifiers, fix_options = _resolve_recipe_selection(
             recipe,
             fixes,
+            phase=phase,
         )
         return CheckResult(
             findings=tuple(
@@ -124,6 +134,7 @@ def check(
                 identifiers=_normalize_fixes(fixes),
                 recipe_id=resolved_recipe_id,
                 store_type=resolved_store_type,
+                phase=phase,
                 strict_io=strict_io,
             )
         )
@@ -139,6 +150,7 @@ def apply(
     dataset: str | None = None,
     categories: Sequence[str] = (),
     fixes: str | Sequence[str] | None = None,
+    phase: str | None = None,
     dry_run: bool = True,
     output_format: str = "auto",
     strict_io: bool = False,
@@ -148,6 +160,7 @@ def apply(
         resolved_identifiers, ordered_identifiers, fix_options = _resolve_recipe_selection(
             recipe,
             fixes,
+            phase=phase,
         )
         return FixResult(
             stats=execute_fix(
@@ -179,6 +192,7 @@ def apply(
             output_format=output_format,
             recipe_id=resolved_recipe_id,
             store_type=resolved_store_type,
+            phase=phase,
             strict_io=strict_io,
         )
     )

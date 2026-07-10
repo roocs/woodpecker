@@ -28,6 +28,7 @@ def _resolve_recipe_api_selection(
     identifiers: Sequence[str],
     recipe_id: str | None,
     store_type: str,
+    phase: str | None = None,
 ) -> tuple[list[DataInput], tuple[str, ...], tuple[str, ...], dict[str, dict[str, Any]]]:
     from woodpecker.recipes.resolver import resolve_recipe_source, resolve_selection_inputs
 
@@ -38,6 +39,7 @@ def _resolve_recipe_api_selection(
         store_type=store_type,
         recipe_location=Path(recipe_path) if recipe_path is not None else None,
         recipe_id=recipe_id,
+        phase=phase,
     )
     resolved_identifiers, resolved_ordered_identifiers, resolved_fix_options = (
         resolve_selection_inputs(
@@ -110,6 +112,7 @@ def execute_check_recipe(
     identifiers: Sequence[str] = (),
     recipe_id: str | None = None,
     store_type: str = "json",
+    phase: str | None = None,
     strict_io: bool = False,
 ) -> list[dict[str, str]]:
     normalized, resolved_identifiers, resolved_ordered_identifiers, resolved_fix_options = (
@@ -119,6 +122,7 @@ def execute_check_recipe(
             identifiers=identifiers,
             recipe_id=recipe_id,
             store_type=store_type,
+            phase=phase,
         )
     )
 
@@ -144,6 +148,7 @@ def execute_fix_recipe(
     output_format: str = "auto",
     recipe_id: str | None = None,
     store_type: str = "json",
+    phase: str | None = None,
     strict_io: bool = False,
 ) -> "FixRunStats":
     normalized, resolved_identifiers, resolved_ordered_identifiers, resolved_fix_options = (
@@ -153,6 +158,7 @@ def execute_fix_recipe(
             identifiers=identifiers,
             recipe_id=recipe_id,
             store_type=store_type,
+            phase=phase,
         )
     )
 
