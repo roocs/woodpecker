@@ -8,7 +8,9 @@ import woodpecker.fixes  # noqa: F401  # registers built-in fixes
 from woodpecker.commands import execute_check, execute_check_recipe, execute_fix, execute_fix_recipe
 from woodpecker.recipes.models import RECIPE_PHASES as _ACCEPTED_RECIPE_PHASES
 from woodpecker.recipes.models import Recipe
+from woodpecker.recipes.resolver import recipe_step_contexts
 from woodpecker.results import CheckResult, FixResult
+from woodpecker.runner import RecipeStepContext
 from woodpecker.stores.helpers import create_recipe_store
 
 PREPARE_PHASE = _ACCEPTED_RECIPE_PHASES[0]
@@ -79,8 +81,14 @@ def _resolve_recipe_selection(
     recipe: Recipe,
     fixes: str | Sequence[str] | None,
     phase: str | None = None,
-) -> tuple[tuple[str, ...], tuple[str, ...], dict[str, dict[str, Any]]]:
+) -> tuple[
+    tuple[str, ...],
+    tuple[str, ...],
+    dict[str, dict[str, Any]],
+    dict[str, RecipeStepContext],
+]:
     source_identifiers, source_fix_options = recipe.step_identifiers_and_options(phase=phase)
+    source_step_contexts = recipe_step_contexts(recipe, phase=phase)
     requested_identifiers = _normalize_fixes(fixes)
     if requested_identifiers:
         requested = set(requested_identifiers)
@@ -89,7 +97,17 @@ def _resolve_recipe_selection(
         )
     else:
         resolved_identifiers = source_identifiers
-    return resolved_identifiers, resolved_identifiers, dict(source_fix_options)
+    resolved_step_contexts = {
+        identifier: source_step_contexts[identifier]
+        for identifier in resolved_identifiers
+        if identifier in source_step_contexts
+    }
+    return (
+        resolved_identifiers,
+        resolved_identifiers,
+        dict(source_fix_options),
+        resolved_step_contexts,
+    )
 
 
 def check(
@@ -106,11 +124,15 @@ def check(
 ) -> CheckResult:
     """Check inputs using fixes selected from a recipe."""
     if isinstance(recipe, Recipe):
-        resolved_identifiers, ordered_identifiers, fix_options = _resolve_recipe_selection(
-            recipe,
-            fixes,
-            phase=phase,
+        resolved_identifiers, ordered_identifiers, fix_options, step_contexts = (
+            _resolve_recipe_selection(
+                recipe,
+                fixes,
+                phase=phase,
+            )
         )
+        if not ordered_identifiers:
+            return CheckResult(findings=())
         return CheckResult(
             findings=tuple(
                 execute_check(
@@ -120,6 +142,7 @@ def check(
                     identifiers=resolved_identifiers,
                     fix_options=fix_options,
                     ordered_identifiers=ordered_identifiers,
+                    step_contexts=step_contexts,
                     strict_io=strict_io,
                 )
             )
@@ -163,11 +186,24 @@ def apply(
 ) -> FixResult:
     """Apply fixes selected from a recipe."""
     if isinstance(recipe, Recipe):
-        resolved_identifiers, ordered_identifiers, fix_options = _resolve_recipe_selection(
-            recipe,
-            fixes,
-            phase=phase,
+        resolved_identifiers, ordered_identifiers, fix_options, step_contexts = (
+            _resolve_recipe_selection(
+                recipe,
+                fixes,
+                phase=phase,
+            )
         )
+        if not ordered_identifiers:
+            return FixResult(
+                stats={
+                    "attempted": 0,
+                    "changed": 0,
+                    "persist_attempted": 0,
+                    "persisted": 0,
+                    "persist_failed": 0,
+                    "preview": [],
+                }
+            )
         return FixResult(
             stats=execute_fix(
                 inputs,
@@ -178,6 +214,7 @@ def apply(
                 output_format=output_format,
                 fix_options=fix_options,
                 ordered_identifiers=ordered_identifiers,
+                step_contexts=step_contexts,
                 strict_io=strict_io,
             )
         )

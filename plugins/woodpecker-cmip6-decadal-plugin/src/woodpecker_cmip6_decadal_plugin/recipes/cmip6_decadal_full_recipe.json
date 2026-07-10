@@ -22,50 +22,64 @@
       },
       "steps": [
         {
-          "id": "cmip6_decadal.time_metadata"
-        },
-        {
           "id": "cmip6_decadal.calendar_normalization",
           "phase": "prepare"
         },
         {
-          "id": "cmip6_decadal.realization_variable"
+          "id": "cmip6_decadal.time_metadata",
+          "phase": "apply"
         },
         {
-          "id": "cmip6_decadal.coordinates_encoding_cleanup"
+          "id": "cmip6_decadal.realization_variable",
+          "phase": "apply"
         },
         {
-          "id": "cmip6_decadal.realization_comment_normalization"
+          "id": "cmip6_decadal.coordinates_encoding_cleanup",
+          "phase": "apply"
         },
         {
-          "id": "cmip6_decadal.realization_dtype_normalization"
+          "id": "cmip6_decadal.realization_comment_normalization",
+          "phase": "apply"
         },
         {
-          "id": "cmip6_decadal.fillvalue_encoding_cleanup"
+          "id": "cmip6_decadal.realization_dtype_normalization",
+          "phase": "apply"
         },
         {
-          "id": "cmip6_decadal.further_info_url_normalization"
+          "id": "cmip6_decadal.fillvalue_encoding_cleanup",
+          "phase": "apply"
         },
         {
-          "id": "cmip6_decadal.start_token_normalization"
+          "id": "cmip6_decadal.further_info_url_normalization",
+          "phase": "apply"
         },
         {
-          "id": "cmip6_decadal.realization_long_name_normalization"
+          "id": "cmip6_decadal.start_token_normalization",
+          "phase": "apply"
         },
         {
-          "id": "cmip6_decadal.realization_index_normalization"
+          "id": "cmip6_decadal.realization_long_name_normalization",
+          "phase": "apply"
         },
         {
-          "id": "cmip6_decadal.leadtime_metadata_normalization"
+          "id": "cmip6_decadal.realization_index_normalization",
+          "phase": "apply"
         },
         {
-          "id": "cmip6_decadal.model_global_attributes"
+          "id": "cmip6_decadal.leadtime_metadata_normalization",
+          "phase": "apply"
         },
         {
-          "id": "cmip6_decadal.reftime_coordinate"
+          "id": "cmip6_decadal.model_global_attributes",
+          "phase": "apply"
         },
         {
-          "id": "cmip6_decadal.leadtime_coordinate"
+          "id": "cmip6_decadal.reftime_coordinate",
+          "phase": "apply"
+        },
+        {
+          "id": "cmip6_decadal.leadtime_coordinate",
+          "phase": "apply"
         }
       ]
     }

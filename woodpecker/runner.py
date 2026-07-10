@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any, Iterable, TypedDict
 
@@ -36,10 +37,33 @@ class FixRunStats(TypedDict):
     preview: list[FixPreview]
 
 
+@dataclass(frozen=True)
+class RecipeStepContext:
+    """Recipe step metadata used to annotate execution failures."""
+
+    recipe_id: str
+    phase: str
+    fix_id: str
+    step_index: int
+
+
+class RecipeStepError(RuntimeError):
+    """Error raised when a recipe step fails during check or apply."""
+
+    def __init__(self, context: RecipeStepContext, original: BaseException):
+        self.context = context
+        self.original = original
+        super().__init__(
+            f"Recipe '{context.recipe_id}' phase '{context.phase}' failed at "
+            f"step {context.step_index} '{context.fix_id}': {original}"
+        )
+
+
 def run_check(
     inputs: Iterable[DataInput],
     fixes: Iterable[Any],
     *,
+    step_contexts: dict[str, RecipeStepContext] | None = None,
     strict_io: bool = False,
 ) -> list[dict[str, str]]:
     findings: list[dict[str, str]] = []
@@ -48,18 +72,29 @@ def run_check(
             dataset = data_input.load()
             identity = resolve_dataset_identity(dataset)
             for fix in fixes:
+                fix_id = getattr(fix, "id", "")
+                step_context = (step_contexts or {}).get(fix_id)
                 if not dataset_type_matches_declared(
                     getattr(fix, "dataset", None), identity.dataset_type
                 ):
                     continue
-                if not fix.matches(dataset):
+                try:
+                    matches = fix.matches(dataset)
+                    messages = fix.check(dataset) if matches else ()
+                except RecipeStepError:
+                    raise
+                except Exception as exc:
+                    if step_context is None:
+                        raise
+                    raise RecipeStepError(step_context, exc) from exc
+                if not matches:
                     continue
-                for message in fix.check(dataset):
+                for message in messages:
                     labels = _fix_labels(fix)
                     findings.append(
                         {
                             "path": data_input.reference,
-                            "fix_id": getattr(fix, "id", ""),
+                            "fix_id": fix_id,
                             "name": fix.name,
                             "labels": labels,
                             "label_titles": [LabelRegistry.title(label) for label in labels],
@@ -81,6 +116,7 @@ def run_fix(
     output_format: str = "auto",
     embed_provenance_metadata: bool = False,
     provenance_run_id: str | None = None,
+    step_contexts: dict[str, RecipeStepContext] | None = None,
     strict_io: bool = False,
 ) -> FixRunStats:
     changed = 0
@@ -105,6 +141,7 @@ def run_fix(
                     dry_run=dry_run,
                     force_apply=force_apply,
                     fix_id=fix_id,
+                    step_context=(step_contexts or {}).get(fix_id),
                 )
                 if attempted_fix:
                     attempted += 1
@@ -161,17 +198,25 @@ def apply_configured_fix(
     dry_run: bool,
     force_apply: bool,
     fix_id: str,
+    step_context: RecipeStepContext | None = None,
 ) -> tuple[bool, bool]:
     if not dataset_type_matches_declared(getattr(fix, "dataset", None), dataset_type):
         return False, False
 
-    if not force_apply and not fix.matches(dataset):
-        return False, False
+    try:
+        if not force_apply and not fix.matches(dataset):
+            return False, False
 
-    if not hasattr(fix, "apply"):
-        raise TypeError(f"Fix function '{fix_id}' does not implement apply()")
+        if not hasattr(fix, "apply"):
+            raise TypeError(f"Fix function '{fix_id}' does not implement apply()")
 
-    return True, bool(fix.apply(dataset, dry_run=dry_run))
+        return True, bool(fix.apply(dataset, dry_run=dry_run))
+    except RecipeStepError:
+        raise
+    except Exception as exc:
+        if step_context is None:
+            raise
+        raise RecipeStepError(step_context, exc) from exc
 
 
 def _fix_labels(fix: Any) -> list[str]:
@@ -191,7 +236,7 @@ def _instantiate_fix(registry: Any, fix_id: str) -> Any:
 def apply_recipe(ds: Any, recipe: "Recipe", registry: Any) -> Any:
     identity = resolve_dataset_identity(ds)
 
-    for ref in recipe.steps:
+    for index, ref in enumerate(recipe.steps, start=1):
         resolved_fix_id = recipe.resolve_fix_identifier(ref)
         fix = _instantiate_fix(registry, resolved_fix_id)
 
@@ -207,6 +252,12 @@ def apply_recipe(ds: Any, recipe: "Recipe", registry: Any) -> Any:
             dry_run=False,
             force_apply=False,
             fix_id=resolved_fix_id,
+            step_context=RecipeStepContext(
+                recipe_id=recipe.id,
+                phase=ref.phase,
+                fix_id=resolved_fix_id,
+                step_index=index,
+            ),
         )
 
     return ds

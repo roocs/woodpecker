@@ -17,10 +17,12 @@
       },
       "steps": [
         {
-          "id": "atlas.encoding_cleanup"
+          "id": "atlas.encoding_cleanup",
+          "phase": "apply"
         },
         {
-          "id": "atlas.project_id_normalization"
+          "id": "atlas.project_id_normalization",
+          "phase": "apply"
         }
       ]
     }

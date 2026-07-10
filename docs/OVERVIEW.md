@@ -15,7 +15,7 @@ moves further through a processing pipeline.
 
 ```mermaid
 flowchart TD
-    Select["Select recipe or fix"] --> Check["Check dataset"]
+    Select["Select recipe or fix id"] --> Check["Check dataset"]
     Check --> Findings["Review findings"]
     Findings --> Preview["Dry-run preview"]
     Preview --> Apply["Apply repair"]

@@ -90,3 +90,23 @@ def test_atlas_plan_checks_and_fixes_synthetic_dataset():
         assert_unchanged=assert_unchanged,
         assert_fixed=assert_fixed,
     )
+
+
+def test_atlas_recipe_steps_are_apply_phase_only():
+    assert [(step.id, step.phase) for step in PLAN.steps] == [
+        ("atlas.encoding_cleanup", "apply"),
+        ("atlas.project_id_normalization", "apply"),
+    ]
+
+    dataset = make_atlas(missing=["project_id"])
+    dataset["pr"].encoding["complevel"] = 5
+
+    assert woodpecker.recipe.check(dataset, PLAN, phase="prepare").fix_ids == ()
+    apply_fix_ids = tuple(
+        dict.fromkeys(woodpecker.recipe.check(dataset, PLAN, phase="apply").fix_ids)
+    )
+    assert apply_fix_ids == (
+        "atlas.encoding_cleanup",
+        "atlas.project_id_normalization",
+    )
+    assert woodpecker.recipe.check(dataset, PLAN, phase="finalize").fix_ids == ()

@@ -13,7 +13,7 @@ from woodpecker.recipes.models import (
     RecipeDocument,
     RecipeRuntimeMetadata,
 )
-from woodpecker.runner import apply_recipe
+from woodpecker.runner import RecipeStepError, apply_recipe
 from woodpecker.stores.json_store import JsonRecipeStore
 from woodpecker.testing import make_cmip6, write_json
 
@@ -88,6 +88,54 @@ class _TypeErrorInsideMethod(FixFunction):
 
     def apply(self, dataset, dry_run=True):
         return True
+
+
+class _FailingApplyMethod(FixFunction):
+    prefix = "plan_test"
+    suffix = "failing_apply_method"
+    name = "Recipe failing apply method"
+    description = ""
+    categories = ["metadata"]
+    priority = 10
+    dataset = None
+
+    def matches(self, dataset):
+        return True
+
+    def apply(self, dataset, dry_run=True):
+        raise RuntimeError("apply exploded")
+
+
+class _FailingCheckMethod(FixFunction):
+    prefix = "plan_test"
+    suffix = "failing_check_method"
+    name = "Recipe failing check method"
+    description = ""
+    categories = ["metadata"]
+    priority = 10
+    dataset = None
+
+    def matches(self, dataset):
+        return True
+
+    def check(self, dataset):
+        raise ValueError("check exploded")
+
+
+class _FailingStoreApplyMethod(FixFunction):
+    prefix = "plan_test"
+    suffix = "failing_store_apply_method"
+    name = "Recipe failing store apply method"
+    description = ""
+    categories = ["metadata"]
+    priority = 10
+    dataset = None
+
+    def matches(self, dataset):
+        return True
+
+    def apply(self, dataset, dry_run=True):
+        raise RuntimeError("store apply exploded")
 
 
 # Recipe file parsing and normalization
@@ -245,6 +293,57 @@ def test_recipe_phase_and_fixes_select_intersection_in_recipe_order(monkeypatch)
     assert captured["identifiers"] == ("plan_test.second", "plan_test.third")
 
 
+def test_recipe_empty_phase_selection_runs_no_steps():
+    recipe = Recipe.model_validate(
+        {
+            "id": "plan_test.apply_only",
+            "steps": [{"id": "plan_test.fix_method", "phase": "apply"}],
+        }
+    )
+
+    findings = recipe_api.check(xr.Dataset(), recipe, phase="prepare")
+    result = recipe_api.apply(xr.Dataset(), recipe, phase="prepare", dry_run=False)
+
+    assert findings.fix_ids == ()
+    assert result.attempted == 0
+    assert result.changed == 0
+    assert result.preview == ()
+
+
+def test_recipe_file_empty_phase_selection_runs_no_steps(tmp_path: Path):
+    recipe_path = tmp_path / "recipe.json"
+    write_json(
+        recipe_path,
+        {
+            "recipes": [
+                {
+                    "id": "plan_test.apply_only_file",
+                    "steps": [{"id": "plan_test.fix_method", "phase": "apply"}],
+                }
+            ]
+        },
+    )
+
+    findings = recipe_api.check(
+        xr.Dataset(),
+        recipe_path,
+        recipe_id="plan_test.apply_only_file",
+        phase="prepare",
+    )
+    result = recipe_api.apply(
+        xr.Dataset(),
+        recipe_path,
+        recipe_id="plan_test.apply_only_file",
+        phase="prepare",
+        dry_run=False,
+    )
+
+    assert findings.fix_ids == ()
+    assert result.attempted == 0
+    assert result.changed == 0
+    assert result.preview == ()
+
+
 def test_apply_plan_calls_matches_then_apply_and_passes_options():
     register_fix_function(_FixMethod)
     ds = make_cmip6()
@@ -286,6 +385,83 @@ def test_apply_plan_does_not_call_check():
     )
 
     apply_recipe(ds, recipe, FixFunctionRegistry)
+
+
+def test_recipe_apply_error_includes_recipe_phase_and_step_context():
+    register_fix_function(_FailingApplyMethod)
+    recipe = Recipe.model_validate(
+        {
+            "id": "plan_test.error_context",
+            "steps": [
+                {"id": "plan_test.fix_method"},
+                {"id": "plan_test.failing_apply_method", "phase": "prepare"},
+            ],
+        }
+    )
+
+    with pytest.raises(RecipeStepError) as exc_info:
+        recipe_api.apply(xr.Dataset(), recipe, phase="prepare", dry_run=False)
+
+    message = str(exc_info.value)
+    assert "Recipe 'plan_test.error_context'" in message
+    assert "phase 'prepare'" in message
+    assert "step 2 'plan_test.failing_apply_method'" in message
+    assert "apply exploded" in message
+    assert isinstance(exc_info.value.original, RuntimeError)
+
+
+def test_recipe_check_error_includes_recipe_phase_and_step_context():
+    register_fix_function(_FailingCheckMethod)
+    recipe = Recipe.model_validate(
+        {
+            "id": "plan_test.check_error_context",
+            "steps": [{"id": "plan_test.failing_check_method", "phase": "finalize"}],
+        }
+    )
+
+    with pytest.raises(RecipeStepError) as exc_info:
+        recipe_api.check(xr.Dataset(), recipe, phase="finalize")
+
+    message = str(exc_info.value)
+    assert "Recipe 'plan_test.check_error_context'" in message
+    assert "phase 'finalize'" in message
+    assert "step 1 'plan_test.failing_check_method'" in message
+    assert "check exploded" in message
+    assert isinstance(exc_info.value.original, ValueError)
+
+
+def test_recipe_file_apply_error_includes_recipe_phase_and_step_context(tmp_path: Path):
+    register_fix_function(_FailingStoreApplyMethod)
+    recipe_path = tmp_path / "recipe.json"
+    write_json(
+        recipe_path,
+        {
+            "recipes": [
+                {
+                    "id": "plan_test.store_error_context",
+                    "steps": [
+                        {"id": "plan_test.fix_method"},
+                        {"id": "plan_test.failing_store_apply_method", "phase": "prepare"},
+                    ],
+                }
+            ]
+        },
+    )
+
+    with pytest.raises(RecipeStepError) as exc_info:
+        recipe_api.apply(
+            xr.Dataset(),
+            recipe_path,
+            recipe_id="plan_test.store_error_context",
+            phase="prepare",
+            dry_run=False,
+        )
+
+    message = str(exc_info.value)
+    assert "Recipe 'plan_test.store_error_context'" in message
+    assert "phase 'prepare'" in message
+    assert "step 2 'plan_test.failing_store_apply_method'" in message
+    assert "store apply exploded" in message
 
 
 def test_load_recipe_document_json(tmp_path: Path):

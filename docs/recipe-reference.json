@@ -13,11 +13,13 @@
     "steps": [
       {
         "id": "atlas.encoding_cleanup",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "atlas.project_id_normalization",
+        "phase": "apply",
         "options": {},
         "links": []
       }
@@ -57,77 +59,92 @@
     },
     "steps": [
       {
-        "id": "cmip6_decadal.time_metadata",
+        "id": "cmip6_decadal.calendar_normalization",
+        "phase": "prepare",
         "options": {},
         "links": []
       },
       {
-        "id": "cmip6_decadal.calendar_normalization",
+        "id": "cmip6_decadal.time_metadata",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "cmip6_decadal.realization_variable",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "cmip6_decadal.coordinates_encoding_cleanup",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "cmip6_decadal.realization_comment_normalization",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "cmip6_decadal.realization_dtype_normalization",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "cmip6_decadal.fillvalue_encoding_cleanup",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "cmip6_decadal.further_info_url_normalization",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "cmip6_decadal.start_token_normalization",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "cmip6_decadal.realization_long_name_normalization",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "cmip6_decadal.realization_index_normalization",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "cmip6_decadal.leadtime_metadata_normalization",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "cmip6_decadal.model_global_attributes",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "cmip6_decadal.reftime_coordinate",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "cmip6_decadal.leadtime_coordinate",
+        "phase": "apply",
         "options": {},
         "links": []
       }
@@ -146,8 +163,8 @@
       "plugins/woodpecker-cmip6-decadal-plugin/src/woodpecker_cmip6_decadal_plugin/recipes/cmip6_decadal_full_recipe.json"
     ],
     "step_ids": [
-      "cmip6_decadal.time_metadata",
       "cmip6_decadal.calendar_normalization",
+      "cmip6_decadal.time_metadata",
       "cmip6_decadal.realization_variable",
       "cmip6_decadal.coordinates_encoding_cleanup",
       "cmip6_decadal.realization_comment_normalization",

@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Sequence, TypedDict
 
 from woodpecker.io import DataInput, normalize_inputs
-from woodpecker.runner import run_check, run_fix
+from woodpecker.runner import RecipeStepContext, run_check, run_fix
 from woodpecker.selection import select_fixes
 
 if TYPE_CHECKING:
@@ -21,6 +21,17 @@ class RunFixKwargs(TypedDict, total=False):
     strict_io: bool
 
 
+def empty_fix_stats() -> "FixRunStats":
+    return {
+        "attempted": 0,
+        "changed": 0,
+        "persist_attempted": 0,
+        "persisted": 0,
+        "persist_failed": 0,
+        "preview": [],
+    }
+
+
 def _resolve_recipe_api_selection(
     *,
     recipe_path: str | Path | None,
@@ -29,12 +40,18 @@ def _resolve_recipe_api_selection(
     recipe_id: str | None,
     store_type: str,
     phase: str | None = None,
-) -> tuple[list[DataInput], tuple[str, ...], tuple[str, ...], dict[str, dict[str, Any]]]:
+) -> tuple[
+    list[DataInput],
+    tuple[str, ...],
+    tuple[str, ...],
+    dict[str, dict[str, Any]],
+    dict[str, RecipeStepContext],
+]:
     from woodpecker.recipes.resolver import resolve_recipe_source, resolve_selection_inputs
 
     resolved_inputs = inputs if inputs is not None else [Path.cwd()]
     normalized = normalize_inputs(resolved_inputs)
-    _, _, source_identifiers, source_fix_options = resolve_recipe_source(
+    _, _, source_identifiers, source_fix_options, source_step_contexts = resolve_recipe_source(
         inputs=normalized,
         store_type=store_type,
         recipe_location=Path(recipe_path) if recipe_path is not None else None,
@@ -48,7 +65,18 @@ def _resolve_recipe_api_selection(
             source_fix_options=source_fix_options,
         )
     )
-    return normalized, resolved_identifiers, resolved_ordered_identifiers, resolved_fix_options
+    resolved_step_contexts = {
+        identifier: source_step_contexts[identifier]
+        for identifier in resolved_ordered_identifiers
+        if identifier in source_step_contexts
+    }
+    return (
+        normalized,
+        resolved_identifiers,
+        resolved_ordered_identifiers,
+        resolved_fix_options,
+        resolved_step_contexts,
+    )
 
 
 def execute_check(
@@ -59,6 +87,7 @@ def execute_check(
     identifiers: Sequence[str] = (),
     fix_options: dict[str, dict[str, Any]] | None = None,
     ordered_identifiers: Sequence[str] = (),
+    step_contexts: dict[str, RecipeStepContext] | None = None,
     strict_io: bool = False,
 ) -> list[dict[str, str]]:
     normalized = normalize_inputs(inputs)
@@ -70,7 +99,7 @@ def execute_check(
         fix_options=fix_options,
         ordered_identifiers=ordered_identifiers,
     )
-    return run_check(normalized, fixes, strict_io=strict_io)
+    return run_check(normalized, fixes, step_contexts=step_contexts, strict_io=strict_io)
 
 
 def execute_fix(
@@ -83,6 +112,7 @@ def execute_fix(
     output_format: str = "auto",
     fix_options: dict[str, dict[str, Any]] | None = None,
     ordered_identifiers: Sequence[str] = (),
+    step_contexts: dict[str, RecipeStepContext] | None = None,
     strict_io: bool = False,
 ) -> "FixRunStats":
     normalized = normalize_inputs(inputs)
@@ -99,6 +129,7 @@ def execute_fix(
         fixes,
         dry_run=dry_run,
         output_format=output_format,
+        step_contexts=step_contexts,
         strict_io=strict_io,
     )
 
@@ -115,16 +146,22 @@ def execute_check_recipe(
     phase: str | None = None,
     strict_io: bool = False,
 ) -> list[dict[str, str]]:
-    normalized, resolved_identifiers, resolved_ordered_identifiers, resolved_fix_options = (
-        _resolve_recipe_api_selection(
-            recipe_path=recipe_path,
-            inputs=inputs,
-            identifiers=identifiers,
-            recipe_id=recipe_id,
-            store_type=store_type,
-            phase=phase,
-        )
+    (
+        normalized,
+        resolved_identifiers,
+        resolved_ordered_identifiers,
+        resolved_fix_options,
+        resolved_step_contexts,
+    ) = _resolve_recipe_api_selection(
+        recipe_path=recipe_path,
+        inputs=inputs,
+        identifiers=identifiers,
+        recipe_id=recipe_id,
+        store_type=store_type,
+        phase=phase,
     )
+    if not resolved_ordered_identifiers:
+        return []
 
     return execute_check(
         normalized,
@@ -133,6 +170,7 @@ def execute_check_recipe(
         identifiers=resolved_identifiers,
         fix_options=resolved_fix_options,
         ordered_identifiers=resolved_ordered_identifiers,
+        step_contexts=resolved_step_contexts,
         strict_io=strict_io,
     )
 
@@ -151,16 +189,22 @@ def execute_fix_recipe(
     phase: str | None = None,
     strict_io: bool = False,
 ) -> "FixRunStats":
-    normalized, resolved_identifiers, resolved_ordered_identifiers, resolved_fix_options = (
-        _resolve_recipe_api_selection(
-            recipe_path=recipe_path,
-            inputs=inputs,
-            identifiers=identifiers,
-            recipe_id=recipe_id,
-            store_type=store_type,
-            phase=phase,
-        )
+    (
+        normalized,
+        resolved_identifiers,
+        resolved_ordered_identifiers,
+        resolved_fix_options,
+        resolved_step_contexts,
+    ) = _resolve_recipe_api_selection(
+        recipe_path=recipe_path,
+        inputs=inputs,
+        identifiers=identifiers,
+        recipe_id=recipe_id,
+        store_type=store_type,
+        phase=phase,
     )
+    if not resolved_ordered_identifiers:
+        return empty_fix_stats()
 
     return execute_fix(
         normalized,
@@ -171,6 +215,7 @@ def execute_fix_recipe(
         output_format=output_format,
         fix_options=resolved_fix_options,
         ordered_identifiers=resolved_ordered_identifiers,
+        step_contexts=resolved_step_contexts,
         strict_io=strict_io,
     )
 
@@ -180,7 +225,12 @@ def execute_check_context(
     *,
     strict_io: bool = False,
 ) -> list[dict[str, str]]:
-    return run_check(context.inputs, context.fixes, strict_io=strict_io)
+    return run_check(
+        context.inputs,
+        context.fixes,
+        step_contexts=context.resolved_step_contexts,
+        strict_io=strict_io,
+    )
 
 
 def build_run_fix_kwargs(
@@ -226,7 +276,12 @@ def execute_fix_context(
         provenance_run_id=provenance_run_id,
         strict_io=strict_io,
     )
-    return run_fix(context.inputs, context.fixes, **run_fix_kwargs)
+    return run_fix(
+        context.inputs,
+        context.fixes,
+        step_contexts=context.resolved_step_contexts,
+        **run_fix_kwargs,
+    )
 
 
 def execute_load_recipes(

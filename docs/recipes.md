@@ -88,3 +88,29 @@ cmip6_core.to_json("cmip6_core_recipe.json")
 
 - `to_model()` returns an in-memory `Recipe`.
 - `to_document()` returns a serializable `RecipeDocument`.
+
+## Recipe Phases
+
+Recipe steps can be assigned to `prepare`, `apply`, or `finalize` phases.
+Use `prepare()` for steps that must run before concatenation or aggregation,
+`apply()` for normal adaptation steps, and `finalize()` for post-processing
+steps.
+
+```python
+from woodpecker.recipes import apply, finalize, prepare, recipe
+
+c3s_decadal = recipe(
+    "c3s.cmip6_decadal",
+    prepare("cmip6_decadal.calendar_normalization"),
+    apply("cmip6_decadal.time_metadata"),
+    finalize("cmip6_decadal.publish_metadata"),
+)
+```
+
+The lower-level `fix()` helper also accepts `phase=`:
+
+```python
+from woodpecker.recipes import fix
+
+fix("cmip6_decadal.calendar_normalization", phase="prepare")
+```

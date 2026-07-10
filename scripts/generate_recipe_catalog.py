@@ -34,7 +34,7 @@ def _format_match(recipe: Recipe) -> str:
 
 
 def _format_steps(recipe: Recipe) -> str:
-    return "<br>".join(step.id for step in recipe.steps)
+    return "<br>".join(f"{step.phase}: {step.id}" for step in recipe.steps)
 
 
 def _github_source_links(source_files: list[str]) -> str:

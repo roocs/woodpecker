@@ -2,7 +2,7 @@ import json
 
 import yaml
 
-from woodpecker.recipes import document, fix, match, recipe
+from woodpecker.recipes import apply, document, finalize, fix, match, prepare, recipe
 from woodpecker.recipes.builder import FixStepBuilder, RecipeBuilder, RecipeDocumentBuilder
 from woodpecker.recipes.models import Recipe, RecipeDocument
 
@@ -21,6 +21,37 @@ def test_fix_step_builder_creates_fix_ref_with_options_and_links():
     assert ref.id == "woodpecker.convert_units"
     assert ref.options == {"units": {"tas": "K"}, "dry_run_only": False}
     assert ref.links[0].rel == "docs"
+
+
+def test_fix_step_builder_accepts_phase():
+    step = fix("cmip6_decadal.calendar_normalization", phase="prepare")
+
+    ref = step.to_model()
+
+    assert ref.phase == "prepare"
+
+
+def test_fix_step_builder_keeps_positional_options_compatibility():
+    step = FixStepBuilder("woodpecker.convert_units", {"units": {"tas": "K"}})
+
+    ref = step.to_model()
+
+    assert ref.phase == "apply"
+    assert ref.options == {"units": {"tas": "K"}}
+
+
+def test_phase_helpers_create_steps_for_each_recipe_phase():
+    model = recipe(
+        "c3s.cmip6_decadal",
+        prepare("cmip6_decadal.calendar_normalization"),
+        apply("cmip6_decadal.time_metadata"),
+        finalize("cmip6_decadal.archive_metadata"),
+    ).to_model()
+
+    assert [step.phase for step in model.steps] == ["prepare", "apply", "finalize"]
+    assert model.selected_steps(phase="prepare")[0].id == "cmip6_decadal.calendar_normalization"
+    assert model.selected_steps(phase="apply")[0].id == "cmip6_decadal.time_metadata"
+    assert model.selected_steps(phase="finalize")[0].id == "cmip6_decadal.archive_metadata"
 
 
 def test_recipe_builder_creates_existing_recipe_model():
@@ -64,7 +95,12 @@ def test_recipe_builder_accepts_match_builder_and_step_mappings():
 
 
 def test_recipe_builder_serializes_as_recipe_document_json_and_yaml(tmp_path):
-    built = recipe("example.workflow", fix("encoding_cleanup", mode="strict"))
+    built = recipe(
+        "example.workflow",
+        prepare("calendar_normalization"),
+        fix("encoding_cleanup", mode="strict"),
+        finalize("publish_metadata"),
+    )
     json_path = tmp_path / "recipe.json"
     yaml_path = tmp_path / "recipe.yaml"
 
@@ -76,7 +112,11 @@ def test_recipe_builder_serializes_as_recipe_document_json_and_yaml(tmp_path):
 
     assert json_payload == yaml_payload
     assert json_payload["recipes"][0]["id"] == "example.workflow"
-    assert json_payload["recipes"][0]["steps"][0]["id"] == "example.encoding_cleanup"
+    assert json_payload["recipes"][0]["steps"][0]["id"] == "example.calendar_normalization"
+    assert json_payload["recipes"][0]["steps"][0]["phase"] == "prepare"
+    assert json_payload["recipes"][0]["steps"][1]["id"] == "example.encoding_cleanup"
+    assert "phase" not in json_payload["recipes"][0]["steps"][1]
+    assert json_payload["recipes"][0]["steps"][2]["phase"] == "finalize"
     assert json_path.read_text(encoding="utf-8") == json_text
     assert yaml.safe_load(yaml_path.read_text(encoding="utf-8")) == yaml_payload
 

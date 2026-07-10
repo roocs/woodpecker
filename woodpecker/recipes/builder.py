@@ -7,7 +7,7 @@ from typing import Any, Mapping
 
 import yaml
 
-from .models import DatasetMatcher, FixRef, Link, Recipe, RecipeDocument
+from .models import DatasetMatcher, FixRef, Link, Recipe, RecipeDocument, RecipePhase
 
 
 def _write_optional(path: str | Path | None, text: str) -> str:
@@ -32,10 +32,16 @@ class FixStepBuilder:
 
     id: str
     options: Mapping[str, Any] = field(default_factory=dict)
+    phase: RecipePhase = "apply"
     links: tuple[Link | Mapping[str, Any], ...] = ()
 
     def to_model(self) -> FixRef:
-        return FixRef(id=self.id, options=dict(self.options), links=list(_coerce_links(self.links)))
+        return FixRef(
+            id=self.id,
+            phase=self.phase,
+            options=dict(self.options),
+            links=list(_coerce_links(self.links)),
+        )
 
     def to_payload(self) -> dict[str, Any]:
         return _model_payload(self.to_model())
@@ -183,6 +189,7 @@ def fix(
     id: str,
     options: Mapping[str, Any] | None = None,
     *,
+    phase: RecipePhase = "apply",
     links: tuple[Link | Mapping[str, Any], ...] | list[Link | Mapping[str, Any]] = (),
     **kwargs: Any,
 ) -> FixStepBuilder:
@@ -190,7 +197,43 @@ def fix(
 
     merged_options = dict(options or {})
     merged_options.update(kwargs)
-    return FixStepBuilder(id=id, options=merged_options, links=tuple(links))
+    return FixStepBuilder(id=id, phase=phase, options=merged_options, links=tuple(links))
+
+
+def prepare(
+    id: str,
+    options: Mapping[str, Any] | None = None,
+    *,
+    links: tuple[Link | Mapping[str, Any], ...] | list[Link | Mapping[str, Any]] = (),
+    **kwargs: Any,
+) -> FixStepBuilder:
+    """Create a prepare-phase recipe step."""
+
+    return fix(id, options, phase="prepare", links=links, **kwargs)
+
+
+def apply(
+    id: str,
+    options: Mapping[str, Any] | None = None,
+    *,
+    links: tuple[Link | Mapping[str, Any], ...] | list[Link | Mapping[str, Any]] = (),
+    **kwargs: Any,
+) -> FixStepBuilder:
+    """Create an apply-phase recipe step."""
+
+    return fix(id, options, phase="apply", links=links, **kwargs)
+
+
+def finalize(
+    id: str,
+    options: Mapping[str, Any] | None = None,
+    *,
+    links: tuple[Link | Mapping[str, Any], ...] | list[Link | Mapping[str, Any]] = (),
+    **kwargs: Any,
+) -> FixStepBuilder:
+    """Create a finalize-phase recipe step."""
+
+    return fix(id, options, phase="finalize", links=links, **kwargs)
 
 
 def match(

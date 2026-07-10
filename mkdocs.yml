@@ -49,6 +49,7 @@ nav:
       - Auto Recipe Store: notebooks/auto_recipe_store_example.ipynb
       - RecipeCatalog: notebooks/recipe_catalog_example.ipynb
       - DuckDB Recipe Store: notebooks/duckdb_recipe_store_example.ipynb
+      - CMIP6-decadal Rook-style Recipe: notebooks/cmip6_decadal_rook_style_example.ipynb
       - Atlas Recipe: notebooks/atlas_recipe_example.ipynb
       - ESA CCI Recipe: notebooks/esa_cci_recipe_example.ipynb
       - xMIP Plugin Demo: notebooks/xmip_plugin_demo.ipynb

@@ -30,7 +30,7 @@ flowchart LR
 
 | Term | Meaning | Use when... |
 | ---- | ------- | ----------- |
-| Fix function | Python rule for one known dataset issue. | You know the exact repair id. |
+| Fix function | Python rule for one known dataset issue. | You know the exact fix id. |
 | Recipe | Ordered workflow of one or more fixes. | You want a named, reusable repair path. |
 | Matching | Rules that decide whether a recipe applies. | Recipes should be selected from dataset metadata or paths. |
 | Recipe store | Source of recipe definitions. | Recipes live in files, catalogs, package resources, or generated sources. |
