@@ -42,7 +42,7 @@ DECADAL_FULL_FIX_IDS = (
     "cmip6_decadal.model_global_attributes",
     "cmip6_decadal.reftime_coordinate",
 )
-PLAN = woodpecker.recipe.get("cmip6_decadal.full")
+PLAN = woodpecker.recipe.get("c3s.cmip6_decadal")
 
 
 def _decadal_dataset(**overrides):
@@ -324,3 +324,18 @@ def test_cmip6_decadal_full_plan_checks_and_fixes_synthetic_dataset():
         assert_unchanged=assert_unchanged,
         assert_fixed=assert_fixed,
     )
+
+
+def test_cmip6_decadal_prepare_phase_applies_calendar_normalization():
+    dataset, assert_fixed = _decadal_calendar_case()
+
+    findings = woodpecker.recipe.check(dataset, PLAN, phase="prepare")
+    preview = woodpecker.recipe.apply(dataset, PLAN, phase="prepare", dry_run=True)
+    write = woodpecker.recipe.apply(dataset, PLAN, phase="prepare", dry_run=False)
+
+    assert findings.fix_ids == ("cmip6_decadal.calendar_normalization",)
+    assert [item["fix_id"] for item in preview.preview if item.get("changed")] == [
+        "cmip6_decadal.calendar_normalization"
+    ]
+    assert write.changed == 1
+    assert_fixed(dataset)

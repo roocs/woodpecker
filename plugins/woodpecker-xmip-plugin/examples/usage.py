@@ -9,6 +9,6 @@ dataset = dataset.rename({"lon": "longitude", "lat": "latitude"})
 findings = woodpecker.check(dataset, fixes="xmip.rename_cmip6_axes")
 print(findings)
 
-result = woodpecker.fix(dataset, fixes="xmip.rename_cmip6_axes", dry_run=False)
+result = woodpecker.apply(dataset, fixes="xmip.rename_cmip6_axes", dry_run=False)
 print(result)
 print(dataset)

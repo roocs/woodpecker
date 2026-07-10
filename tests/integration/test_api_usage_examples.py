@@ -2,9 +2,9 @@
 
 This file is intentionally light on test helpers. It shows the shape user code
 should normally take: build or open a dataset, run ``woodpecker.check()``, run a
-dry-run ``woodpecker.fix()``, apply with ``dry_run=False``, and re-check. The recipe
+dry-run ``woodpecker.apply()``, apply with ``dry_run=False``, and re-check. The recipe
 example shows the same flow through ``woodpecker.recipe.check()`` and
-``woodpecker.recipe.fix()``.
+``woodpecker.recipe.apply()``.
 """
 
 import numpy as np
@@ -26,7 +26,7 @@ def test_usage_example_check_and_fix_synthetic_cmip6_dataset():
 
     assert result.fix_ids == ("woodpecker.normalize_tas_units_to_kelvin",)
 
-    preview = woodpecker.fix(
+    preview = woodpecker.apply(
         dataset,
         fixes="woodpecker.normalize_tas_units_to_kelvin",
         dry_run=True,
@@ -36,7 +36,7 @@ def test_usage_example_check_and_fix_synthetic_cmip6_dataset():
     assert dataset["tas"].attrs["units"] == "degC"
     np.testing.assert_allclose(dataset["tas"].values, original_values)
 
-    write = woodpecker.fix(
+    write = woodpecker.apply(
         dataset,
         fixes="woodpecker.normalize_tas_units_to_kelvin",
         dry_run=False,
@@ -65,13 +65,13 @@ def test_usage_example_check_and_fix_synthetic_cmip6_dataset_with_plan():
 
     assert result.fix_ids == ("woodpecker.normalize_tas_units_to_kelvin",)
 
-    preview = woodpecker.recipe.fix(dataset, recipe, dry_run=True)
+    preview = woodpecker.recipe.apply(dataset, recipe, dry_run=True)
 
     assert preview.changed == 1
     assert dataset["tas"].attrs["units"] == "degC"
     np.testing.assert_allclose(dataset["tas"].values, original_values)
 
-    write = woodpecker.recipe.fix(dataset, recipe, dry_run=False)
+    write = woodpecker.recipe.apply(dataset, recipe, dry_run=False)
 
     assert write.changed == 1
     assert dataset["tas"].attrs["units"] == "K"
@@ -90,13 +90,13 @@ def test_usage_example_check_and_fix_synthetic_cmip6_dataset_with_auto_plan():
 
     assert result.fix_ids == ("woodpecker.normalize_tas_units_to_kelvin",)
 
-    preview = woodpecker.recipe.fix(dataset, auto_plan, dry_run=True)
+    preview = woodpecker.recipe.apply(dataset, auto_plan, dry_run=True)
 
     assert preview.changed == 1
     assert dataset["tas"].attrs["units"] == "degC"
     np.testing.assert_allclose(dataset["tas"].values, original_values)
 
-    write = woodpecker.recipe.fix(dataset, auto_plan, dry_run=False)
+    write = woodpecker.recipe.apply(dataset, auto_plan, dry_run=False)
 
     assert write.changed == 1
     assert dataset["tas"].attrs["units"] == "K"

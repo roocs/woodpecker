@@ -9,7 +9,7 @@ EXPECTED_FIX_IDS = {
     "atlas.encoding_cleanup",
     "atlas.project_id_normalization",
 }
-PLAN = woodpecker.recipe.get("atlas.basic")
+PLAN = woodpecker.recipe.get("c3s.atlas")
 
 
 def test_plugin_registers_expected_fixes():

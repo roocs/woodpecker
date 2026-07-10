@@ -36,7 +36,7 @@ class CheckResult:
 
 @dataclass(frozen=True)
 class FixResult:
-    """Structured result returned by ``woodpecker.fix()``."""
+    """Structured result returned by ``woodpecker.apply()``."""
 
     stats: Mapping[str, Any]
 

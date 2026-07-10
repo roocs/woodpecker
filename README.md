@@ -39,16 +39,19 @@ recipe = woodpecker.recipe.get("cmip6.core_units")
 findings = woodpecker.recipe.check(dataset, recipe)
 
 if findings:
-    woodpecker.recipe.fix(dataset, recipe, dry_run=True).preview
-    woodpecker.recipe.fix(dataset, recipe, dry_run=False)
+    woodpecker.recipe.apply(dataset, recipe, dry_run=True).preview
+    woodpecker.recipe.apply(dataset, recipe, dry_run=False)
 ```
 
 From the command line:
 
 ```bash
 woodpecker check ./data --recipe-id cmip6.core_units
-woodpecker fix ./data --recipe-id cmip6.core_units --dry-run
+woodpecker apply ./data --recipe-id cmip6.core_units --dry-run
 ```
+
+Use `woodpecker.apply(...)`, `woodpecker.recipe.apply(...)`, and
+`woodpecker apply ...` for applying selected changes.
 
 ## Docs
 

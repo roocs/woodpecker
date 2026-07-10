@@ -111,19 +111,19 @@ def test_identifier_resolver_rejects_unqualified_suffix_lookup():
 
 def test_coerce_scoped_identifier_builds_identifier_set_from_id():
     resolved = coerce_scoped_identifier(
-        id="atlas.basic",
+        id="c3s.atlas",
         suffix="",
         prefix="",
         id_label="Recipe.id",
     )
 
-    assert resolved.id == "atlas.basic"
-    assert resolved.prefix == "atlas"
-    assert resolved.suffix == "basic"
+    assert resolved.id == "c3s.atlas"
+    assert resolved.prefix == "c3s"
+    assert resolved.suffix == "atlas"
     assert resolved.identifier_set == IdentifierSet(
-        prefix="atlas",
-        suffix="basic",
-        id="atlas.basic",
+        prefix="c3s",
+        suffix="atlas",
+        id="c3s.atlas",
         aliases=(),
     )
 

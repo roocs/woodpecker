@@ -22,6 +22,7 @@ from woodpecker.ui.formatting import format_findings, format_fix_stats, format_f
 T = TypeVar("T")
 STORE_CHOICES = ["catalog", "json", "duckdb", "auto"]
 WRITABLE_STORE_CHOICES = ["json", "duckdb"]
+PHASE_CHOICES = ["prepare", "apply", "finalize"]
 
 
 def _with_click_errors(func: Callable[[], T]) -> T:
@@ -175,6 +176,12 @@ def load_recipes(
     ),
 )
 @click.option("--recipe-id", "recipe_id", default=None, help="Select a specific stored recipe id.")
+@click.option(
+    "--phase",
+    type=click.Choice(PHASE_CHOICES),
+    default=None,
+    help="Run only recipe steps in this lifecycle phase.",
+)
 @click.option("--dataset", default=None, help="Filter fixes by dataset.")
 @click.option(
     "--category", "categories", multiple=True, help="Filter fixes by category (repeatable)"
@@ -197,6 +204,7 @@ def check_cmd(
     store_type: str,
     recipe: Path | None,
     recipe_id: str | None,
+    phase: str | None,
     dataset: str | None,
     categories: tuple[str, ...],
     identifiers: tuple[str, ...],
@@ -210,6 +218,7 @@ def check_cmd(
             store_type=store_type,
             recipe_location=recipe,
             recipe_id=recipe_id,
+            phase=phase,
             dataset=dataset,
             categories=categories,
             identifiers=identifiers,
@@ -243,7 +252,7 @@ def io_status(fmt: str):
         click.echo(f"{key}: {'available' if value else 'unavailable'}")
 
 
-@cli.command("fix")
+@cli.command("apply")
 @click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=Path))
 @click.option(
     "--store",
@@ -264,6 +273,12 @@ def io_status(fmt: str):
     ),
 )
 @click.option("--recipe-id", "recipe_id", default=None, help="Select a specific stored recipe id.")
+@click.option(
+    "--phase",
+    type=click.Choice(PHASE_CHOICES),
+    default=None,
+    help="Run only recipe steps in this lifecycle phase.",
+)
 @click.option("--dataset", default=None, help="Filter fixes by dataset.")
 @click.option(
     "--category", "categories", multiple=True, help="Filter fixes by category (repeatable)"
@@ -324,6 +339,7 @@ def fix_cmd(
     store_type: str,
     recipe: Path | None,
     recipe_id: str | None,
+    phase: str | None,
     dataset: str | None,
     categories: tuple[str, ...],
     identifiers: tuple[str, ...],
@@ -344,6 +360,7 @@ def fix_cmd(
             store_type=store_type,
             recipe_location=recipe,
             recipe_id=recipe_id,
+            phase=phase,
             dataset=dataset,
             categories=categories,
             identifiers=identifiers,

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from functools import cached_property
-from typing import Any, Mapping
+from typing import Any, Literal, Mapping
 
 from pydantic import (
     BaseModel,
@@ -13,6 +13,9 @@ from pydantic import (
 )
 
 from woodpecker.fixes.identifiers import IdentifierRules, IdentifierSet
+
+RecipePhase = Literal["prepare", "apply", "finalize"]
+RECIPE_PHASES: tuple[RecipePhase, ...] = ("prepare", "apply", "finalize")
 
 
 def _string_or_empty(value: object) -> str:
@@ -63,6 +66,7 @@ class FixRef(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     id: str
+    phase: RecipePhase = "apply"
     options: dict[str, Any] = Field(default_factory=dict)
     links: list[Link] = Field(default_factory=list)
 
@@ -77,6 +81,17 @@ class FixRef(BaseModel):
         else:
             IdentifierRules.validate_suffix("FixRef.id", normalized)
         return normalized
+
+    @field_validator("phase", mode="before")
+    @classmethod
+    def _normalize_and_validate_phase(cls, v: object) -> RecipePhase:
+        if v is None or v == "":
+            return "apply"
+        phase = str(v).strip().lower()
+        if phase not in RECIPE_PHASES:
+            allowed = ", ".join(RECIPE_PHASES)
+            raise ValueError(f"FixRef.phase must be one of: {allowed}")
+        return phase  # type: ignore[return-value]
 
     @field_validator("options", mode="before")
     @classmethod
@@ -247,7 +262,12 @@ class Recipe(BaseModel):
             )
         )
         self.steps = [
-            FixRef(id=self.resolve_fix_identifier(ref), options=ref.options, links=ref.links)
+            FixRef(
+                id=self.resolve_fix_identifier(ref),
+                phase=ref.phase,
+                options=ref.options,
+                links=ref.links,
+            )
             for ref in self.steps
         ]
         return self
@@ -273,11 +293,34 @@ class Recipe(BaseModel):
             return token
         return f"{self.prefix}.{token}"
 
-    def step_identifiers_and_options(self) -> tuple[tuple[str, ...], dict[str, dict[str, Any]]]:
+    @staticmethod
+    def normalize_phase(phase: str | None) -> RecipePhase | None:
+        """Normalize and validate optional recipe phase selection."""
+
+        if phase is None:
+            return None
+        normalized = str(phase).strip().lower()
+        if normalized not in RECIPE_PHASES:
+            allowed = ", ".join(RECIPE_PHASES)
+            raise ValueError(f"Recipe phase must be one of: {allowed}")
+        return normalized  # type: ignore[return-value]
+
+    def selected_steps(self, phase: str | None = None) -> tuple[FixRef, ...]:
+        """Return recipe steps in order, optionally filtered by phase."""
+
+        normalized_phase = self.normalize_phase(phase)
+        if normalized_phase is None:
+            return tuple(self.steps)
+        return tuple(ref for ref in self.steps if ref.phase == normalized_phase)
+
+    def step_identifiers_and_options(
+        self, phase: str | None = None
+    ) -> tuple[tuple[str, ...], dict[str, dict[str, Any]]]:
         """Return ordered step ids and per-step options."""
 
-        identifiers = tuple(self.resolve_fix_identifier(ref) for ref in self.steps)
-        options = {self.resolve_fix_identifier(ref): dict(ref.options) for ref in self.steps}
+        steps = self.selected_steps(phase=phase)
+        identifiers = tuple(self.resolve_fix_identifier(ref) for ref in steps)
+        options = {self.resolve_fix_identifier(ref): dict(ref.options) for ref in steps}
         return identifiers, options
 
     def runtime_metadata_dump(self) -> dict[str, Any] | None:

@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Literal, Sequence
 
+from woodpecker.fixes.registry import FixFunctionRegistry
 from woodpecker.io import DataInput, normalize_inputs
 from woodpecker.recipes.models import Recipe
 from woodpecker.selection import select_fixes
@@ -111,8 +112,10 @@ def select_matching_store_recipes(
 
 def _store_recipe_result(
     recipe: Recipe,
+    *,
+    phase: str | None = None,
 ) -> tuple[Literal["store"], list[Recipe], tuple[str, ...], dict[str, dict[str, Any]]]:
-    identifiers, fix_options = recipe.step_identifiers_and_options()
+    identifiers, fix_options = recipe.step_identifiers_and_options(phase=phase)
     return "store", [recipe], identifiers, fix_options
 
 
@@ -122,14 +125,15 @@ def _resolve_store_recipe(
     inputs: Sequence[DataInput],
     recipe_id: str | None,
     empty_message: str,
+    phase: str | None = None,
 ) -> tuple[Literal["store"], list[Recipe], tuple[str, ...], dict[str, dict[str, Any]]]:
     if recipe_id:
-        return _store_recipe_result(store.get_recipe(recipe_id.strip()))
+        return _store_recipe_result(store.get_recipe(recipe_id.strip()), phase=phase)
 
     recipes = select_matching_store_recipes(store=store, inputs=inputs, recipe_id=recipe_id)
     if not recipes:
         raise ValueError(empty_message)
-    return _store_recipe_result(recipes[0])
+    return _store_recipe_result(recipes[0], phase=phase)
 
 
 def resolve_recipe_source(
@@ -138,6 +142,7 @@ def resolve_recipe_source(
     store_type: str,
     recipe_location: Path | None,
     recipe_id: str | None,
+    phase: str | None = None,
 ) -> tuple[
     Literal["direct", "store"],
     list[Recipe],
@@ -151,6 +156,7 @@ def resolve_recipe_source(
             inputs=inputs,
             recipe_id=recipe_id,
             empty_message="No matching auto recipes found for selected inputs.",
+            phase=phase,
         )
 
     use_catalog = store_type == "catalog" or (recipe_location is None and recipe_id is not None)
@@ -161,9 +167,14 @@ def resolve_recipe_source(
             inputs=inputs,
             recipe_id=recipe_id,
             empty_message="No matching discovered recipes found for selected inputs.",
+            phase=phase,
         )
 
     if recipe_location is None:
+        if phase is not None:
+            raise ValueError(
+                "--phase requires a recipe source via --recipe, --recipe-id, or --store auto."
+            )
         return "direct", [], (), {}
 
     store = create_recipe_store(store_type, recipe_location)
@@ -172,6 +183,7 @@ def resolve_recipe_source(
         inputs=inputs,
         recipe_id=recipe_id,
         empty_message="No matching recipes found in selected store for selected inputs.",
+        phase=phase,
     )
 
 
@@ -188,10 +200,26 @@ def resolve_selection_inputs(
     source_fix_options: dict[str, dict[str, Any]],
 ) -> tuple[tuple[str, ...], tuple[str, ...], dict[str, dict[str, Any]]]:
     normalized_cli_identifiers = normalize_ordered_identifiers(cli_identifiers)
-    resolved_identifiers = normalized_cli_identifiers or source_identifiers
+    if normalized_cli_identifiers and source_identifiers:
+        selected = {
+            _resolve_fix_identifier_for_intersection(identifier)
+            for identifier in normalized_cli_identifiers
+        }
+        resolved_identifiers = tuple(
+            identifier for identifier in source_identifiers if identifier in selected
+        )
+    else:
+        resolved_identifiers = normalized_cli_identifiers or source_identifiers
     resolved_ordered_identifiers = resolved_identifiers
     resolved_fix_options = {key: dict(value) for key, value in source_fix_options.items()}
     return resolved_identifiers, resolved_ordered_identifiers, resolved_fix_options
+
+
+def _resolve_fix_identifier_for_intersection(identifier: str) -> str:
+    try:
+        return FixFunctionRegistry.resolve_identifier(identifier)
+    except (KeyError, ValueError):
+        return identifier
 
 
 def resolve_run_context(
@@ -204,6 +232,7 @@ def resolve_run_context(
     categories: tuple[str, ...],
     identifiers: tuple[str, ...],
     output_format: str,
+    phase: str | None = None,
 ) -> RunContext:
     target_paths = resolve_target_paths(paths)
     inputs = normalize_inputs(target_paths)
@@ -213,6 +242,7 @@ def resolve_run_context(
         store_type=store_type,
         recipe_location=recipe_location,
         recipe_id=recipe_id,
+        phase=phase,
     )
 
     resolved_identifiers, resolved_ordered_identifiers, resolved_fix_options = (

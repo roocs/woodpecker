@@ -10,13 +10,13 @@ import woodpecker
 
 recipe = woodpecker.recipe.get("xmip.cmip6_preprocessing")
 findings = woodpecker.recipe.check(dataset, recipe)
-preview = woodpecker.recipe.fix(dataset, recipe, dry_run=True)
+preview = woodpecker.recipe.apply(dataset, recipe, dry_run=True)
 preview.preview
 ```
 
 ```bash
 woodpecker check ./data --recipe-id xmip.cmip6_preprocessing
-woodpecker fix ./data --recipe-id xmip.cmip6_preprocessing --dry-run
+woodpecker apply ./data --recipe-id xmip.cmip6_preprocessing --dry-run
 ```
 
 Use [Recipe Reference](recipe-reference.md) to inspect discovered recipe ids.

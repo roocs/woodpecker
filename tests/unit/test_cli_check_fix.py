@@ -101,7 +101,7 @@ def test_check_json_output_structure(
         (_fix_stats(persisted=0, persist_failed=1), 1),
     ],
 )
-def test_fix_json_output_contains_write_report(
+def test_apply_json_output_contains_write_report(
     isolated_cli_workspace: tuple[CliRunner, Callable[[str], Path]],
     monkeypatch,
     stats,
@@ -118,7 +118,7 @@ def test_fix_json_output_contains_write_report(
     result = runner.invoke(
         cli,
         [
-            "fix",
+            "apply",
             ".",
             "--select",
             "woodpecker.normalize_tas_units_to_kelvin",
@@ -157,7 +157,7 @@ def test_check_unknown_fix_code_returns_click_error(
     assert "Unknown fix identifier(s): DOESNOTEXIST" in result.output
 
 
-def test_fix_force_apply_is_forwarded_to_runner(
+def test_apply_force_apply_is_forwarded_to_runner(
     isolated_cli_workspace: tuple[CliRunner, Callable[[str], Path]],
     monkeypatch,
 ):
@@ -175,7 +175,7 @@ def test_fix_force_apply_is_forwarded_to_runner(
     result = runner.invoke(
         cli,
         [
-            "fix",
+            "apply",
             ".",
             "--select",
             "woodpecker.normalize_tas_units_to_kelvin",
@@ -191,12 +191,12 @@ def test_fix_force_apply_is_forwarded_to_runner(
     assert payload["force_apply"] is True
 
 
-def test_fix_force_apply_requires_selected_codes(
+def test_apply_force_apply_requires_selected_codes(
     isolated_cli_workspace: tuple[CliRunner, Callable[[str], Path]],
 ):
     runner, _ = isolated_cli_workspace
 
-    result = runner.invoke(cli, ["fix", ".", "--force-apply"])
+    result = runner.invoke(cli, ["apply", ".", "--force-apply"])
 
     assert result.exit_code != 0
     assert "--force-apply requires explicit fix selection" in result.output
@@ -232,7 +232,7 @@ def test_check_strict_io_flag_is_forwarded(
     assert captured.get("strict_io") is True
 
 
-def test_fix_strict_io_flag_is_forwarded(
+def test_apply_strict_io_flag_is_forwarded(
     isolated_cli_workspace: tuple[CliRunner, Callable[[str], Path]],
     monkeypatch,
 ):
@@ -250,7 +250,7 @@ def test_fix_strict_io_flag_is_forwarded(
     result = runner.invoke(
         cli,
         [
-            "fix",
+            "apply",
             ".",
             "--select",
             "woodpecker.normalize_tas_units_to_kelvin",

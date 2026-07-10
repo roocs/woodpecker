@@ -11,8 +11,8 @@ def test_recipe_loader_discovers_core_and_plugin_package_recipes():
     recipe_ids = {recipe.id for recipe in RecipeLoader().catalog().list_recipes()}
 
     assert "cmip6.core_units" in recipe_ids
-    assert "atlas.basic" in recipe_ids
-    assert "cmip6_decadal.full" in recipe_ids
+    assert "c3s.atlas" in recipe_ids
+    assert "c3s.cmip6_decadal" in recipe_ids
     assert "cmip7.esa_cci_water_vapour_zarr" in recipe_ids
     assert "xmip.cmip6_preprocessing" in recipe_ids
 
@@ -75,7 +75,7 @@ def test_recipe_api_get_returns_plan_usable_by_check_and_fix():
     recipe = woodpecker.recipe.get("cmip6.core_units")
 
     findings = woodpecker.recipe.check(dataset, recipe)
-    preview = woodpecker.recipe.fix(dataset, recipe, dry_run=True)
+    preview = woodpecker.recipe.apply(dataset, recipe, dry_run=True)
 
     assert recipe.id == "cmip6.core_units"
     assert findings.fix_ids == ("woodpecker.normalize_tas_units_to_kelvin",)

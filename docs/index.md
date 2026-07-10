@@ -17,7 +17,7 @@ flowchart LR
 - [Overview](OVERVIEW.md): what Woodpecker is for and how the pieces fit.
 - [Concepts](concepts.md): fixes, recipes, plugins, catalogs, stores, and ids.
 - [Recipes](recipes.md): run shared workflows by recipe id.
-- [CLI](cli.md): list, check, fix, dry-run, and format results.
+- [CLI](cli.md): list, check, apply, dry-run, and format results.
 - [Plugins](plugins.md): bundled dataset-family fixes and recipes.
 
 ## Happy Path
@@ -25,7 +25,7 @@ flowchart LR
 ```bash
 woodpecker list-recipes
 woodpecker check ./data --recipe-id cmip6.core_units
-woodpecker fix ./data --recipe-id cmip6.core_units --dry-run
+woodpecker apply ./data --recipe-id cmip6.core_units --dry-run
 ```
 
 ## Common Tasks

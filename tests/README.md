@@ -30,7 +30,7 @@ Put a test in `tests/integration/` when it should read like a user workflow:
 1. create or load a realistic synthetic dataset,
 2. corrupt it in a realistic way,
 3. call `woodpecker.check(...)` or `woodpecker.recipe.check(...)`,
-4. call `woodpecker.fix(..., dry_run=True)` or `woodpecker.recipe.fix(..., dry_run=True)`,
+4. call `woodpecker.apply(..., dry_run=True)` or `woodpecker.recipe.apply(..., dry_run=True)`,
 5. apply with `dry_run=False`,
 6. confirm the issue is fixed and no longer reported.
 

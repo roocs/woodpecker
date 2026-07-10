@@ -45,26 +45,26 @@ def test_recipe_builder_creates_existing_recipe_model():
 
 
 def test_recipe_builder_scopes_local_fix_ids_to_plan_prefix():
-    model = recipe("atlas.basic", "encoding_cleanup").to_model()
+    model = recipe("example.workflow", "encoding_cleanup").to_model()
 
-    assert model.steps[0].id == "atlas.encoding_cleanup"
+    assert model.steps[0].id == "example.encoding_cleanup"
 
 
 def test_recipe_builder_accepts_match_builder_and_step_mappings():
     model = recipe(
-        "atlas.basic",
+        "example.workflow",
         {"id": "encoding_cleanup", "options": {"mode": "strict"}},
         match=match(path_patterns=["*atlas*.nc"]),
     ).to_model()
 
     assert model.match is not None
     assert model.match.path_patterns == ["*atlas*.nc"]
-    assert model.steps[0].id == "atlas.encoding_cleanup"
+    assert model.steps[0].id == "example.encoding_cleanup"
     assert model.steps[0].options == {"mode": "strict"}
 
 
 def test_recipe_builder_serializes_as_recipe_document_json_and_yaml(tmp_path):
-    built = recipe("atlas.basic", fix("encoding_cleanup", mode="strict"))
+    built = recipe("example.workflow", fix("encoding_cleanup", mode="strict"))
     json_path = tmp_path / "recipe.json"
     yaml_path = tmp_path / "recipe.yaml"
 
@@ -75,15 +75,15 @@ def test_recipe_builder_serializes_as_recipe_document_json_and_yaml(tmp_path):
     yaml_payload = yaml.safe_load(yaml_text)
 
     assert json_payload == yaml_payload
-    assert json_payload["recipes"][0]["id"] == "atlas.basic"
-    assert json_payload["recipes"][0]["steps"][0]["id"] == "atlas.encoding_cleanup"
+    assert json_payload["recipes"][0]["id"] == "example.workflow"
+    assert json_payload["recipes"][0]["steps"][0]["id"] == "example.encoding_cleanup"
     assert json_path.read_text(encoding="utf-8") == json_text
     assert yaml.safe_load(yaml_path.read_text(encoding="utf-8")) == yaml_payload
 
 
 def test_document_builder_combines_multiple_python_plans():
     built = document(
-        recipe("atlas.basic", "encoding_cleanup"),
+        recipe("example.workflow", "encoding_cleanup"),
         recipe("cmip6.core_units", "woodpecker.normalize_tas_units_to_kelvin"),
     )
 
@@ -91,5 +91,5 @@ def test_document_builder_combines_multiple_python_plans():
 
     assert isinstance(built, RecipeDocumentBuilder)
     assert isinstance(model, RecipeDocument)
-    assert [recipe.id for recipe in model.recipes] == ["atlas.basic", "cmip6.core_units"]
+    assert [recipe.id for recipe in model.recipes] == ["example.workflow", "cmip6.core_units"]
     assert json.loads(built.to_json())["recipes"][1]["id"] == "cmip6.core_units"

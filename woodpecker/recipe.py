@@ -6,9 +6,15 @@ from typing import Any, Sequence
 
 import woodpecker.fixes  # noqa: F401  # registers built-in fixes
 from woodpecker.commands import execute_check, execute_check_recipe, execute_fix, execute_fix_recipe
+from woodpecker.recipes.models import RECIPE_PHASES as _ACCEPTED_RECIPE_PHASES
 from woodpecker.recipes.models import Recipe
 from woodpecker.results import CheckResult, FixResult
 from woodpecker.stores.helpers import create_recipe_store
+
+PREPARE_PHASE = _ACCEPTED_RECIPE_PHASES[0]
+APPLY_PHASE = _ACCEPTED_RECIPE_PHASES[1]
+FINALIZE_PHASE = _ACCEPTED_RECIPE_PHASES[2]
+RECIPE_PHASES = (PREPARE_PHASE, APPLY_PHASE, FINALIZE_PHASE)
 
 
 @dataclass(frozen=True)
@@ -72,9 +78,17 @@ def _resolve_recipe_source(
 def _resolve_recipe_selection(
     recipe: Recipe,
     fixes: str | Sequence[str] | None,
+    phase: str | None = None,
 ) -> tuple[tuple[str, ...], tuple[str, ...], dict[str, dict[str, Any]]]:
-    source_identifiers, source_fix_options = recipe.step_identifiers_and_options()
-    resolved_identifiers = _normalize_fixes(fixes) or source_identifiers
+    source_identifiers, source_fix_options = recipe.step_identifiers_and_options(phase=phase)
+    requested_identifiers = _normalize_fixes(fixes)
+    if requested_identifiers:
+        requested = set(requested_identifiers)
+        resolved_identifiers = tuple(
+            identifier for identifier in source_identifiers if identifier in requested
+        )
+    else:
+        resolved_identifiers = source_identifiers
     return resolved_identifiers, resolved_identifiers, dict(source_fix_options)
 
 
@@ -87,6 +101,7 @@ def check(
     dataset: str | None = None,
     categories: Sequence[str] = (),
     fixes: str | Sequence[str] | None = None,
+    phase: str | None = None,
     strict_io: bool = False,
 ) -> CheckResult:
     """Check inputs using fixes selected from a recipe."""
@@ -94,6 +109,7 @@ def check(
         resolved_identifiers, ordered_identifiers, fix_options = _resolve_recipe_selection(
             recipe,
             fixes,
+            phase=phase,
         )
         return CheckResult(
             findings=tuple(
@@ -124,13 +140,14 @@ def check(
                 identifiers=_normalize_fixes(fixes),
                 recipe_id=resolved_recipe_id,
                 store_type=resolved_store_type,
+                phase=phase,
                 strict_io=strict_io,
             )
         )
     )
 
 
-def fix(
+def apply(
     inputs: Any,
     recipe: RecipeSource,
     *,
@@ -139,6 +156,7 @@ def fix(
     dataset: str | None = None,
     categories: Sequence[str] = (),
     fixes: str | Sequence[str] | None = None,
+    phase: str | None = None,
     dry_run: bool = True,
     output_format: str = "auto",
     strict_io: bool = False,
@@ -148,6 +166,7 @@ def fix(
         resolved_identifiers, ordered_identifiers, fix_options = _resolve_recipe_selection(
             recipe,
             fixes,
+            phase=phase,
         )
         return FixResult(
             stats=execute_fix(
@@ -179,6 +198,7 @@ def fix(
             output_format=output_format,
             recipe_id=resolved_recipe_id,
             store_type=resolved_store_type,
+            phase=phase,
             strict_io=strict_io,
         )
     )

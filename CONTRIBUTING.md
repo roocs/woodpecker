@@ -36,12 +36,12 @@ Other setup paths:
 ```bash
 woodpecker io-status
 woodpecker check . --select cmip6_decadal.time_metadata
-woodpecker fix . --select cmip6_decadal.time_metadata
-woodpecker fix . --select cmip6_decadal.time_metadata --dry-run
-woodpecker fix . --select cmip6_decadal.time_metadata --force-apply
+woodpecker apply . --select cmip6_decadal.time_metadata
+woodpecker apply . --select cmip6_decadal.time_metadata --dry-run
+woodpecker apply . --select cmip6_decadal.time_metadata --force-apply
 woodpecker check . --select woodpecker.normalize_tas_units_to_kelvin --strict-io
-woodpecker fix . --select woodpecker.normalize_tas_units_to_kelvin --strict-io
-woodpecker fix --recipe recipe.json
+woodpecker apply . --select woodpecker.normalize_tas_units_to_kelvin --strict-io
+woodpecker apply --recipe recipe.json
 ```
 
 Notes:
@@ -173,7 +173,7 @@ Woodpecker uses one schema for both recipe files and recipe stores:
 
 Common `Recipe` fields:
 
-- `id`: recipe identifier, for example `atlas.basic`.
+- `id`: recipe identifier, for example `c3s.atlas`.
 - `description`: optional human-readable description.
 - `match.attrs`: key/value attribute matcher for dataset metadata.
 - `match.path_patterns`: optional fnmatch-style path patterns.
@@ -186,8 +186,8 @@ Minimal `RecipeDocument` example:
 {
   "recipes": [
     {
-      "id": "atlas.basic",
-      "description": "ATLAS recipe",
+      "id": "c3s.atlas",
+      "description": "C3S/CDS adaptation recipe for Atlas NetCDF datasets",
       "match": {
         "path_patterns": ["*atlas*.nc"]
       },
@@ -217,7 +217,7 @@ Python authoring helpers can generate the same document schema:
 from woodpecker.recipes import fix, recipe
 
 atlas_basic = (
-    recipe("atlas.basic", fix("atlas.encoding_cleanup"))
+    recipe("c3s.atlas", fix("atlas.encoding_cleanup"))
     .match(path_patterns=["*atlas*.nc"])
 )
 
@@ -235,7 +235,7 @@ Load and run from file:
 
 ```bash
 woodpecker check --recipe recipe.json
-woodpecker fix --recipe recipe.json --dry-run
+woodpecker apply --recipe recipe.json --dry-run
 ```
 
 ## Recipe Stores
@@ -268,7 +268,7 @@ woodpecker check --recipe-id cmip6.core_units
 woodpecker list-recipes
 woodpecker check --store duckdb --recipe recipes.duckdb
 woodpecker check --store auto --recipe-id woodpecker.normalize_tas_units_to_kelvin
-woodpecker fix --recipe recipes.json --recipe-id atlas.encoding_cleanup_suite
+woodpecker apply --recipe recipes.json --recipe-id atlas.encoding_cleanup_suite
 woodpecker list-recipes --store duckdb --recipe recipes.duckdb --format json
 ```
 
@@ -345,16 +345,16 @@ ds = xr.Dataset(attrs={"source_name": "atlas_bad.nc"})
 findings = woodpecker.check(ds, fixes="atlas.encoding_cleanup")
 assert findings.fix_ids
 
-result = woodpecker.fix(ds, fixes="atlas.encoding_cleanup", dry_run=False)
+result = woodpecker.apply(ds, fixes="atlas.encoding_cleanup", dry_run=False)
 assert result.changed >= 0
 
 # Optional fail-fast I/O behavior
 strict_findings = woodpecker.check(ds, fixes="atlas.encoding_cleanup", strict_io=True)
-strict_result = woodpecker.fix(ds, fixes="atlas.encoding_cleanup", dry_run=False, strict_io=True)
+strict_result = woodpecker.apply(ds, fixes="atlas.encoding_cleanup", dry_run=False, strict_io=True)
 
 # Recipe helpers
 findings_recipe = woodpecker.recipe.check(["./data"], "recipe.json")
-result_recipe = woodpecker.recipe.fix(ds, "recipe.json", dry_run=False)
+result_recipe = woodpecker.recipe.apply(ds, "recipe.json", dry_run=False)
 
 # Path input works as well
 findings_from_paths = woodpecker.check(

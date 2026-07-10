@@ -295,7 +295,7 @@ def test_xmip_sort_vertex_order_matches_upstream_permutations():
 
     for order in itertools.permutations(range(4)):
         dataset = _dataset_with_vertices(order)
-        changed = woodpecker.fix(
+        changed = woodpecker.apply(
             dataset,
             fixes="xmip.sort_vertex_order",
             dry_run=False,
@@ -421,7 +421,7 @@ def test_xmip_cmip6_preprocessing_plan_checks_and_fixes_dataset():
         "xmip.fix_known_cmip6_metadata",
     }
 
-    preview = woodpecker.recipe.fix(
+    preview = woodpecker.recipe.apply(
         dataset,
         PLAN,
         dry_run=True,
@@ -430,7 +430,7 @@ def test_xmip_cmip6_preprocessing_plan_checks_and_fixes_dataset():
     assert "i" in dataset.dims
     assert "branch_time_in_parent" not in dataset.attrs
 
-    write = woodpecker.recipe.fix(
+    write = woodpecker.recipe.apply(
         dataset,
         PLAN,
         dry_run=False,
@@ -453,7 +453,7 @@ def test_xmip_cmip6_preprocessing_plan_drops_helper_coords():
         bnds=np.arange(2),
     )
 
-    write = woodpecker.recipe.fix(
+    write = woodpecker.recipe.apply(
         dataset,
         PLAN,
         dry_run=False,

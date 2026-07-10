@@ -46,14 +46,14 @@ def test_xmip_cmip6_preprocessing_plan_checks_and_fixes_synthetic_dataset():
         "xmip.fix_known_cmip6_metadata",
     )
 
-    preview = woodpecker.recipe.fix(dataset, recipe, dry_run=True)
+    preview = woodpecker.recipe.apply(dataset, recipe, dry_run=True)
     assert preview.changed == 3
     assert "i" in dataset.dims
     assert "longitude" in dataset.data_vars
     assert dataset["lev"].attrs["units"] == "centimeters"
     assert "branch_time_in_parent" not in dataset.attrs
 
-    write = woodpecker.recipe.fix(dataset, recipe, dry_run=False)
+    write = woodpecker.recipe.apply(dataset, recipe, dry_run=False)
 
     assert write.changed == 5
     assert write.persisted == 1

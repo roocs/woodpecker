@@ -3,7 +3,8 @@ from pathlib import Path
 import pytest
 import xarray as xr
 
-from woodpecker.api import check, fix
+from woodpecker import recipe as recipe_api
+from woodpecker.api import apply, check
 from woodpecker.io import (
     NetCDFInput,
     ZarrInput,
@@ -11,6 +12,7 @@ from woodpecker.io import (
     get_io_availability,
     get_output_adapter,
 )
+from woodpecker.recipes.models import Recipe
 from woodpecker.testing import make_cmip6
 
 
@@ -35,10 +37,10 @@ def test_check_accepts_fix_alias():
     assert result.fix_ids == ("woodpecker.normalize_tas_units_to_kelvin",)
 
 
-def test_fix_exposes_stats_as_properties():
+def test_apply_exposes_stats_as_properties():
     ds = make_cmip6(overrides={"units": "degC"})
 
-    result = fix(
+    result = apply(
         ds,
         fixes="woodpecker.normalize_tas_units_to_kelvin",
         dry_run=False,
@@ -58,11 +60,27 @@ def test_fix_exposes_stats_as_properties():
     assert ds["tas"].attrs["units"] == "K"
 
 
+def test_recipe_apply_follows_recipe_behavior():
+    recipe = Recipe.model_validate(
+        {
+            "id": "woodpecker.apply_alias",
+            "steps": ["woodpecker.normalize_tas_units_to_kelvin"],
+        }
+    )
+    applied_ds = make_cmip6(overrides={"units": "degC"})
+
+    apply_result = recipe_api.apply(applied_ds, recipe, dry_run=True)
+
+    assert apply_result.attempted == 1
+    assert apply_result.changed == 1
+    assert applied_ds["tas"].attrs["units"] == "degC"
+
+
 def test_empty_results_are_falsey_and_readable():
     ds = make_cmip6(overrides={"units": "K"})
 
     findings = check(ds, fixes="woodpecker.normalize_tas_units_to_kelvin")
-    result = fix(ds, fixes="woodpecker.normalize_tas_units_to_kelvin")
+    result = apply(ds, fixes="woodpecker.normalize_tas_units_to_kelvin")
 
     assert not findings
     assert len(findings) == 0
