@@ -39,9 +39,8 @@ matches the public adaptation id where practical. For example,
 `cmip6d_0002_calendar.py` registers
 `cmip6_decadal.calendar_normalization`.
 
-An adaptation does not need to know about Rook. It only needs to declare when a
-CMIP6-decadal dataset needs a change, how to preview that change, and how to
-apply it in place.
+An adaptation only needs to declare when a CMIP6-decadal dataset needs a change,
+how to preview that change, and how to apply it in place.
 
 Use the existing modules as templates:
 
@@ -76,6 +75,6 @@ Use `phase: "prepare"` for pre-concatenation changes, `phase: "apply"` for
 normal C3S/CDS adaptation, and `phase: "finalize"` for post-processing after
 the normal adaptation flow.
 
-The notebook `docs/notebooks/cmip6_decadal_rook_style_example.ipynb` shows the
-standalone public API flow used by Rook-style callers: load `c3s.cmip6_decadal`,
-run the `prepare` phase, then run the normal `apply` phase.
+The notebook `docs/notebooks/cmip6_decadal_recipe_example.ipynb` shows the
+public API flow: load `c3s.cmip6_decadal`, run the `prepare` phase, then run
+the normal `apply` phase.

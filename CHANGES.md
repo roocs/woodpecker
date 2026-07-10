@@ -5,7 +5,7 @@
 - Renamed the public apply workflow from `fix` to `apply` in the Python API, CLI, docs, and examples.
 - Added recipe step phases: `prepare`, `apply`, and `finalize`, with phase selection in API and CLI recipe runs.
 - Renamed bundled C3S recipe ids to use the `c3s.*` prefix.
-- Added Rook WPS usage documentation and integration coverage.
+- Added C3S CMIP6-decadal and Atlas integration coverage for service-style recipe usage.
 
 ## 0.6.0 (2026-07-08)
 
