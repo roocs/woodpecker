@@ -252,7 +252,7 @@ Current backends:
 
 Recipes are accessed through the CLI:
 
-- `--store`: backend type (`catalog`, `json`, `duckdb`, or `auto`; default: `json` for check/fix)
+- `--store`: backend type (`catalog`, `json`, `duckdb`, or `auto`; default: `json` for check/apply)
 - `--recipe`: store location or an extra catalog file/directory
 - `--recipe-id`: optionally select a specific recipe by id
 

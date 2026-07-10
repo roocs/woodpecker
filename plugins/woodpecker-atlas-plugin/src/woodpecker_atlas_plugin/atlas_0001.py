@@ -81,7 +81,7 @@ def _apply_atlas_encoding_cleanup(dataset: xr.Dataset) -> bool:
 class AtlasEncodingCleanup(FixFunction):
     suffix = "encoding_cleanup"
     name = "ATLAS encoding cleanup"
-    description = "Applies rook-equivalent ATLAS deflation/encoding cleanup."
+    description = "Applies C3S/CDS ATLAS deflation and encoding cleanup."
     categories = ["encoding"]
     priority = 20
     dataset = "ATLAS"

@@ -289,7 +289,7 @@
     "prefix": "atlas",
     "aliases": [],
     "name": "ATLAS encoding cleanup",
-    "description": "Applies rook-equivalent ATLAS deflation/encoding cleanup.",
+    "description": "Applies C3S/CDS ATLAS deflation and encoding cleanup.",
     "categories": [
       "encoding"
     ],

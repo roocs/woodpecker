@@ -197,6 +197,7 @@
     "steps": [
       {
         "id": "woodpecker.normalize_tas_units_to_kelvin",
+        "phase": "apply",
         "options": {},
         "links": []
       }
@@ -232,6 +233,7 @@
     "steps": [
       {
         "id": "woodpecker.merge_equivalent_dimensions",
+        "phase": "apply",
         "options": {
           "dims": [
             "bnds",
@@ -242,6 +244,7 @@
       },
       {
         "id": "cmip7.configurable_reformat_bridge",
+        "phase": "apply",
         "options": {
           "realm": "atmos",
           "branded_variable": "prw_tavg-u-hxy-u",
@@ -254,6 +257,7 @@
       },
       {
         "id": "woodpecker.ensure_latitude_is_increasing",
+        "phase": "apply",
         "options": {},
         "links": []
       }
@@ -291,6 +295,7 @@
     "steps": [
       {
         "id": "cmip7.configurable_reformat_bridge",
+        "phase": "apply",
         "options": {
           "realm": "atmos",
           "branded_variable": "prw_tavg-u-hxy-u",
@@ -306,6 +311,7 @@
       },
       {
         "id": "woodpecker.ensure_latitude_is_increasing",
+        "phase": "apply",
         "options": {},
         "links": []
       }
@@ -347,6 +353,7 @@
     "steps": [
       {
         "id": "woodpecker.rename_variables",
+        "phase": "apply",
         "options": {
           "mapping": {
             "x": [
@@ -418,11 +425,13 @@
       },
       {
         "id": "woodpecker.promote_missing_dimension_coords",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "woodpecker.set_coordinate_variables",
+        "phase": "apply",
         "options": {
           "coordinates": [
             "x",
@@ -443,11 +452,13 @@
       },
       {
         "id": "xmip.broadcast_lon_lat",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "woodpecker.normalize_longitude_convention",
+        "phase": "apply",
         "options": {
           "coordinate": "lon",
           "target": "0_360",
@@ -460,6 +471,7 @@
       },
       {
         "id": "woodpecker.convert_units",
+        "phase": "apply",
         "options": {
           "units": {
             "lev": "m"
@@ -472,31 +484,37 @@
       },
       {
         "id": "xmip.normalize_lon_lat_bounds",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "xmip.sort_vertex_order",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "xmip.convert_bounds_to_vertices",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "xmip.convert_vertices_to_bounds",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "xmip.fix_known_cmip6_metadata",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "woodpecker.drop_variables",
+        "phase": "apply",
         "options": {
           "variables": [
             "bnds",
@@ -549,6 +567,7 @@
     "steps": [
       {
         "id": "woodpecker.rename_variables",
+        "phase": "apply",
         "options": {
           "mapping": {
             "x": [
@@ -620,11 +639,13 @@
       },
       {
         "id": "woodpecker.promote_missing_dimension_coords",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "woodpecker.set_coordinate_variables",
+        "phase": "apply",
         "options": {
           "coordinates": [
             "x",
@@ -645,11 +666,13 @@
       },
       {
         "id": "xmip.broadcast_lon_lat",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "woodpecker.normalize_longitude_convention",
+        "phase": "apply",
         "options": {
           "coordinate": "lon",
           "target": "0_360",
@@ -662,11 +685,13 @@
       },
       {
         "id": "xmip.replace_xy_with_nominal_lon_lat",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "woodpecker.convert_units",
+        "phase": "apply",
         "options": {
           "units": {
             "lev": "m"
@@ -679,31 +704,37 @@
       },
       {
         "id": "xmip.normalize_lon_lat_bounds",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "xmip.sort_vertex_order",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "xmip.convert_bounds_to_vertices",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "xmip.convert_vertices_to_bounds",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "xmip.fix_known_cmip6_metadata",
+        "phase": "apply",
         "options": {},
         "links": []
       },
       {
         "id": "woodpecker.drop_variables",
+        "phase": "apply",
         "options": {
           "variables": [
             "bnds",

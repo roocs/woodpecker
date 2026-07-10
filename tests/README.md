@@ -5,7 +5,7 @@ Woodpecker has two test layers:
 | Layer | Path | Purpose | Run when... |
 | ----- | ---- | ------- | ----------- |
 | Unit | `tests/unit/` | Small, focused checks for parsing, identifiers, recipes, stores, selection, provenance, formatting, CLI option forwarding, and fix internals. | You change one module or low-level contract. |
-| Integration | `tests/integration/` | Functional public API flows using synthetic climate datasets. | You change check/fix behavior, recipes, plugins, stores, or user-facing workflows. |
+| Integration | `tests/integration/` | Functional public API flows using synthetic climate datasets. | You change check/apply behavior, recipes, plugins, stores, or user-facing workflows. |
 
 Run all tests with:
 
@@ -23,7 +23,7 @@ pytest tests/integration
 ## What Belongs Where
 
 Put a test in `tests/unit/` when it can use small fixtures, mocks, or direct
-model objects and does not need a full check/fix workflow.
+model objects and does not need a full check/apply workflow.
 
 Put a test in `tests/integration/` when it should read like a user workflow:
 

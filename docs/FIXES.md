@@ -23,7 +23,7 @@ Source values: core (built-in) or plugin:<package> (discovered plugin fix).
 
 | ID | Name | Description | Categories | Dataset | Priority | Severity | Labels | Source |
 |----|------|-------------|------------|---------|---------|------|--------|--------|
-| atlas.encoding_cleanup | ATLAS encoding cleanup | Applies rook-equivalent ATLAS deflation/encoding cleanup. | encoding | ATLAS | 20 | safe: encoding metadata |  | plugin:woodpecker_atlas_plugin |
+| atlas.encoding_cleanup | ATLAS encoding cleanup | Applies C3S/CDS ATLAS deflation and encoding cleanup. | encoding | ATLAS | 20 | safe: encoding metadata |  | plugin:woodpecker_atlas_plugin |
 | atlas.project_id_normalization | ATLAS project_id normalization | Adds or normalizes ATLAS project_id from dataset identifier prefix. | metadata | ATLAS | 21 | safe: metadata only |  | plugin:woodpecker_atlas_plugin |
 
 ## Plugin: woodpecker_cmip6_decadal_plugin

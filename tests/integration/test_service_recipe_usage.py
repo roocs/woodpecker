@@ -1,4 +1,4 @@
-"""Rook WPS-oriented public API usage examples."""
+"""Service-oriented public API usage examples."""
 
 import numpy as np
 import pytest
@@ -16,7 +16,7 @@ EC_EARTH_DECADAL_SOURCE_NAME = (
 )
 
 
-def _cmip6_decadal_wps_dataset():
+def _cmip6_decadal_service_dataset():
     dataset = make_cmip6_decadal(
         overrides={
             "source_name": EC_EARTH_DECADAL_SOURCE_NAME,
@@ -37,7 +37,7 @@ def _cmip6_decadal_wps_dataset():
     return dataset
 
 
-def _run_wps_recipe(
+def _run_service_recipe(
     dataset,
     recipe_id: str,
     *,
@@ -45,7 +45,7 @@ def _run_wps_recipe(
     phase: str | None = None,
     recipe_source=None,
 ):
-    """Thin rook-like adapter around the public recipe API."""
+    """Thin service adapter around the public recipe API."""
     recipe = woodpecker.recipe.get(recipe_id, recipe=recipe_source)
     findings = woodpecker.recipe.check(dataset, recipe, phase=phase)
 
@@ -70,11 +70,11 @@ def _run_wps_recipe(
     }
 
 
-def test_rook_wps_usage_previews_and_applies_cmip6_decadal_recipe():
-    dataset = _cmip6_decadal_wps_dataset()
+def test_service_usage_previews_and_applies_cmip6_decadal_recipe():
+    dataset = _cmip6_decadal_service_dataset()
     recipe_source = integration_recipe_path("cmip6_decadal_full_recipe.json")
 
-    preview = _run_wps_recipe(dataset, "c3s.cmip6_decadal", recipe_source=recipe_source)
+    preview = _run_service_recipe(dataset, "c3s.cmip6_decadal", recipe_source=recipe_source)
 
     assert preview["recipe_id"] == "c3s.cmip6_decadal"
     assert preview["changed"] > 0
@@ -83,7 +83,7 @@ def test_rook_wps_usage_previews_and_applies_cmip6_decadal_recipe():
     assert dataset.attrs["startdate"] == "s1960"
     assert "reftime" not in dataset.coords
 
-    applied = _run_wps_recipe(
+    applied = _run_service_recipe(
         dataset,
         "c3s.cmip6_decadal",
         apply=True,
@@ -98,11 +98,11 @@ def test_rook_wps_usage_previews_and_applies_cmip6_decadal_recipe():
     assert not woodpecker.recipe.check(dataset, recipe)
 
 
-def test_rook_wps_usage_runs_cmip6_decadal_prepare_then_apply_phases():
-    dataset = _cmip6_decadal_wps_dataset()
+def test_service_usage_runs_cmip6_decadal_prepare_then_apply_phases():
+    dataset = _cmip6_decadal_service_dataset()
     recipe_source = integration_recipe_path("cmip6_decadal_full_recipe.json")
 
-    prepared = _run_wps_recipe(
+    prepared = _run_service_recipe(
         dataset,
         "c3s.cmip6_decadal",
         apply=True,
@@ -121,7 +121,7 @@ def test_rook_wps_usage_runs_cmip6_decadal_prepare_then_apply_phases():
     assert dataset.attrs["startdate"] == "s1960"
     assert "reftime" not in dataset.coords
 
-    applied = _run_wps_recipe(
+    applied = _run_service_recipe(
         dataset,
         "c3s.cmip6_decadal",
         apply=True,
@@ -144,12 +144,12 @@ def test_rook_wps_usage_runs_cmip6_decadal_prepare_then_apply_phases():
     assert not woodpecker.recipe.check(dataset, recipe)
 
 
-def test_rook_wps_usage_previews_and_applies_atlas_recipe():
+def test_service_usage_previews_and_applies_atlas_recipe():
     dataset = make_atlas(missing=["project_id"])
     dataset["pr"].encoding["complevel"] = 5
     recipe_source = integration_recipe_path("atlas_basic_recipe.json")
 
-    preview = _run_wps_recipe(dataset, "c3s.atlas", recipe_source=recipe_source)
+    preview = _run_service_recipe(dataset, "c3s.atlas", recipe_source=recipe_source)
 
     assert preview["recipe_id"] == "c3s.atlas"
     assert preview["changed"] == 2
@@ -157,7 +157,7 @@ def test_rook_wps_usage_previews_and_applies_atlas_recipe():
     assert "project_id" not in dataset.attrs
     assert dataset["pr"].encoding["complevel"] == 5
 
-    applied = _run_wps_recipe(
+    applied = _run_service_recipe(
         dataset,
         "c3s.atlas",
         apply=True,
@@ -172,19 +172,19 @@ def test_rook_wps_usage_previews_and_applies_atlas_recipe():
     assert not woodpecker.recipe.check(dataset, recipe)
 
 
-def test_rook_wps_usage_atlas_apply_phase_is_explicit_and_empty_phases_are_noops():
+def test_service_usage_atlas_apply_phase_is_explicit_and_empty_phases_are_noops():
     dataset = make_atlas(missing=["project_id"])
     dataset["pr"].encoding["complevel"] = 5
     recipe_source = integration_recipe_path("atlas_basic_recipe.json")
 
-    prepared = _run_wps_recipe(
+    prepared = _run_service_recipe(
         dataset,
         "c3s.atlas",
         apply=True,
         phase=woodpecker.recipe.PREPARE_PHASE,
         recipe_source=recipe_source,
     )
-    finalized = _run_wps_recipe(
+    finalized = _run_service_recipe(
         dataset,
         "c3s.atlas",
         apply=True,
@@ -199,7 +199,7 @@ def test_rook_wps_usage_atlas_apply_phase_is_explicit_and_empty_phases_are_noops
     assert "project_id" not in dataset.attrs
     assert dataset["pr"].encoding["complevel"] == 5
 
-    applied = _run_wps_recipe(
+    applied = _run_service_recipe(
         dataset,
         "c3s.atlas",
         apply=True,
