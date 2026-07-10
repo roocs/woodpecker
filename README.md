@@ -8,15 +8,15 @@
 [![License](https://img.shields.io/github/license/roocs/woodpecker)](https://github.com/roocs/woodpecker/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://github.com/roocs/woodpecker/blob/main/pyproject.toml)
 
-Woodpecker checks and applies known climate-data fixes through a small Python
-API, CLI, and recipe system. Use it when a dataset needs a documented repair
-before it enters a larger processing workflow.
+Woodpecker checks, previews, and applies known climate-data fixes through a
+small Python API, CLI, and recipe system. Use it when a dataset needs a
+documented repair before it enters a larger processing workflow.
 
 ```mermaid
 flowchart LR
     D["Dataset"] --> C["check"]
     C --> F["findings"]
-    F --> R["recipe or fix"]
+    F --> R["recipe or fix id"]
     R --> P["dry-run preview"]
     P --> A["apply"]
 ```

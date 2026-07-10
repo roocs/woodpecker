@@ -69,7 +69,7 @@ Labels are user-facing metadata for fixes.
 | description | Longer explanation. |
 | category | Group such as `info`, `risk-low`, `risk-medium`, or `risk-high`. |
 
-Labels help users understand a fix. They do not affect recipes, priority,
+Labels help users understand fixes. They do not affect recipes, priority,
 matching, or automation.
 
 Plugins can use predefined labels:

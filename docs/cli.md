@@ -1,7 +1,7 @@
 # CLI
 
 Use `woodpecker` to list fixes and recipes, check datasets, preview repairs,
-and apply selected fixes from the terminal.
+and apply selected recipes or fix ids from the terminal.
 
 Use `--format json` when another tool needs machine-readable output.
 
@@ -62,7 +62,7 @@ woodpecker check ./data --dataset CMIP6-decadal
 woodpecker check ./data --category metadata
 ```
 
-Repeat `--select` to run more than one fix:
+Repeat `--select` to run more than one fix id:
 
 ```bash
 woodpecker check ./data \
@@ -83,7 +83,7 @@ woodpecker apply ./data --select cmip6_decadal.time_metadata
 ```
 
 Dry-run output shows the input path, selected fix id, fix name, severity label,
-and whether the fix would change the dataset. Use `--format json` for the same
+and whether the apply step would change the dataset. Use `--format json` for the same
 preview data as structured output.
 
 ## Recipe Stores

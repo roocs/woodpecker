@@ -352,7 +352,7 @@ def fix_cmd(
     embed_provenance_metadata: bool,
     fmt: str,
 ):
-    """Apply selected fixes to NetCDF files."""
+    """Apply selected recipes or fix ids to NetCDF files."""
 
     def run_fix_command() -> tuple[RunContext, dict[str, object]]:
         context = resolve_run_context(
