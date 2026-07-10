@@ -102,7 +102,9 @@ def test_atlas_recipe_steps_are_apply_phase_only():
     dataset["pr"].encoding["complevel"] = 5
 
     assert woodpecker.recipe.check(dataset, PLAN, phase="prepare").fix_ids == ()
-    apply_fix_ids = tuple(dict.fromkeys(woodpecker.recipe.check(dataset, PLAN, phase="apply").fix_ids))
+    apply_fix_ids = tuple(
+        dict.fromkeys(woodpecker.recipe.check(dataset, PLAN, phase="apply").fix_ids)
+    )
     assert apply_fix_ids == (
         "atlas.encoding_cleanup",
         "atlas.project_id_normalization",

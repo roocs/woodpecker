@@ -134,8 +134,7 @@ def test_rook_wps_usage_runs_cmip6_decadal_prepare_then_apply_phases():
     assert applied["changed"] > 0
     assert applied["applied"] is True
     assert all(
-        item["fix_id"] != "cmip6_decadal.calendar_normalization"
-        for item in applied["preview"]
+        item["fix_id"] != "cmip6_decadal.calendar_normalization" for item in applied["preview"]
     )
     assert dataset.attrs["startdate"] == "s196011"
     assert "reftime" in dataset.coords

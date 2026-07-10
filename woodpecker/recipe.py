@@ -102,7 +102,12 @@ def _resolve_recipe_selection(
         for identifier in resolved_identifiers
         if identifier in source_step_contexts
     }
-    return resolved_identifiers, resolved_identifiers, dict(source_fix_options), resolved_step_contexts
+    return (
+        resolved_identifiers,
+        resolved_identifiers,
+        dict(source_fix_options),
+        resolved_step_contexts,
+    )
 
 
 def check(

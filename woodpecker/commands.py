@@ -51,14 +51,12 @@ def _resolve_recipe_api_selection(
 
     resolved_inputs = inputs if inputs is not None else [Path.cwd()]
     normalized = normalize_inputs(resolved_inputs)
-    _, _, source_identifiers, source_fix_options, source_step_contexts = (
-        resolve_recipe_source(
-            inputs=normalized,
-            store_type=store_type,
-            recipe_location=Path(recipe_path) if recipe_path is not None else None,
-            recipe_id=recipe_id,
-            phase=phase,
-        )
+    _, _, source_identifiers, source_fix_options, source_step_contexts = resolve_recipe_source(
+        inputs=normalized,
+        store_type=store_type,
+        recipe_location=Path(recipe_path) if recipe_path is not None else None,
+        recipe_id=recipe_id,
+        phase=phase,
     )
     resolved_identifiers, resolved_ordered_identifiers, resolved_fix_options = (
         resolve_selection_inputs(
