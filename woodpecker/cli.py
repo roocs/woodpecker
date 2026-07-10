@@ -243,7 +243,7 @@ def io_status(fmt: str):
         click.echo(f"{key}: {'available' if value else 'unavailable'}")
 
 
-@cli.command("fix")
+@cli.command("apply")
 @click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=Path))
 @click.option(
     "--store",
@@ -389,19 +389,6 @@ def fix_cmd(
     )
     if fmt == "json" and not dry_run and stats.get("persist_failed", 0) > 0:
         raise SystemExit(1)
-
-
-_fix_alias_cmd = cli.commands.pop("fix")
-cli.add_command(
-    click.Command(
-        name="apply",
-        params=_fix_alias_cmd.params,
-        callback=_fix_alias_cmd.callback,
-        help="Apply selected fixes to NetCDF files.",
-    )
-)
-_fix_alias_cmd.help = "Deprecated compatibility alias for 'woodpecker apply'."
-cli.add_command(_fix_alias_cmd, "fix")
 
 
 if __name__ == "__main__":

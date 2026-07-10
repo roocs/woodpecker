@@ -86,9 +86,6 @@ Dry-run output shows the input path, selected fix id, fix name, severity label,
 and whether the fix would change the dataset. Use `--format json` for the same
 preview data as structured output.
 
-`woodpecker fix ...` remains available as a compatibility alias for
-`woodpecker apply ...`.
-
 ## Recipe Stores
 
 Recipe-backed commands accept:
