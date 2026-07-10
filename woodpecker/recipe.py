@@ -126,6 +126,8 @@ def check(
                 phase=phase,
             )
         )
+        if not ordered_identifiers:
+            return CheckResult(findings=())
         return CheckResult(
             findings=tuple(
                 execute_check(
@@ -186,6 +188,17 @@ def apply(
                 phase=phase,
             )
         )
+        if not ordered_identifiers:
+            return FixResult(
+                stats={
+                    "attempted": 0,
+                    "changed": 0,
+                    "persist_attempted": 0,
+                    "persisted": 0,
+                    "persist_failed": 0,
+                    "preview": [],
+                }
+            )
         return FixResult(
             stats=execute_fix(
                 inputs,

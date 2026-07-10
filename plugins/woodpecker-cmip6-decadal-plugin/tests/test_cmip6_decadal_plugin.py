@@ -31,8 +31,8 @@ EC_EARTH_DECADAL_SOURCE_NAME = (
     "dcppA-hindcast.s1960-r2i1p1f1.Amon.tas.gr.v20201215.nc"
 )
 DECADAL_FULL_FIX_IDS = (
-    "cmip6_decadal.time_metadata",
     "cmip6_decadal.calendar_normalization",
+    "cmip6_decadal.time_metadata",
     "cmip6_decadal.realization_comment_normalization",
     "cmip6_decadal.realization_dtype_normalization",
     "cmip6_decadal.fillvalue_encoding_cleanup",
@@ -326,6 +326,26 @@ def test_cmip6_decadal_full_plan_checks_and_fixes_synthetic_dataset():
     )
 
 
+def test_cmip6_decadal_recipe_steps_are_grouped_by_phase():
+    assert [(step.id, step.phase) for step in PLAN.steps] == [
+        ("cmip6_decadal.calendar_normalization", "prepare"),
+        ("cmip6_decadal.time_metadata", "apply"),
+        ("cmip6_decadal.realization_variable", "apply"),
+        ("cmip6_decadal.coordinates_encoding_cleanup", "apply"),
+        ("cmip6_decadal.realization_comment_normalization", "apply"),
+        ("cmip6_decadal.realization_dtype_normalization", "apply"),
+        ("cmip6_decadal.fillvalue_encoding_cleanup", "apply"),
+        ("cmip6_decadal.further_info_url_normalization", "apply"),
+        ("cmip6_decadal.start_token_normalization", "apply"),
+        ("cmip6_decadal.realization_long_name_normalization", "apply"),
+        ("cmip6_decadal.realization_index_normalization", "apply"),
+        ("cmip6_decadal.leadtime_metadata_normalization", "apply"),
+        ("cmip6_decadal.model_global_attributes", "apply"),
+        ("cmip6_decadal.reftime_coordinate", "apply"),
+        ("cmip6_decadal.leadtime_coordinate", "apply"),
+    ]
+
+
 def test_cmip6_decadal_prepare_phase_applies_calendar_normalization():
     dataset, assert_fixed = _decadal_calendar_case()
 
@@ -339,3 +359,12 @@ def test_cmip6_decadal_prepare_phase_applies_calendar_normalization():
     ]
     assert write.changed == 1
     assert_fixed(dataset)
+
+
+def test_cmip6_decadal_apply_phase_excludes_prepare_step():
+    dataset = _cmip6_decadal_full_suite_dataset()
+
+    findings = woodpecker.recipe.check(dataset, PLAN, phase="apply")
+
+    assert "cmip6_decadal.calendar_normalization" not in findings.fix_ids
+    assert findings.fix_ids[0] == "cmip6_decadal.time_metadata"

@@ -293,6 +293,57 @@ def test_recipe_phase_and_fixes_select_intersection_in_recipe_order(monkeypatch)
     assert captured["identifiers"] == ("plan_test.second", "plan_test.third")
 
 
+def test_recipe_empty_phase_selection_runs_no_steps():
+    recipe = Recipe.model_validate(
+        {
+            "id": "plan_test.apply_only",
+            "steps": [{"id": "plan_test.fix_method", "phase": "apply"}],
+        }
+    )
+
+    findings = recipe_api.check(xr.Dataset(), recipe, phase="prepare")
+    result = recipe_api.apply(xr.Dataset(), recipe, phase="prepare", dry_run=False)
+
+    assert findings.fix_ids == ()
+    assert result.attempted == 0
+    assert result.changed == 0
+    assert result.preview == ()
+
+
+def test_recipe_file_empty_phase_selection_runs_no_steps(tmp_path: Path):
+    recipe_path = tmp_path / "recipe.json"
+    write_json(
+        recipe_path,
+        {
+            "recipes": [
+                {
+                    "id": "plan_test.apply_only_file",
+                    "steps": [{"id": "plan_test.fix_method", "phase": "apply"}],
+                }
+            ]
+        },
+    )
+
+    findings = recipe_api.check(
+        xr.Dataset(),
+        recipe_path,
+        recipe_id="plan_test.apply_only_file",
+        phase="prepare",
+    )
+    result = recipe_api.apply(
+        xr.Dataset(),
+        recipe_path,
+        recipe_id="plan_test.apply_only_file",
+        phase="prepare",
+        dry_run=False,
+    )
+
+    assert findings.fix_ids == ()
+    assert result.attempted == 0
+    assert result.changed == 0
+    assert result.preview == ()
+
+
 def test_apply_plan_calls_matches_then_apply_and_passes_options():
     register_fix_function(_FixMethod)
     ds = make_cmip6()

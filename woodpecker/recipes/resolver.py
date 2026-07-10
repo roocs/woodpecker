@@ -304,14 +304,17 @@ def resolve_run_context(
         if identifier in source_step_contexts
     }
 
-    fixes = select_fixes(
-        dataset=resolved_dataset,
-        categories=resolved_categories,
-        identifiers=resolved_identifiers,
-        strict_identifiers=True,
-        fix_options=resolved_fix_options,
-        ordered_identifiers=resolved_ordered_identifiers,
-    )
+    if source != "direct" and not resolved_ordered_identifiers:
+        fixes = []
+    else:
+        fixes = select_fixes(
+            dataset=resolved_dataset,
+            categories=resolved_categories,
+            identifiers=resolved_identifiers,
+            strict_identifiers=True,
+            fix_options=resolved_fix_options,
+            ordered_identifiers=resolved_ordered_identifiers,
+        )
 
     return RunContext(
         inputs=inputs,

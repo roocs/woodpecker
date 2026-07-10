@@ -21,6 +21,17 @@ class RunFixKwargs(TypedDict, total=False):
     strict_io: bool
 
 
+def empty_fix_stats() -> "FixRunStats":
+    return {
+        "attempted": 0,
+        "changed": 0,
+        "persist_attempted": 0,
+        "persisted": 0,
+        "persist_failed": 0,
+        "preview": [],
+    }
+
+
 def _resolve_recipe_api_selection(
     *,
     recipe_path: str | Path | None,
@@ -151,6 +162,8 @@ def execute_check_recipe(
         store_type=store_type,
         phase=phase,
     )
+    if not resolved_ordered_identifiers:
+        return []
 
     return execute_check(
         normalized,
@@ -192,6 +205,8 @@ def execute_fix_recipe(
         store_type=store_type,
         phase=phase,
     )
+    if not resolved_ordered_identifiers:
+        return empty_fix_stats()
 
     return execute_fix(
         normalized,
