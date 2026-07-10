@@ -1,8 +1,8 @@
 {
   "recipes": [
     {
-      "id": "cmip6_decadal.full",
-      "description": "Full CMIP6-decadal recipe for NetCDF hindcast datasets",
+      "id": "c3s.cmip6_decadal",
+      "description": "Apply C3S/CDS-ready metadata/encoding normalization for CMIP6-decadal hindcast datasets",
       "links": [
         {
           "rel": "self",

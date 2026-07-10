@@ -17,8 +17,8 @@ directory.
 Installed plugin recipes are available through the same API as core recipes:
 
 ```python
-recipe = woodpecker.recipe.get("atlas.basic")
-findings = woodpecker.recipe.check(dataset, recipe)
+recipe = woodpecker.recipe.get("c3s.atlas")
+preview = woodpecker.recipe.apply(dataset, recipe, dry_run=True)
 ```
 
 The xMIP plugin is a demo of an xMIP-style CMIP6 preprocessing recipe expressed

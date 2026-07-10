@@ -1,8 +1,8 @@
 {
   "recipes": [
     {
-      "id": "atlas.basic",
-      "description": "Concrete Atlas recipe for atlas*.nc files",
+      "id": "c3s.atlas",
+      "description": "C3S/CDS adaptation recipe for Atlas NetCDF datasets",
       "links": [
         {
           "rel": "self",

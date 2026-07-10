@@ -1,8 +1,8 @@
 [
   {
-    "id": "atlas.basic",
+    "id": "c3s.atlas",
     "aliases": [],
-    "description": "Concrete Atlas recipe for atlas*.nc files",
+    "description": "C3S/CDS adaptation recipe for Atlas NetCDF datasets",
     "match": {
       "attrs": {},
       "dataset_id_patterns": [],
@@ -29,8 +29,8 @@
         "title": "Source recipe document"
       }
     ],
-    "prefix": "atlas",
-    "suffix": "basic",
+    "prefix": "c3s",
+    "suffix": "atlas",
     "source": "plugin:woodpecker_atlas_plugin",
     "source_files": [
       "plugins/woodpecker-atlas-plugin/src/woodpecker_atlas_plugin/recipes/atlas_basic_recipe.json"
@@ -41,47 +41,9 @@
     ]
   },
   {
-    "id": "cmip6.core_units",
+    "id": "c3s.cmip6_decadal",
     "aliases": [],
-    "description": "",
-    "match": {
-      "attrs": {
-        "project_id": "CMIP6",
-        "activity_id": "CMIP"
-      },
-      "dataset_id_patterns": [
-        "CMIP6.CMIP.*.Amon.tas.*"
-      ],
-      "path_patterns": []
-    },
-    "steps": [
-      {
-        "id": "woodpecker.normalize_tas_units_to_kelvin",
-        "options": {},
-        "links": []
-      }
-    ],
-    "links": [
-      {
-        "rel": "self",
-        "href": "https://github.com/roocs/woodpecker/blob/main/woodpecker/recipes/recipes/cmip6_core_recipe.yaml",
-        "title": "Source recipe document"
-      }
-    ],
-    "prefix": "cmip6",
-    "suffix": "core_units",
-    "source": "core",
-    "source_files": [
-      "woodpecker/recipes/recipes/cmip6_core_recipe.yaml"
-    ],
-    "step_ids": [
-      "woodpecker.normalize_tas_units_to_kelvin"
-    ]
-  },
-  {
-    "id": "cmip6_decadal.full",
-    "aliases": [],
-    "description": "Full CMIP6-decadal recipe for NetCDF hindcast datasets",
+    "description": "Apply C3S/CDS-ready metadata/encoding normalization for CMIP6-decadal hindcast datasets",
     "match": {
       "attrs": {
         "project_id": "CMIP6",
@@ -177,8 +139,8 @@
         "title": "Source recipe document"
       }
     ],
-    "prefix": "cmip6_decadal",
-    "suffix": "full",
+    "prefix": "c3s",
+    "suffix": "cmip6_decadal",
     "source": "plugin:woodpecker_cmip6_decadal_plugin",
     "source_files": [
       "plugins/woodpecker-cmip6-decadal-plugin/src/woodpecker_cmip6_decadal_plugin/recipes/cmip6_decadal_full_recipe.json"
@@ -199,6 +161,44 @@
       "cmip6_decadal.model_global_attributes",
       "cmip6_decadal.reftime_coordinate",
       "cmip6_decadal.leadtime_coordinate"
+    ]
+  },
+  {
+    "id": "cmip6.core_units",
+    "aliases": [],
+    "description": "",
+    "match": {
+      "attrs": {
+        "project_id": "CMIP6",
+        "activity_id": "CMIP"
+      },
+      "dataset_id_patterns": [
+        "CMIP6.CMIP.*.Amon.tas.*"
+      ],
+      "path_patterns": []
+    },
+    "steps": [
+      {
+        "id": "woodpecker.normalize_tas_units_to_kelvin",
+        "options": {},
+        "links": []
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https://github.com/roocs/woodpecker/blob/main/woodpecker/recipes/recipes/cmip6_core_recipe.yaml",
+        "title": "Source recipe document"
+      }
+    ],
+    "prefix": "cmip6",
+    "suffix": "core_units",
+    "source": "core",
+    "source_files": [
+      "woodpecker/recipes/recipes/cmip6_core_recipe.yaml"
+    ],
+    "step_ids": [
+      "woodpecker.normalize_tas_units_to_kelvin"
     ]
   },
   {

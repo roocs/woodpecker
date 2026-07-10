@@ -11,8 +11,8 @@ def test_recipe_loader_discovers_core_and_plugin_package_recipes():
     recipe_ids = {recipe.id for recipe in RecipeLoader().catalog().list_recipes()}
 
     assert "cmip6.core_units" in recipe_ids
-    assert "atlas.basic" in recipe_ids
-    assert "cmip6_decadal.full" in recipe_ids
+    assert "c3s.atlas" in recipe_ids
+    assert "c3s.cmip6_decadal" in recipe_ids
     assert "cmip7.esa_cci_water_vapour_zarr" in recipe_ids
     assert "xmip.cmip6_preprocessing" in recipe_ids
 

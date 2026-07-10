@@ -100,11 +100,11 @@ Recipe-backed commands accept:
 Examples:
 
 ```bash
-woodpecker check ./data --store catalog --recipe-id atlas.basic
-woodpecker check ./data --store json --recipe recipes.json --recipe-id atlas.basic
-woodpecker check ./data --store duckdb --recipe recipes.duckdb --recipe-id atlas.basic
-woodpecker check ./data --store auto \
-  --recipe-id woodpecker.normalize_tas_units_to_kelvin
+woodpecker apply ./data --store catalog --recipe-id c3s.atlas --dry-run
+woodpecker apply ./data --store json --recipe recipes.json --recipe-id c3s.atlas --dry-run
+woodpecker apply ./data --store duckdb --recipe recipes.duckdb --recipe-id c3s.atlas --dry-run
+woodpecker apply ./data --store auto \
+  --recipe-id woodpecker.normalize_tas_units_to_kelvin --dry-run
 ```
 
 When no explicit `--recipe` is provided, `--recipe-id` uses the discovered

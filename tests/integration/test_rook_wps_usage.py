@@ -65,9 +65,9 @@ def test_rook_wps_usage_previews_and_applies_cmip6_decadal_recipe():
     dataset = _cmip6_decadal_wps_dataset()
     recipe_source = integration_recipe_path("cmip6_decadal_full_recipe.json")
 
-    preview = _run_wps_recipe(dataset, "cmip6_decadal.full", recipe_source=recipe_source)
+    preview = _run_wps_recipe(dataset, "c3s.cmip6_decadal", recipe_source=recipe_source)
 
-    assert preview["recipe_id"] == "cmip6_decadal.full"
+    assert preview["recipe_id"] == "c3s.cmip6_decadal"
     assert preview["changed"] > 0
     assert preview["applied"] is False
     assert preview["preview"]
@@ -76,7 +76,7 @@ def test_rook_wps_usage_previews_and_applies_cmip6_decadal_recipe():
 
     applied = _run_wps_recipe(
         dataset,
-        "cmip6_decadal.full",
+        "c3s.cmip6_decadal",
         apply=True,
         recipe_source=recipe_source,
     )
@@ -85,7 +85,7 @@ def test_rook_wps_usage_previews_and_applies_cmip6_decadal_recipe():
     assert applied["applied"] is True
     assert dataset.attrs["startdate"] == "s196011"
     assert "reftime" in dataset.coords
-    recipe = woodpecker.recipe.get("cmip6_decadal.full", recipe=recipe_source)
+    recipe = woodpecker.recipe.get("c3s.cmip6_decadal", recipe=recipe_source)
     assert not woodpecker.recipe.check(dataset, recipe)
 
 
@@ -94,9 +94,9 @@ def test_rook_wps_usage_previews_and_applies_atlas_recipe():
     dataset["pr"].encoding["complevel"] = 5
     recipe_source = integration_recipe_path("atlas_basic_recipe.json")
 
-    preview = _run_wps_recipe(dataset, "atlas.basic", recipe_source=recipe_source)
+    preview = _run_wps_recipe(dataset, "c3s.atlas", recipe_source=recipe_source)
 
-    assert preview["recipe_id"] == "atlas.basic"
+    assert preview["recipe_id"] == "c3s.atlas"
     assert preview["changed"] == 2
     assert preview["applied"] is False
     assert "project_id" not in dataset.attrs
@@ -104,7 +104,7 @@ def test_rook_wps_usage_previews_and_applies_atlas_recipe():
 
     applied = _run_wps_recipe(
         dataset,
-        "atlas.basic",
+        "c3s.atlas",
         apply=True,
         recipe_source=recipe_source,
     )
@@ -113,5 +113,5 @@ def test_rook_wps_usage_previews_and_applies_atlas_recipe():
     assert applied["applied"] is True
     assert dataset.attrs["project_id"] == "c3s-ipcc-atlas"
     assert dataset["pr"].encoding["complevel"] == 1
-    recipe = woodpecker.recipe.get("atlas.basic", recipe=recipe_source)
+    recipe = woodpecker.recipe.get("c3s.atlas", recipe=recipe_source)
     assert not woodpecker.recipe.check(dataset, recipe)

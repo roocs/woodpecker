@@ -173,7 +173,7 @@ Woodpecker uses one schema for both recipe files and recipe stores:
 
 Common `Recipe` fields:
 
-- `id`: recipe identifier, for example `atlas.basic`.
+- `id`: recipe identifier, for example `c3s.atlas`.
 - `description`: optional human-readable description.
 - `match.attrs`: key/value attribute matcher for dataset metadata.
 - `match.path_patterns`: optional fnmatch-style path patterns.
@@ -186,8 +186,8 @@ Minimal `RecipeDocument` example:
 {
   "recipes": [
     {
-      "id": "atlas.basic",
-      "description": "ATLAS recipe",
+      "id": "c3s.atlas",
+      "description": "C3S/CDS adaptation recipe for Atlas NetCDF datasets",
       "match": {
         "path_patterns": ["*atlas*.nc"]
       },
@@ -217,7 +217,7 @@ Python authoring helpers can generate the same document schema:
 from woodpecker.recipes import fix, recipe
 
 atlas_basic = (
-    recipe("atlas.basic", fix("atlas.encoding_cleanup"))
+    recipe("c3s.atlas", fix("atlas.encoding_cleanup"))
     .match(path_patterns=["*atlas*.nc"])
 )
 

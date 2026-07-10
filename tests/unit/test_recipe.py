@@ -334,7 +334,7 @@ def test_fix_recipe_identity_rejects_conflicting_explicit_parts():
     with pytest.raises(ValueError, match="suffix does not match"):
         Recipe.model_validate(
             {
-                "id": "atlas.basic",
+                "id": "c3s.atlas",
                 "suffix": "other",
                 "steps": [{"id": "encoding_cleanup"}],
             }
@@ -343,15 +343,15 @@ def test_fix_recipe_identity_rejects_conflicting_explicit_parts():
 
 def test_fix_recipe_identity_includes_aliases():
     recipe = Recipe(
-        id="atlas.atlas_basic",
-        aliases=["basic", "legacy.atlas_basic"],
-        steps=[FixRef(id="atlas.encoding_cleanup")],
+        id="example.workflow",
+        aliases=["legacy", "old.workflow"],
+        steps=[FixRef(id="example.encoding_cleanup")],
     )
 
-    assert recipe.aliases == ["atlas.basic", "legacy.atlas_basic"]
+    assert recipe.aliases == ["example.legacy", "old.workflow"]
     assert recipe.identifier_set.aliases == (
-        "atlas.basic",
-        "legacy.atlas_basic",
+        "example.legacy",
+        "old.workflow",
     )
 
 
@@ -409,7 +409,7 @@ def test_recipe_document_uses_explicit_schema_version_when_present(tmp_path: Pat
             "schema_version": 1,
             "recipes": [
                 {
-                    "id": "atlas.basic",
+                    "id": "c3s.atlas",
                     "steps": [{"id": "atlas.encoding_cleanup"}],
                 }
             ],
@@ -417,18 +417,18 @@ def test_recipe_document_uses_explicit_schema_version_when_present(tmp_path: Pat
     )
 
     assert document.schema_version == 1
-    assert document.recipes[0].id == "atlas.basic"
+    assert document.recipes[0].id == "c3s.atlas"
 
 
 def test_recipe_document_to_dict_includes_schema_version():
     document = RecipeDocument(
-        recipes=[Recipe(id="atlas.basic", steps=[FixRef(id="atlas.encoding_cleanup")])]
+        recipes=[Recipe(id="c3s.atlas", steps=[FixRef(id="atlas.encoding_cleanup")])]
     )
 
     payload = document.model_dump()
 
     assert payload["schema_version"] == 1
-    assert payload["recipes"][0]["id"] == "atlas.basic"
+    assert payload["recipes"][0]["id"] == "c3s.atlas"
 
 
 def test_cmip7_plan_document_uses_plugin_fix_codes_in_order(tmp_path):

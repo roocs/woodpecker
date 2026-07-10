@@ -97,8 +97,8 @@ def test_generate_recipe_catalog_can_load_discovered_recipe_sources():
     assert source == "core"
     assert source_files == ["woodpecker/recipes/recipes/cmip6_core_recipe.yaml"]
 
-    assert "atlas.basic" in recipe_by_id
-    _, source_files, source = recipe_by_id["atlas.basic"]
+    assert "c3s.atlas" in recipe_by_id
+    _, source_files, source = recipe_by_id["c3s.atlas"]
     assert source == "plugin:woodpecker_atlas_plugin"
     assert source_files == [
         "plugins/woodpecker-atlas-plugin/src/woodpecker_atlas_plugin/recipes/atlas_basic_recipe.json"

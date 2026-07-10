@@ -47,8 +47,8 @@ def run_woodpecker_recipe(
 
 | Rook workflow | Woodpecker recipe id |
 | --- | --- |
-| CMIP6-decadal hindcast fixes | `cmip6_decadal.full` |
-| C3S Atlas fixes | `atlas.basic` |
+| CMIP6-decadal C3S/CDS adaptation | `c3s.cmip6_decadal` |
+| Atlas C3S/CDS adaptation | `c3s.atlas` |
 
 Inspect the active runtime before wiring rook:
 
@@ -74,4 +74,4 @@ woodpecker list-fixes --dataset ATLAS
   installed.
 
 The rook-side integration test should cover one representative CMIP6-decadal
-dataset with `cmip6_decadal.full` and one Atlas dataset with `atlas.basic`.
+dataset with `c3s.cmip6_decadal` and one Atlas dataset with `c3s.atlas`.
