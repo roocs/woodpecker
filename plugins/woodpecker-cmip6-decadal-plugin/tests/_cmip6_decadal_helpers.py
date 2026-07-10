@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from woodpecker import check, fix, recipe
+from woodpecker import apply, check, recipe
 
 
 def check_finding_ids(dataset, fix_id: str) -> set[str]:
@@ -8,14 +8,14 @@ def check_finding_ids(dataset, fix_id: str) -> set[str]:
 
 
 def assert_fix_dry_run_reports_change(dataset, fix_id: str) -> None:
-    result = fix(dataset, fixes=fix_id, dry_run=True)
+    result = apply(dataset, fixes=fix_id, dry_run=True)
 
     assert result.changed == 1
     assert result.persisted == 0
 
 
 def assert_fix_write_reports_change(dataset, fix_id: str) -> None:
-    result = fix(dataset, fixes=fix_id, dry_run=False)
+    result = apply(dataset, fixes=fix_id, dry_run=False)
 
     assert result.changed == 1
     assert result.persisted == 1
@@ -52,13 +52,13 @@ def assert_plan_check_fix_cycle(
     findings = recipe.check(dataset, recipe_path)
     assert unique_in_order(findings.fix_ids) == expected_fix_ids
 
-    preview = recipe.fix(dataset, recipe_path, dry_run=True)
+    preview = recipe.apply(dataset, recipe_path, dry_run=True)
     assert preview.changed == expected_changed
     assert preview.persisted == 0
     if assert_unchanged is not None:
         assert_unchanged(dataset)
 
-    write = recipe.fix(dataset, recipe_path, dry_run=False)
+    write = recipe.apply(dataset, recipe_path, dry_run=False)
     assert write.changed == (
         expected_changed if expected_write_changed is None else expected_write_changed
     )

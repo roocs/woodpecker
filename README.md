@@ -50,8 +50,8 @@ woodpecker check ./data --recipe-id cmip6.core_units
 woodpecker apply ./data --recipe-id cmip6.core_units --dry-run
 ```
 
-`woodpecker.fix(...)` and `woodpecker.recipe.fix(...)` remain available as
-Python compatibility aliases.
+Use `woodpecker.apply(...)`, `woodpecker.recipe.apply(...)`, and
+`woodpecker apply ...` for applying selected changes.
 
 ## Docs
 

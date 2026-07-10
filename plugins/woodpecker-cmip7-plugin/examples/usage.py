@@ -12,8 +12,8 @@ dataset = make_cmip7(missing=["project_id"], rename_vars={"tas": "temp"})
 findings = woodpecker.check(dataset, fixes=fixes)
 
 if findings:
-    preview = woodpecker.fix(dataset, fixes=findings.fix_ids)
-    result = woodpecker.fix(dataset, fixes=findings.fix_ids, dry_run=False)
+    preview = woodpecker.apply(dataset, fixes=findings.fix_ids)
+    result = woodpecker.apply(dataset, fixes=findings.fix_ids, dry_run=False)
     print(findings)
     print(preview)
     print(result)

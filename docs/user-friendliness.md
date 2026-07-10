@@ -63,7 +63,7 @@ and direct fix selection.
 ## Questions For The Next PR
 
 - Should the public Python API add `woodpecker.recipe.preview(...)` as a clearer
-  alias or replacement for dry-run `recipe.fix(...)`?
+  alias or replacement for dry-run `recipe.apply(...)`?
 - Should `woodpecker.recipe.apply(...)` become the preferred mutation verb?
 - Should CLI recipe commands become a grouped command surface, or should the
   existing `check` and `fix` commands keep recipe options?

@@ -51,7 +51,7 @@ def _run_wps_recipe(dataset, recipe_id: str, *, apply: bool = False, recipe_sour
             "preview": [],
         }
 
-    result = woodpecker.recipe.fix(dataset, recipe, dry_run=not apply)
+    result = woodpecker.recipe.apply(dataset, recipe, dry_run=not apply)
     return {
         "recipe_id": recipe_id,
         "changed": result.changed,

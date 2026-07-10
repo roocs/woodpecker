@@ -40,7 +40,7 @@ def check(
     )
 
 
-def fix(
+def apply(
     inputs: Any,
     fixes: str | Sequence[str] | None = None,
     dataset: str | None = None,
@@ -65,6 +65,3 @@ def fix(
             strict_io=strict_io,
         )
     )
-
-
-apply = fix

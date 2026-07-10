@@ -1,5 +1,6 @@
 def test_public_import_surfaces_are_available():
-    from woodpecker import CheckResult, FixResult, apply, check, fix, recipe
+    import woodpecker
+    from woodpecker import CheckResult, FixResult, apply, check, recipe
     from woodpecker.fixes import (
         UNPRIORITIZED,
         FixFunction,
@@ -22,13 +23,14 @@ def test_public_import_surfaces_are_available():
     assert callable(apply_recipe)
     assert callable(apply)
     assert callable(check)
-    assert callable(fix)
     assert callable(recipe.auto)
     assert callable(recipe.apply)
     assert callable(recipe.check)
-    assert callable(recipe.fix)
     assert callable(recipe.get)
     assert callable(recipe.list_recipes)
+    assert "fix" not in woodpecker.__all__
+    assert not hasattr(woodpecker, "fix")
+    assert not hasattr(recipe, "fix")
     assert Recipe.__name__ == "Recipe"
     assert FixRef.__name__ == "FixRef"
     assert CheckResult.__name__ == "CheckResult"

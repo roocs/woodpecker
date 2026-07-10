@@ -20,7 +20,6 @@ woodpecker apply ./data --recipe-id xmip.cmip6_preprocessing --dry-run
 ```
 
 Use [Recipe Reference](recipe-reference.md) to inspect discovered recipe ids.
-`woodpecker.recipe.fix(...)` remains available as a Python compatibility alias.
 
 ## Discovery Order
 
