@@ -8,6 +8,7 @@ from typing import Any, Iterable, Literal, Sequence
 from woodpecker.fixes.registry import FixFunctionRegistry
 from woodpecker.io import DataInput, normalize_inputs
 from woodpecker.recipes.models import Recipe
+from woodpecker.runner import RecipeStepContext
 from woodpecker.selection import select_fixes
 from woodpecker.stores.base import RecipeStore
 from woodpecker.stores.helpers import create_recipe_store
@@ -30,6 +31,7 @@ class RunContext:
     resolved_categories: tuple[str, ...]
     resolved_identifiers: tuple[str, ...]
     resolved_fix_options: dict[str, dict[str, Any]]
+    resolved_step_contexts: dict[str, RecipeStepContext]
     resolved_output_format: str
     source: Literal["direct", "store"]
 
@@ -110,13 +112,41 @@ def select_matching_store_recipes(
     )
 
 
+def recipe_step_contexts(
+    recipe: Recipe,
+    *,
+    phase: str | None = None,
+) -> dict[str, RecipeStepContext]:
+    """Return recipe execution context keyed by resolved fix id."""
+
+    normalized_phase = recipe.normalize_phase(phase)
+    contexts: dict[str, RecipeStepContext] = {}
+    for step_index, ref in enumerate(recipe.steps, start=1):
+        if normalized_phase is not None and ref.phase != normalized_phase:
+            continue
+        fix_id = recipe.resolve_fix_identifier(ref)
+        contexts[fix_id] = RecipeStepContext(
+            recipe_id=recipe.id,
+            phase=ref.phase,
+            fix_id=fix_id,
+            step_index=step_index,
+        )
+    return contexts
+
+
 def _store_recipe_result(
     recipe: Recipe,
     *,
     phase: str | None = None,
-) -> tuple[Literal["store"], list[Recipe], tuple[str, ...], dict[str, dict[str, Any]]]:
+) -> tuple[
+    Literal["store"],
+    list[Recipe],
+    tuple[str, ...],
+    dict[str, dict[str, Any]],
+    dict[str, RecipeStepContext],
+]:
     identifiers, fix_options = recipe.step_identifiers_and_options(phase=phase)
-    return "store", [recipe], identifiers, fix_options
+    return "store", [recipe], identifiers, fix_options, recipe_step_contexts(recipe, phase=phase)
 
 
 def _resolve_store_recipe(
@@ -126,7 +156,13 @@ def _resolve_store_recipe(
     recipe_id: str | None,
     empty_message: str,
     phase: str | None = None,
-) -> tuple[Literal["store"], list[Recipe], tuple[str, ...], dict[str, dict[str, Any]]]:
+) -> tuple[
+    Literal["store"],
+    list[Recipe],
+    tuple[str, ...],
+    dict[str, dict[str, Any]],
+    dict[str, RecipeStepContext],
+]:
     if recipe_id:
         return _store_recipe_result(store.get_recipe(recipe_id.strip()), phase=phase)
 
@@ -148,6 +184,7 @@ def resolve_recipe_source(
     list[Recipe],
     tuple[str, ...],
     dict[str, dict[str, Any]],
+    dict[str, RecipeStepContext],
 ]:
     if store_type == "auto":
         store = create_recipe_store(store_type, recipe_location)
@@ -175,7 +212,7 @@ def resolve_recipe_source(
             raise ValueError(
                 "--phase requires a recipe source via --recipe, --recipe-id, or --store auto."
             )
-        return "direct", [], (), {}
+        return "direct", [], (), {}, {}
 
     store = create_recipe_store(store_type, recipe_location)
     return _resolve_store_recipe(
@@ -237,7 +274,13 @@ def resolve_run_context(
     target_paths = resolve_target_paths(paths)
     inputs = normalize_inputs(target_paths)
 
-    source, selected_recipes, source_identifiers, source_fix_options = resolve_recipe_source(
+    (
+        source,
+        selected_recipes,
+        source_identifiers,
+        source_fix_options,
+        source_step_contexts,
+    ) = resolve_recipe_source(
         inputs=inputs,
         store_type=store_type,
         recipe_location=recipe_location,
@@ -255,6 +298,11 @@ def resolve_run_context(
     resolved_dataset = dataset
     resolved_categories = categories
     resolved_output_format = output_format
+    resolved_step_contexts = {
+        identifier: source_step_contexts[identifier]
+        for identifier in resolved_ordered_identifiers
+        if identifier in source_step_contexts
+    }
 
     fixes = select_fixes(
         dataset=resolved_dataset,
@@ -273,6 +321,7 @@ def resolve_run_context(
         resolved_categories=tuple(resolved_categories),
         resolved_identifiers=tuple(resolved_identifiers),
         resolved_fix_options=resolved_fix_options,
+        resolved_step_contexts=resolved_step_contexts,
         resolved_output_format=resolved_output_format,
         source=source,
     )
