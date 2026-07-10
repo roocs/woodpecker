@@ -43,47 +43,24 @@ An adaptation does not need to know about Rook. It only needs to declare when a
 CMIP6-decadal dataset needs a change, how to preview that change, and how to
 apply it in place.
 
-```python
-from __future__ import annotations
+Use the existing modules as templates:
 
-import xarray as xr
+| Module | Shows |
+| ------ | ----- |
+| `cmip6d_0001_time_meta.py` | Simple metadata normalization with a helper predicate and one changed attribute. |
+| `cmip6d_0002_calendar.py` | Prepare-phase calendar normalization for pre-concatenation use. |
+| `cmip6d_0014_reftime_coord.py` | Coordinate creation derived from existing time/start metadata. |
+| `cmip6d_0015_leadtime_coord.py` | Coordinate creation that depends on a previous adaptation step. |
 
-from woodpecker.fixes.labels import Labels
-from woodpecker.fixes.registry import FixFunction, FixFunctionRegistry
+Most modules follow the same shape:
 
-from .helpers import is_cmip6_decadal_netcdf
-
-
-def _needs_change(dataset: xr.Dataset) -> bool:
-    return is_cmip6_decadal_netcdf(dataset) and dataset.attrs.get("example") != "ok"
-
-
-@FixFunctionRegistry.register
-class DecadalExampleMetadata(FixFunction):
-    suffix = "example_metadata"
-    name = "Decadal example metadata"
-    description = "Normalizes the CMIP6-decadal example metadata field."
-    categories = ["metadata"]
-    priority = 99
-    dataset = "CMIP6-decadal"
-    labels = [Labels.RISK_METADATA_ONLY]
-
-    def matches(self, dataset: xr.Dataset) -> bool:
-        return is_cmip6_decadal_netcdf(dataset)
-
-    def check(self, dataset: xr.Dataset) -> list[str]:
-        if _needs_change(dataset):
-            return ["example metadata should be 'ok'"]
-        return []
-
-    def apply(self, dataset: xr.Dataset, dry_run: bool = True) -> bool:
-        if not _needs_change(dataset):
-            return False
-        if dry_run:
-            return True
-        dataset.attrs["example"] = "ok"
-        return True
-```
+1. A private `_needs_*` predicate.
+2. Optional private helper functions for the actual mutation.
+3. One `@FixFunctionRegistry.register` class.
+4. `matches()` delegates to `is_cmip6_decadal_netcdf()`.
+5. `check()` returns short user-facing findings.
+6. `apply()` returns `True` on dry-run when it would change the dataset, and
+   mutates only when `dry_run=False`.
 
 Checklist:
 
@@ -98,3 +75,7 @@ Checklist:
 Use `phase: "prepare"` for pre-concatenation changes, `phase: "apply"` for
 normal C3S/CDS adaptation, and `phase: "finalize"` for post-processing after
 the normal adaptation flow.
+
+The notebook `docs/notebooks/cmip6_decadal_rook_style_example.ipynb` shows the
+standalone public API flow used by Rook-style callers: load `c3s.cmip6_decadal`,
+run the `prepare` phase, then run the normal `apply` phase.
