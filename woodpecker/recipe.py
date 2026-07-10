@@ -9,8 +9,8 @@ from woodpecker.commands import execute_check, execute_check_recipe, execute_fix
 from woodpecker.recipes.models import RECIPE_PHASES as _ACCEPTED_RECIPE_PHASES
 from woodpecker.recipes.models import Recipe
 from woodpecker.recipes.resolver import recipe_step_contexts
-from woodpecker.runner import RecipeStepContext
 from woodpecker.results import CheckResult, FixResult
+from woodpecker.runner import RecipeStepContext
 from woodpecker.stores.helpers import create_recipe_store
 
 PREPARE_PHASE = _ACCEPTED_RECIPE_PHASES[0]
