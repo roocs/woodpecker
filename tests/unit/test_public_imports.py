@@ -28,6 +28,14 @@ def test_public_import_surfaces_are_available():
     assert callable(recipe.check)
     assert callable(recipe.get)
     assert callable(recipe.list_recipes)
+    assert recipe.PREPARE_PHASE == "prepare"
+    assert recipe.APPLY_PHASE == "apply"
+    assert recipe.FINALIZE_PHASE == "finalize"
+    assert recipe.RECIPE_PHASES == (
+        recipe.PREPARE_PHASE,
+        recipe.APPLY_PHASE,
+        recipe.FINALIZE_PHASE,
+    )
     assert "fix" not in woodpecker.__all__
     assert not hasattr(woodpecker, "fix")
     assert not hasattr(recipe, "fix")
@@ -51,6 +59,13 @@ def test_public_import_surfaces_are_available():
     assert callable(build_document)
     assert callable(run_fix)
     assert callable(select_fixes)
+
+
+def test_recipe_phase_constants_match_model_validation_vocabulary():
+    from woodpecker import recipe
+    from woodpecker.recipes.models import RECIPE_PHASES as model_recipe_phases
+
+    assert recipe.RECIPE_PHASES == model_recipe_phases
 
 
 def test_testing_public_api_exports_are_stable():

@@ -6,9 +6,15 @@ from typing import Any, Sequence
 
 import woodpecker.fixes  # noqa: F401  # registers built-in fixes
 from woodpecker.commands import execute_check, execute_check_recipe, execute_fix, execute_fix_recipe
+from woodpecker.recipes.models import RECIPE_PHASES as _ACCEPTED_RECIPE_PHASES
 from woodpecker.recipes.models import Recipe
 from woodpecker.results import CheckResult, FixResult
 from woodpecker.stores.helpers import create_recipe_store
+
+PREPARE_PHASE = _ACCEPTED_RECIPE_PHASES[0]
+APPLY_PHASE = _ACCEPTED_RECIPE_PHASES[1]
+FINALIZE_PHASE = _ACCEPTED_RECIPE_PHASES[2]
+RECIPE_PHASES = (PREPARE_PHASE, APPLY_PHASE, FINALIZE_PHASE)
 
 
 @dataclass(frozen=True)
