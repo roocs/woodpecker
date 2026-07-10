@@ -33,7 +33,7 @@ def run_woodpecker_recipe(
             "preview": [],
         }
 
-    result = woodpecker.recipe.fix(dataset, recipe, dry_run=not apply)
+    result = woodpecker.recipe.apply(dataset, recipe, dry_run=not apply)
     return {
         "recipe_id": recipe_id,
         "changed": result.changed,

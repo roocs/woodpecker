@@ -1,7 +1,7 @@
 # Overview
 
-Woodpecker is a small repair layer for climate-data workflows. It helps you
-find known dataset issues, preview the repair, and apply the fix before the data
+Woodpecker is a small adaptation layer for climate-data workflows. It helps you
+find known dataset issues, preview the changes, and apply them before the data
 moves further through a processing pipeline.
 
 ## Core Idea

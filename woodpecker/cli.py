@@ -391,5 +391,18 @@ def fix_cmd(
         raise SystemExit(1)
 
 
+_fix_alias_cmd = cli.commands.pop("fix")
+cli.add_command(
+    click.Command(
+        name="apply",
+        params=_fix_alias_cmd.params,
+        callback=_fix_alias_cmd.callback,
+        help="Apply selected fixes to NetCDF files.",
+    )
+)
+_fix_alias_cmd.help = "Deprecated compatibility alias for 'woodpecker apply'."
+cli.add_command(_fix_alias_cmd, "fix")
+
+
 if __name__ == "__main__":
     cli()

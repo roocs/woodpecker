@@ -101,11 +101,13 @@ def test_check_json_output_structure(
         (_fix_stats(persisted=0, persist_failed=1), 1),
     ],
 )
-def test_fix_json_output_contains_write_report(
+@pytest.mark.parametrize("command", ["apply", "fix"])
+def test_apply_and_fix_json_output_contains_write_report(
     isolated_cli_workspace: tuple[CliRunner, Callable[[str], Path]],
     monkeypatch,
     stats,
     expected_exit_code,
+    command,
 ):
     runner, make_placeholder_netcdf_path = isolated_cli_workspace
     make_placeholder_netcdf_path("cmip6_case.nc")
@@ -118,7 +120,7 @@ def test_fix_json_output_contains_write_report(
     result = runner.invoke(
         cli,
         [
-            "fix",
+            command,
             ".",
             "--select",
             "woodpecker.normalize_tas_units_to_kelvin",

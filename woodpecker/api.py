@@ -65,3 +65,6 @@ def fix(
             strict_io=strict_io,
         )
     )
+
+
+apply = fix

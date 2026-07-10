@@ -12,8 +12,8 @@ Use `--format json` when another tool needs machine-readable output.
 | List fixes | `woodpecker list-fixes` |
 | List recipes | `woodpecker list-recipes` |
 | Check with a recipe | `woodpecker check ./data --recipe-id cmip6.core_units` |
-| Preview a repair | `woodpecker fix ./data --recipe-id cmip6.core_units --dry-run` |
-| Apply a repair | `woodpecker fix ./data --recipe-id cmip6.core_units` |
+| Preview an apply run | `woodpecker apply ./data --recipe-id cmip6.core_units --dry-run` |
+| Apply a recipe | `woodpecker apply ./data --recipe-id cmip6.core_units` |
 | Check one fix id | `woodpecker check ./data --select woodpecker.normalize_tas_units_to_kelvin` |
 
 `check` exits with status `1` when findings are reported and `0` when no issues
@@ -73,18 +73,21 @@ woodpecker check ./data \
 Text findings show the selected fix severity label. JSON findings include the
 complete label metadata.
 
-## Fix
+## Apply
 
 ```bash
-woodpecker fix ./data --recipe-id cmip6.core_units --dry-run
-woodpecker fix ./data --recipe-id cmip6.core_units
-woodpecker fix ./data --select cmip6_decadal.time_metadata --dry-run
-woodpecker fix ./data --select cmip6_decadal.time_metadata
+woodpecker apply ./data --recipe-id cmip6.core_units --dry-run
+woodpecker apply ./data --recipe-id cmip6.core_units
+woodpecker apply ./data --select cmip6_decadal.time_metadata --dry-run
+woodpecker apply ./data --select cmip6_decadal.time_metadata
 ```
 
 Dry-run output shows the input path, selected fix id, fix name, severity label,
 and whether the fix would change the dataset. Use `--format json` for the same
 preview data as structured output.
+
+`woodpecker fix ...` remains available as a compatibility alias for
+`woodpecker apply ...`.
 
 ## Recipe Stores
 
@@ -131,12 +134,12 @@ woodpecker load-recipes --store duckdb --recipe recipes.duckdb \
 | Choose NetCDF output | `--output-format netcdf` |
 | Choose Zarr output | `--output-format zarr` |
 
-`fix` writes W3C PROV-JSON provenance by default.
+`apply` writes W3C PROV-JSON provenance by default.
 
 Use `--force-apply` only with explicit fix or recipe selection:
 
 ```bash
-woodpecker fix ./data --select cmip6_decadal.time_metadata --force-apply
+woodpecker apply ./data --select cmip6_decadal.time_metadata --force-apply
 ```
 
 Check optional I/O backend availability:

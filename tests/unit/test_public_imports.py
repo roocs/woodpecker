@@ -1,5 +1,5 @@
 def test_public_import_surfaces_are_available():
-    from woodpecker import CheckResult, FixResult, check, fix, recipe
+    from woodpecker import CheckResult, FixResult, apply, check, fix, recipe
     from woodpecker.fixes import (
         UNPRIORITIZED,
         FixFunction,
@@ -20,9 +20,11 @@ def test_public_import_surfaces_are_available():
     from woodpecker.selection import select_fixes
 
     assert callable(apply_recipe)
+    assert callable(apply)
     assert callable(check)
     assert callable(fix)
     assert callable(recipe.auto)
+    assert callable(recipe.apply)
     assert callable(recipe.check)
     assert callable(recipe.fix)
     assert callable(recipe.get)
