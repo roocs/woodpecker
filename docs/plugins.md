@@ -31,6 +31,33 @@ recipe = woodpecker.recipe.get("xmip.cmip6_preprocessing")
 Use [Fix Reference](FIXES.md) and [Recipe Reference](recipe-reference.md) for
 the full registered list.
 
+## C3S Contribution Pattern
+
+C3S adaptations live in dataset-family plugins and are exposed through recipe
+ids:
+
+| Recipe id | Plugin | Purpose |
+| --------- | ------ | ------- |
+| `c3s.cmip6_decadal` | `woodpecker-cmip6-decadal-plugin` | CMIP6-decadal C3S/CDS preparation and adaptation. |
+| `c3s.atlas` | `woodpecker-atlas-plugin` | Atlas C3S/CDS adaptation. |
+
+Contributors normally add one small adaptation class, register it in the plugin,
+add it to the recipe, and cover it with a synthetic dataset test. The recipe
+phase controls when it runs:
+
+| Phase | Use |
+| ----- | --- |
+| `prepare` | Pre-concatenation changes. |
+| `apply` | Normal adaptation steps. This is the default when `phase` is omitted. |
+| `finalize` | Post-processing after normal adaptation. |
+
+For the CMIP6-decadal plugin, follow the module naming pattern documented in
+`plugins/woodpecker-cmip6-decadal-plugin/README.md`:
+
+```text
+cmip6d_<sequence>_<short_name>.py
+```
+
 ## Labels
 
 Labels are user-facing metadata for fixes.
