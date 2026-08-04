@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.7.1 (2026-08-04)
+
+- Renamed the PyPI distribution to `roocs-woodpecker`; the Python import package
+  and CLI remain named `woodpecker`.
+- Added PyPI-facing README, license, and project URL metadata.
+- Updated bundled plugin dependencies and runtime installation guidance to use
+  the new distribution name.
+
 ## 0.7.0 (2026-07-10)
 
 - Renamed the public apply workflow from `fix` to `apply` in the Python API, CLI, docs, and examples.

@@ -5,6 +5,7 @@
 [![CI](https://github.com/roocs/woodpecker/actions/workflows/ci.yml/badge.svg)](https://github.com/roocs/woodpecker/actions/workflows/ci.yml)
 [![Docs](https://github.com/roocs/woodpecker/actions/workflows/docs.yml/badge.svg)](https://github.com/roocs/woodpecker/actions/workflows/docs.yml)
 [![Online Docs](https://img.shields.io/badge/docs-online-blue)](https://roocs.github.io/woodpecker/)
+[![PyPI](https://img.shields.io/pypi/v/roocs-woodpecker.svg)](https://pypi.org/project/roocs-woodpecker/)
 [![License](https://img.shields.io/github/license/roocs/woodpecker)](https://github.com/roocs/woodpecker/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://github.com/roocs/woodpecker/blob/main/pyproject.toml)
 
@@ -22,6 +23,15 @@ flowchart LR
 ```
 
 ## Quick Start
+
+Install the `roocs-woodpecker` distribution from PyPI. The Python package and
+command-line program remain named `woodpecker`:
+
+```bash
+pip install roocs-woodpecker
+```
+
+For a development checkout:
 
 ```bash
 conda env create -f environment.yml

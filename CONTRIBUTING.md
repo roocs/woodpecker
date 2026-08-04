@@ -300,7 +300,7 @@ Minimal plugin entry point:
 [project]
 name = "woodpecker-example-plugin"
 version = "0.1.0"
-dependencies = ["woodpecker>=0.4,<0.5"]
+dependencies = ["roocs-woodpecker>=0.7,<0.8"]
 
 [project.entry-points."woodpecker.plugins"]
 example = "woodpecker_example_plugin"
