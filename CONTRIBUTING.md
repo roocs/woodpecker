@@ -276,13 +276,13 @@ fixes live in plugins discovered via the `woodpecker.plugins` entry point group.
 
 Bundled plugin packages live under `plugins/`:
 
-| Plugin package                    | Namespace prefix |
-| --------------------------------- | ---------------- |
-| `woodpecker-atlas-plugin`         | `atlas`          |
-| `woodpecker-cmip6-plugin`         | `cmip6`          |
-| `woodpecker-cmip6-decadal-plugin` | `cmip6_decadal`  |
-| `woodpecker-cmip7-plugin`         | `cmip7`          |
-| `woodpecker-xmip-plugin`          | `xmip`           |
+| Plugin package                             | Namespace prefix |
+| ------------------------------------------ | ---------------- |
+| `roocs-woodpecker-atlas-plugin`            | `atlas`          |
+| `woodpecker-cmip6-plugin`                  | `cmip6`          |
+| `roocs-woodpecker-cmip6-decadal-plugin`  | `cmip6_decadal`  |
+| `woodpecker-cmip7-plugin`                  | `cmip7`          |
+| `woodpecker-xmip-plugin`                   | `xmip`           |
 
 Install bundled plugins during development:
 

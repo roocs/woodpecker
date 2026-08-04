@@ -1,4 +1,4 @@
-# woodpecker-cmip6-decadal-plugin
+# roocs-woodpecker-cmip6-decadal-plugin
 
 CMIP6-decadal fixes for Woodpecker.
 
@@ -9,6 +9,12 @@ This plugin registers the CMIP6-decadal fix family, including:
 - `cmip6_decadal.realization_variable`
 
 ## Install
+
+```bash
+pip install roocs-woodpecker-cmip6-decadal-plugin
+```
+
+For a development checkout:
 
 ```bash
 pip install -e .

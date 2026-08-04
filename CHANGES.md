@@ -9,6 +9,9 @@
 - Added PyPI-facing README, license, and project URL metadata.
 - Updated bundled plugin dependencies and runtime installation guidance to use
   the new distribution name.
+- Renamed the published Atlas and CMIP6-decadal plugin distributions to
+  `roocs-woodpecker-atlas-plugin` and
+  `roocs-woodpecker-cmip6-decadal-plugin`, and bumped them to `0.7.1`.
 
 ## 0.7.0 (2026-07-10)
 

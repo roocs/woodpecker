@@ -117,9 +117,9 @@ Plugins own namespace prefixes:
 
 | Package | Prefix |
 | ------- | ------ |
-| `woodpecker-atlas-plugin` | `atlas` |
+| `roocs-woodpecker-atlas-plugin` | `atlas` |
 | `woodpecker-cmip6-plugin` | `cmip6` |
-| `woodpecker-cmip6-decadal-plugin` | `cmip6_decadal` |
+| `roocs-woodpecker-cmip6-decadal-plugin` | `cmip6_decadal` |
 | `woodpecker-cmip7-plugin` | `cmip7` |
 | `woodpecker-xmip-plugin` | `xmip` |
 

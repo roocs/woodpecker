@@ -19,9 +19,9 @@ apply, and report which fixes still need work.
   reports, and missing fixes.
 - [ ] Update the CMIP6-decadal fixes for the new data.
 - [ ] Keep Atlas as the second service-style recipe guard.
-- [ ] Publish `woodpecker` to PyPI and conda.
-- [ ] Publish at least `woodpecker-atlas-plugin` and
-  `woodpecker-cmip6-decadal-plugin` to PyPI and conda.
+- [ ] Publish `roocs-woodpecker` to PyPI and conda.
+- [ ] Publish at least `roocs-woodpecker-atlas-plugin` and
+  `roocs-woodpecker-cmip6-decadal-plugin` to PyPI and conda.
 
 ## Done
 
@@ -55,9 +55,9 @@ apply, and report which fixes still need work.
 
 ## Publishing
 
-- [ ] Publish `woodpecker` to PyPI.
-- [ ] Publish `woodpecker-atlas-plugin` to PyPI.
-- [ ] Publish `woodpecker-cmip6-decadal-plugin` to PyPI.
+- [ ] Publish `roocs-woodpecker` to PyPI.
+- [ ] Publish `roocs-woodpecker-atlas-plugin` to PyPI.
+- [ ] Publish `roocs-woodpecker-cmip6-decadal-plugin` to PyPI.
 - [ ] Verify clean installs from PyPI for core, Atlas, and decadal.
 - [ ] Add or update conda recipes for core, Atlas, and decadal.
 - [ ] Verify clean conda installs for core, Atlas, and decadal.
@@ -69,7 +69,7 @@ apply, and report which fixes still need work.
 - [ ] Prefer recipe ids for provider workflows; keep direct fix ids for debugging
   and contributors.
 - [ ] Review plugin dependencies and data I/O assumptions for server use.
-- [ ] Decide whether `woodpecker-cmip6-decadal-plugin` should move to its own
+- [ ] Decide whether `roocs-woodpecker-cmip6-decadal-plugin` should move to its own
   repository before external patches are expected.
 - [ ] If split out, keep history, tests, package metadata, and release workflow
   easy for external contributors.
