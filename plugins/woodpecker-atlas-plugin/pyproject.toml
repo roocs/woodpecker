@@ -1,12 +1,13 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "woodpecker-atlas-plugin"
-version = "0.7.0"
+name = "roocs-woodpecker-atlas-plugin"
+version = "0.7.1"
 description = "External plugin providing ATLAS fixes for Woodpecker"
 readme = "README.md"
+license = "Apache-2.0"
 requires-python = ">=3.10"
 dependencies = [
   "roocs-woodpecker>=0.7,<0.8",
@@ -20,6 +21,11 @@ test = [
 
 [project.entry-points."woodpecker.plugins"]
 atlas = "woodpecker_atlas_plugin"
+
+[project.urls]
+Documentation = "https://roocs.github.io/woodpecker/plugins/"
+Issues = "https://github.com/roocs/woodpecker/issues"
+Repository = "https://github.com/roocs/woodpecker"
 
 [tool.setuptools.packages.find]
 where = ["src"]

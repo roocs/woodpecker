@@ -6,9 +6,9 @@ directory.
 
 | Plugin package | Prefix | Fixes | Recipes | Status |
 | -------------- | ------ | ----: | ----: | ------ |
-| `woodpecker-atlas-plugin` | `atlas` | 2 | 1 | bundled |
+| `roocs-woodpecker-atlas-plugin` | `atlas` | 2 | 1 | bundled |
 | `woodpecker-cmip6-plugin` | `cmip6` | 1 | 0 | bundled |
-| `woodpecker-cmip6-decadal-plugin` | `cmip6_decadal` | 15 | 1 | bundled |
+| `roocs-woodpecker-cmip6-decadal-plugin` | `cmip6_decadal` | 15 | 1 | bundled |
 | `woodpecker-cmip7-plugin` | `cmip7` | 3 | 2 | bundled |
 | `woodpecker-xmip-plugin` | `xmip` | 13 | 2 | demo |
 
@@ -38,8 +38,8 @@ ids:
 
 | Recipe id | Plugin | Purpose |
 | --------- | ------ | ------- |
-| `c3s.cmip6_decadal` | `woodpecker-cmip6-decadal-plugin` | CMIP6-decadal C3S/CDS preparation and adaptation. |
-| `c3s.atlas` | `woodpecker-atlas-plugin` | Atlas C3S/CDS adaptation. |
+| `c3s.cmip6_decadal` | `roocs-woodpecker-cmip6-decadal-plugin` | CMIP6-decadal C3S/CDS preparation and adaptation. |
+| `c3s.atlas` | `roocs-woodpecker-atlas-plugin` | Atlas C3S/CDS adaptation. |
 
 Contributors normally add one small adaptation class, register it in the plugin,
 add it to the recipe, and cover it with a synthetic dataset test. The recipe

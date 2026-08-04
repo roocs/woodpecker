@@ -1,4 +1,4 @@
-# woodpecker-atlas-plugin
+# roocs-woodpecker-atlas-plugin
 
 ATLAS fixes for Woodpecker.
 
@@ -8,6 +8,12 @@ This plugin registers:
 - `atlas.project_id_normalization`
 
 ## Install
+
+```bash
+pip install roocs-woodpecker-atlas-plugin
+```
+
+For a development checkout:
 
 ```bash
 pip install -e .
