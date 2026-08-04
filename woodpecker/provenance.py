@@ -49,7 +49,7 @@ def build_prov_document(
     generated_at = utc_now_iso()
 
     try:
-        core_version = version("woodpecker")
+        core_version = version("roocs-woodpecker")
     except PackageNotFoundError:
         core_version = "unknown"
 

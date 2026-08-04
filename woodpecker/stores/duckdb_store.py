@@ -26,7 +26,7 @@ class DuckDBRecipeStore(RecipeStore):
             import duckdb
         except ImportError as exc:  # pragma: no cover - exercised in environments without duckdb
             raise RuntimeError(
-                "DuckDBRecipeStore requires optional dependency 'duckdb'. Install with: pip install duckdb (or pip install 'woodpecker[full]')"
+                "DuckDBRecipeStore requires optional dependency 'duckdb'. Install with: pip install duckdb (or pip install 'roocs-woodpecker[full]')"
             ) from exc
         return duckdb
 

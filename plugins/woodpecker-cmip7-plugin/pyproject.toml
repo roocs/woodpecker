@@ -9,7 +9,7 @@ description = "Reference external plugin providing CMIP7-style fixes for Woodpec
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-  "woodpecker>=0.7,<0.8",
+  "roocs-woodpecker>=0.7,<0.8",
   "xarray>=2024.1.0",
 ]
 

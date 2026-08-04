@@ -1,11 +1,14 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "woodpecker"
-version = "0.7.0"
+name = "roocs-woodpecker"
+version = "0.7.1"
 description = "Lightweight fix catalog + scaffolding for climate dataset fixes"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 dependencies = [
   "click>=8.1",
@@ -20,7 +23,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   "pytest>=8.0",
-  "ruff>=0.6.0",
+  "ruff==0.16.1",
 ]
 full = [
   # runtime io
@@ -44,6 +47,11 @@ docs = [
 
 [project.scripts]
 woodpecker = "woodpecker.cli:cli"
+
+[project.urls]
+Documentation = "https://roocs.github.io/woodpecker/"
+Issues = "https://github.com/roocs/woodpecker/issues"
+Repository = "https://github.com/roocs/woodpecker"
 
 [tool.setuptools.packages.find]
 include = ["woodpecker*"]
