@@ -216,10 +216,7 @@ Python authoring helpers can generate the same document schema:
 ```python
 from woodpecker.recipes import fix, recipe
 
-atlas_basic = (
-    recipe("c3s.atlas", fix("atlas.encoding_cleanup"))
-    .match(path_patterns=["*atlas*.nc"])
-)
+atlas_basic = recipe("c3s.atlas", fix("atlas.encoding_cleanup")).match(path_patterns=["*atlas*.nc"])
 
 atlas_basic.to_yaml("atlas_basic_recipe.yaml")
 ```
@@ -310,6 +307,7 @@ Minimal plugin fix function:
 
 ```python
 from woodpecker.fixes.registry import FixFunction, register_fix_function
+
 
 @register_fix_function
 class ExternalDemo(FixFunction):

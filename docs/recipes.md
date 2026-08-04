@@ -70,16 +70,13 @@ findings = woodpecker.recipe.check(dataset, "my-recipes.yaml")
 ```python
 from woodpecker.recipes import fix, recipe
 
-cmip6_core = (
-    recipe(
-        "cmip6.core_units",
-        fix("woodpecker.normalize_tas_units_to_kelvin"),
-        description="Normalize CMIP6 tas units.",
-    )
-    .match(
-        dataset_id_patterns=["CMIP6.CMIP.*.Amon.tas.*"],
-        attrs={"project_id": "CMIP6", "activity_id": "CMIP"},
-    )
+cmip6_core = recipe(
+    "cmip6.core_units",
+    fix("woodpecker.normalize_tas_units_to_kelvin"),
+    description="Normalize CMIP6 tas units.",
+).match(
+    dataset_id_patterns=["CMIP6.CMIP.*.Amon.tas.*"],
+    attrs={"project_id": "CMIP6", "activity_id": "CMIP"},
 )
 
 cmip6_core.to_yaml("cmip6_core_recipe.yaml")
