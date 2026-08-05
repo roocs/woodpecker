@@ -19,12 +19,15 @@ apply, and report which fixes still need work.
   reports, and missing fixes.
 - [ ] Update the CMIP6-decadal fixes for the new data.
 - [ ] Keep Atlas as the second service-style recipe guard.
-- [ ] Publish `roocs-woodpecker` to PyPI and conda.
-- [ ] Publish at least `roocs-woodpecker-atlas-plugin` and
-  `roocs-woodpecker-cmip6-decadal-plugin` to PyPI and conda.
+- [ ] Publish conda packages for core, Atlas, and CMIP6-decadal.
 
 ## Done
 
+- [x] Released `v0.7.1`.
+- [x] Published `roocs-woodpecker`, `roocs-woodpecker-atlas-plugin`, and
+  `roocs-woodpecker-cmip6-decadal-plugin` `0.7.1` to PyPI.
+- [x] Verified a clean PyPI installation and discovery of the Atlas and
+  CMIP6-decadal recipes.
 - [x] Released `v0.7.0`.
 - [x] Public apply workflow uses `apply` in API, CLI, docs, and examples.
 - [x] C3S recipe ids use the `c3s.*` prefix.
@@ -53,14 +56,14 @@ apply, and report which fixes still need work.
 - [ ] Update `docs/notebooks/cmip6_decadal_recipe_example.ipynb` only if the
   public flow changes.
 
-## Publishing
+## Conda Packaging
 
-- [ ] Publish `roocs-woodpecker` to PyPI.
-- [ ] Publish `roocs-woodpecker-atlas-plugin` to PyPI.
-- [ ] Publish `roocs-woodpecker-cmip6-decadal-plugin` to PyPI.
-- [ ] Verify clean installs from PyPI for core, Atlas, and decadal.
-- [ ] Add or update conda recipes for core, Atlas, and decadal.
-- [ ] Verify clean conda installs for core, Atlas, and decadal.
+- [ ] Create a conda recipe for `roocs-woodpecker`.
+- [ ] Create a conda recipe for `roocs-woodpecker-atlas-plugin`.
+- [ ] Create a conda recipe for `roocs-woodpecker-cmip6-decadal-plugin`.
+- [ ] Publish all three packages to the selected conda channel.
+- [ ] Verify a clean conda installation and discovery of the Atlas and
+  CMIP6-decadal recipes.
 - [ ] Decide later whether to publish the CMIP6, CMIP7, and xMIP plugins.
 
 ## Provider Readiness
