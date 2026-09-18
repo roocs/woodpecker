@@ -12,8 +12,8 @@ Milano, 2026
 
 Many projects have developed useful repair and standardization code:
 
-- xMIP cleans and organizes MIP data for analysis in the Pangeo ecosystem.
-- ESMValTool's `fixer-prototype` explores configurable fixes with CMIP7 and ESA-CCI plugins.
+- [xMIP](https://github.com/jbusecke/xMIP) cleans and organizes MIP data for analysis in the Pangeo ecosystem.
+- [ESMValTool's fixer prototype](https://github.com/ESMValGroup/fixer-prototype) explores configurable fixes with CMIP7 and ESA-CCI plugins.
 - Services and projects maintain further fixes in local libraries, scripts, and workflows.
 
 These implementations reflect different data, communities, and use cases. That specialization is useful.
@@ -86,16 +86,15 @@ class TimeMetadata(FixFunction):
     prefix = "cmip6_decadal"
     suffix = "time_metadata"
 
-    def matches(self, dataset): ...
-    def check(self, dataset) -> list[str]: ...
-    def apply(self, dataset, dry_run=True) -> bool: ...
+    def apply(self, dataset, dry_run=True):
+        ...
 ```
 
 The plugin provides:
 
 - the scientific and technical knowledge
 - the implementation
-- matching rules and options
+- optional matching and checks
 - tests and maintenance
 
 Woodpecker provides registration, discovery, execution, results, and provenance.
@@ -139,11 +138,7 @@ The Woodpecker documentation includes an interactive overview of all registered 
 - inspect descriptions, severity, labels, aliases, and package sources
 - link directly to a fix through its stable anchor
 
-Example:
-
-```text
-https://roocs.github.io/woodpecker/fixes.html#woodpecker.normalize_tas_units_to_kelvin
-```
+Example: [`woodpecker.normalize_tas_units_to_kelvin`](https://roocs.github.io/woodpecker/fixes.html#woodpecker.normalize_tas_units_to_kelvin)
 
 This browser is a demonstration of how a portal, an Errata entry, or documentation can refer to one precise fix.
 
@@ -180,19 +175,18 @@ The plugin remains the authoritative implementation.
 import woodpecker
 
 recipe = woodpecker.recipe.get("c3s.cmip6_decadal")
-findings = woodpecker.recipe.check(dataset, recipe)
-preview = woodpecker.recipe.apply(dataset, recipe, dry_run=True)
 result = woodpecker.recipe.apply(dataset, recipe, dry_run=False)
 ```
 
 ## Command line
 
 ```bash
-woodpecker check ./data --recipe-id c3s.cmip6_decadal
-woodpecker apply ./data --recipe-id c3s.cmip6_decadal --dry-run
+woodpecker apply ./data --recipe-id c3s.cmip6_decadal
 ```
 
 Both routes use the same identifiers, plugins, and recipes.
+
+Matching, separate checks, and dry-run previews are also available when needed.
 
 ---
 
