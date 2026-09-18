@@ -2,7 +2,7 @@
 
 ## A common interface for climate-data fixes
 
-Woodpecker is a lightweight Python interface for discovering, combining, and applying climate-data fixes supplied by its core and plugins.
+Woodpecker is a **lightweight Python interface** for discovering, combining, and applying climate-data fixes supplied by its **core and plugins**.
 
 <https://github.com/roocs/woodpecker>
 
@@ -12,7 +12,7 @@ Milano, 2026
 
 # 2. Why the name Woodpecker?
 
-A woodpecker is a bird that lives in the forest and picks insects out of trees. It helps to keep the forest healthy.
+A woodpecker is a **bird** that lives in the forest and picks insects out of trees. It helps to **keep the forest healthy**.
 
 [![Male pileated woodpecker foraging on a tree](https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/PileatedWoodpeckerFeedingonTree%2C_crop.jpg/1280px-PileatedWoodpeckerFeedingonTree%2C_crop.jpg)](https://commons.wikimedia.org/wiki/File:PileatedWoodpeckerFeedingonTree,_crop.jpg)
 
@@ -39,24 +39,24 @@ Many projects have developed useful repair and standardization code:
 
 These implementations reflect different data, communities, and use cases. That specialization is useful.
 
-The problem is the lack of a small common contract for finding, referencing, and running them.
+The problem is the lack of a **small common contract** for finding, referencing, and running them.
 
 ---
 
 # 4. Woodpecker does not replace the fix ecosystem
 
-Woodpecker does not aim to become the single fixing library for every climate-data project.
+Woodpecker **does not aim to become the single fixing library** for every climate-data project.
 
 It provides:
 
-- a thin interface layer
+- a **thin interface layer**
 - a small set of common functions
-- plugin discovery
-- stable identifiers for fixes and recipes
-- a Python API and command-line interface
+- **plugin discovery**
+- **stable identifiers** for fixes and recipes
+- a **Python API and command-line interface**
 - checking, dry-run previews, execution, and provenance
 
-The plugins contain most of the domain-specific work.
+The **plugins contain most of the domain-specific work**.
 
 ---
 
@@ -75,7 +75,7 @@ flowchart TD
 
 Plugins may be narrow and project-specific. They may implement fixes directly or adapt existing libraries.
 
-Woodpecker gives each plugin the same entry point without taking ownership away from its maintainers.
+Woodpecker gives each plugin the **same entry point** while its maintainers keep control of the implementation.
 
 ---
 
@@ -110,24 +110,42 @@ class RenameCmip6Axes(FixFunction):
         ...
 ```
 
-The stable fix ID combines two parts:
+The **stable fix ID** combines two parts:
 
-```text
-xmip                + rename_cmip6_axes
-plugin prefix         fix suffix
+| Plugin prefix | Fix suffix | Stable fix ID |
+| --- | --- | --- |
+| `xmip` | `rename_cmip6_axes` | `xmip.rename_cmip6_axes` |
 
-= xmip.rename_cmip6_axes
-```
+Woodpecker joins the prefix and suffix with a dot.
 
-- The plugin name defines the `xmip` namespace prefix.
-- The fix name defines the `rename_cmip6_axes` suffix.
-- The plugin still owns the implementation, tests, and domain knowledge.
+- The **plugin name** defines the `xmip` namespace prefix.
+- The **fix name** defines the `rename_cmip6_axes` suffix.
+- The **plugin owns** the implementation, tests, and domain knowledge.
 
 Woodpecker provides registration, discovery, execution, results, and provenance.
 
 ---
 
-# 8. Stable identifiers form the common contract
+# 8. Recipes combine fixes for a use case
+
+```yaml
+recipes:
+  - id: xmip.cmip6_preprocessing
+    steps:
+      - id: woodpecker.rename_variables
+      - id: xmip.broadcast_lon_lat
+      - id: woodpecker.normalize_longitude_convention
+```
+
+- A recipe combines fixes for a **defined workflow**.
+- The fixes can come from **one or several plugins**.
+- Plugins retain their own namespaces and release cycles.
+- JSON and YAML make recipes **portable and reviewable**.
+- Catalogue, JSON, and DuckDB stores support different deployment needs.
+
+---
+
+# 9. Stable identifiers form the common contract
 
 ```text
 xmip.rename_cmip6_axes
@@ -136,7 +154,7 @@ woodpecker.normalize_longitude_convention
 xmip.cmip6_preprocessing       # recipe
 ```
 
-The identifier is independent of the calling environment.
+The identifier is **independent of the calling environment**.
 
 The same fix or recipe can be referenced by:
 
@@ -146,21 +164,21 @@ The same fix or recipe can be referenced by:
 - an ESGF Errata record or another portal
 - documentation and tests
 
-The portal does not need to reproduce the repair instructions. It can point to a maintained, executable definition.
+The portal can point to a **maintained, executable definition** instead of reproducing repair instructions.
 
 - ESGF Errata: <https://errata.esgf.io/static/index.html>
 - Woodpecker fix IDs: <https://roocs.github.io/woodpecker/fixes.html>
 
 ---
 
-# 9. The fix browser makes identifiers visible
+# 10. The fix browser makes identifiers visible
 
 The Woodpecker documentation includes an interactive overview of all registered fixes:
 
-- search by ID, name, category, dataset, or source
-- distinguish core fixes from plugin-provided fixes
+- **search** by ID, name, category, dataset, or source
+- distinguish **core fixes from plugin-provided fixes**
 - inspect descriptions, severity, labels, aliases, and package sources
-- link directly to a fix through its stable anchor
+- link directly to a fix through its **stable anchor**
 
 Example: [`woodpecker.normalize_tas_units_to_kelvin`](https://roocs.github.io/woodpecker/fixes.html#woodpecker.normalize_tas_units_to_kelvin)
 
@@ -168,7 +186,7 @@ This browser is a demonstration of how a portal, an Errata entry, or documentati
 
 ---
 
-# 10. From an ESGF Errata record to an executable fix
+# 11. From an ESGF Errata record to an executable fix
 
 ```mermaid
 flowchart TD
@@ -181,17 +199,17 @@ flowchart TD
 
 This creates a link between issue documentation and executable repair logic:
 
-1. The Errata record identifies the affected data.
-2. It references a stable fix or recipe ID.
-3. The Woodpecker documentation makes the ID and its source discoverable.
-4. Woodpecker resolves that ID through an installed plugin.
-5. A user or service can check, preview, and apply the repair.
+1. The **Errata record** identifies the affected data.
+2. It references a **stable fix or recipe ID**.
+3. The fix browser makes the **ID and its source discoverable**.
+4. Woodpecker resolves the ID through an **installed plugin**.
+5. A user or service can **check, preview, and apply** the repair.
 
 The plugin remains the authoritative implementation.
 
 ---
 
-# 11. One interface for local and service use
+# 12. One interface for local and service use
 
 ## Python library
 
@@ -208,13 +226,13 @@ result = woodpecker.recipe.apply(dataset, recipe, dry_run=False)
 woodpecker apply ./data --recipe-id xmip.cmip6_preprocessing
 ```
 
-Both routes use the same identifiers, plugins, and recipes.
+Both routes use the **same identifiers, plugins, and recipes**.
 
 Matching, separate checks, and dry-run previews are also available when needed.
 
 ---
 
-# 12. Rook uses Woodpecker as a library
+# 13. Rook uses Woodpecker as a library
 
 ```mermaid
 flowchart LR
@@ -223,31 +241,12 @@ flowchart LR
     R --> O["CDS output"]
 ```
 
-- Woodpecker prepares known dataset issues through the Python API.
-- Rook continues with generic operations such as subset, concatenate, or regrid.
-- Dataset-specific behaviour stays outside the generic processing code.
+- **Woodpecker prepares** known dataset issues through the Python API.
+- **Rook continues** with generic operations such as subset, concatenate, or regrid.
+- **Dataset-specific behaviour stays outside** the generic processing code.
 - The same recipe remains available outside Rook through the CLI or another Python workflow.
 
 **Woodpecker prepares the data. Rook operates on it.**
-
----
-
-# 13. Recipes describe a use case without centralizing its fixes
-
-```yaml
-recipes:
-  - id: xmip.cmip6_preprocessing
-    steps:
-      - id: woodpecker.rename_variables
-      - id: xmip.broadcast_lon_lat
-      - id: woodpecker.normalize_longitude_convention
-```
-
-- A recipe combines fixes for a defined workflow.
-- The fixes can come from one or several plugins.
-- Plugins retain their own namespaces and release cycles.
-- JSON and YAML make recipes portable and reviewable.
-- Catalogue, JSON, and DuckDB stores support different deployment needs.
 
 ---
 
@@ -255,13 +254,13 @@ recipes:
 
 | Plugin or example | Focus |
 | --- | --- |
-| Atlas | Production adaptations for the Copernicus Climate Data Store |
-| CMIP6 Decadal | Production Decadal adaptations for the Copernicus Climate Data Store |
-| CMIP6 | Dummy plugin used as a placeholder |
-| ESMValTool CMIP7 example | CMIP7 and ESA-CCI examples based on the ESMValTool fixer prototype |
-| xMIP | xMIP-style CMIP6 preprocessing exposed as Woodpecker fixes and recipes |
+| **Atlas** | Production adaptations for the Copernicus Climate Data Store |
+| **CMIP6 Decadal** | Production Decadal adaptations for the Copernicus Climate Data Store |
+| **CMIP6** | Dummy plugin used as a placeholder |
+| **ESMValTool CMIP7 example** | CMIP7 and ESA-CCI examples based on the ESMValTool fixer prototype |
+| **xMIP** | xMIP-style CMIP6 preprocessing exposed as Woodpecker fixes and recipes |
 
-These plugins do not define the limit of Woodpecker.
+These plugins **do not define the limit of Woodpecker**.
 
 Other projects can provide independent plugins while keeping their own code, scope, governance, and users.
 
@@ -269,15 +268,17 @@ Other projects can provide independent plugins while keeping their own code, sco
 
 # 15. Collaboration without one central fixes library
 
-> It would be really great if we could all work together on the fixes package to avoid developing fragmented fixes solutions again.
+> **It would be really great if we could all work together on the fixes package to avoid developing fragmented fixes solutions again.**
+>
+> — Bouwe, ESMValTool developer
 
 A common Woodpecker interface allows cooperation without forcing every project into one implementation:
 
-- projects continue to own their fix logic
-- plugins expose that logic through a shared pattern
-- stable identifiers make fixes discoverable and referenceable
-- recipes combine fixes for specific workflows
-- services and users call them through the same interface
+- **projects own** their fix logic
+- **plugins expose** that logic through a shared pattern
+- **stable identifiers** make fixes discoverable and referenceable
+- **recipes combine** fixes for specific workflows
+- **services and users** call them through the same interface
 
 The shared work is the contract and the connections between projects.
 
@@ -293,7 +294,7 @@ The shared work is the contract and the connections between projects.
 
 ## A practical first step
 
-Expose one existing project fix through a plugin and reference its stable ID from a recipe or Errata example.
+**Expose one existing project fix through a plugin** and reference its stable ID from a recipe or Errata example.
 
 ---
 
@@ -301,11 +302,11 @@ Expose one existing project fix through a plugin and reference its stable ID fro
 
 ## One interface, many fix implementations
 
-- Woodpecker: <https://github.com/roocs/woodpecker>
-- Documentation: <https://roocs.github.io/woodpecker/>
-- Fix browser: <https://roocs.github.io/woodpecker/fixes.html>
-- ESGF Errata: <https://errata.esgf.io/static/index.html>
-- xMIP: <https://github.com/jbusecke/xMIP>
-- ESMValTool fixer prototype: <https://github.com/ESMValGroup/fixer-prototype>
+- **Woodpecker:** <https://github.com/roocs/woodpecker>
+- **Documentation:** <https://roocs.github.io/woodpecker/>
+- **Fix browser:** <https://roocs.github.io/woodpecker/fixes.html>
+- **ESGF Errata:** <https://errata.esgf.io/static/index.html>
+- **xMIP:** <https://github.com/jbusecke/xMIP>
+- **ESMValTool fixer prototype:** <https://github.com/ESMValGroup/fixer-prototype>
 
 `pip install roocs-woodpecker`
