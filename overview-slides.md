@@ -103,11 +103,8 @@ flowchart LR
 # 7. Plugins provide fixes and their namespace
 
 ```python
-class RenameCmip6Axes(FixFunction):
-    suffix = "rename_cmip6_axes"
-
-    def apply(self, dataset, dry_run=True):
-        ...
+cclass RenameCmip6Axes(FixFunction):
+    def apply(self, dataset, dry_run=True): ...
 ```
 
 - A plugin fix derives from the Woodpecker **`FixFunction` base class**.
