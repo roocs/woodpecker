@@ -1,4 +1,4 @@
-# Woodpecker
+# 1. Woodpecker
 
 ## A common interface for climate-data fixes
 
@@ -8,7 +8,7 @@ Milano, 2026
 
 ---
 
-# Climate-data fixes already exist
+# 2. Climate-data fixes already exist
 
 Many projects have developed useful repair and standardization code:
 
@@ -22,7 +22,7 @@ The problem is the lack of a small common contract for finding, referencing, and
 
 ---
 
-# Woodpecker does not replace the fix ecosystem
+# 3. Woodpecker does not replace the fix ecosystem
 
 Woodpecker does not aim to become the single fixing library for every climate-data project.
 
@@ -39,17 +39,17 @@ The plugins contain most of the domain-specific work.
 
 ---
 
-# Thin core, independent plugins
+# 4. Thin core, independent plugins
 
 ```mermaid
 flowchart TD
     U["Woodpecker API and CLI"] --> C["Thin core"]
-    C --> P1["Project plugin A"]
-    C --> P2["Dataset plugin B"]
-    C --> P3["Use-case plugin C"]
-    P1 --> L1["Own fix logic"]
-    P2 --> L2["Existing library"]
-    P3 --> L3["Local adaptations"]
+    C --> P1["xMIP plugin"]
+    C --> P2["ESMValTool plugin"]
+    C --> P3["CMIP6 Decadal plugin"]
+    P1 --> L1["xMIP preprocessing"]
+    P2 --> L2["ESMValTool fixes"]
+    P3 --> L3["C3S, CDS, Copernicus"]
 ```
 
 Plugins may be narrow and project-specific. They may implement fixes directly or adapt existing libraries.
@@ -58,7 +58,7 @@ Woodpecker gives each plugin the same entry point without taking ownership away 
 
 ---
 
-# A small common vocabulary
+# 5. A small common vocabulary
 
 **Fix**  
 One check or repair exposed through a stable identifier.
@@ -79,7 +79,7 @@ flowchart LR
 
 ---
 
-# The plugin owns the climate-data knowledge
+# 6. The plugin owns the climate-data knowledge
 
 ```python
 class TimeMetadata(FixFunction):
@@ -101,7 +101,7 @@ Woodpecker provides registration, discovery, execution, results, and provenance.
 
 ---
 
-# Stable identifiers form the common contract
+# 7. Stable identifiers form the common contract
 
 ```text
 cmip6_decadal.time_metadata
@@ -129,7 +129,7 @@ The portal does not need to reproduce the repair instructions. It can point to a
 
 ---
 
-# The fix browser makes identifiers visible
+# 8. The fix browser makes identifiers visible
 
 The Woodpecker documentation includes an interactive overview of all registered fixes:
 
@@ -144,7 +144,7 @@ This browser is a demonstration of how a portal, an Errata entry, or documentati
 
 ---
 
-# From an ESGF Errata record to an executable fix
+# 9. From an ESGF Errata record to an executable fix
 
 ```mermaid
 flowchart TD
@@ -167,7 +167,7 @@ The plugin remains the authoritative implementation.
 
 ---
 
-# One interface for local and service use
+# 10. One interface for local and service use
 
 ## Python library
 
@@ -190,7 +190,7 @@ Matching, separate checks, and dry-run previews are also available when needed.
 
 ---
 
-# Rook uses Woodpecker as a library
+# 11. Rook uses Woodpecker as a library
 
 ```mermaid
 flowchart LR
@@ -208,7 +208,7 @@ flowchart LR
 
 ---
 
-# Recipes describe a use case without centralizing its fixes
+# 12. Recipes describe a use case without centralizing its fixes
 
 ```yaml
 recipes:
@@ -230,7 +230,7 @@ recipes:
 
 ---
 
-# Current plugins demonstrate the pattern
+# 13. Current plugins demonstrate the pattern
 
 | Plugin or example | Focus |
 | --- | --- |
@@ -246,7 +246,7 @@ Other projects can provide independent plugins while keeping their own code, sco
 
 ---
 
-# Collaboration without one central fixes library
+# 14. Collaboration without one central fixes library
 
 > It would be really great if we could all work together on the fixes package to avoid developing fragmented fixes solutions again.
 
@@ -262,7 +262,7 @@ The shared work is the contract and the connections between projects.
 
 ---
 
-# Questions for Milano
+# 15. Questions for Milano
 
 - Can existing fix libraries expose selected functions as Woodpecker plugins?
 - Which identifiers should ESGF Errata and other portals reference?
@@ -276,7 +276,7 @@ Expose one existing project fix through a plugin and reference its stable ID fro
 
 ---
 
-# Woodpecker
+# 16. Woodpecker
 
 ## One interface, many fix implementations
 
