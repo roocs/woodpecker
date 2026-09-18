@@ -68,8 +68,8 @@ flowchart TD
     C --> P1["xMIP plugin"]
     C --> P2["ESMValTool plugin"]
     C --> P3["CMIP6 Decadal plugin"]
-    P1 --> L1["xMIP preprocessing"]
-    P2 --> L2["ESMValTool fixes"]
+    P1 --> L1["CMIP6 preprocessing"]
+    P2 --> L2["CMIP7 fixes for ESA CCI"]
     P3 --> L3["Copernicus Climate Data Store"]
 ```
 
@@ -100,23 +100,28 @@ flowchart LR
 
 ---
 
-# 7. The plugin owns the climate-data knowledge
+# 7. Plugins provide fixes and their namespace
 
 ```python
-class BroadcastLonLat(FixFunction):
-    prefix = "xmip"
-    suffix = "broadcast_lon_lat"
+class RenameCmip6Axes(FixFunction):
+    suffix = "rename_cmip6_axes"
 
     def apply(self, dataset, dry_run=True):
         ...
 ```
 
-The plugin provides:
+The stable fix ID combines two parts:
 
-- the scientific and technical knowledge
-- the implementation
-- optional matching and checks
-- tests and maintenance
+```text
+xmip                + rename_cmip6_axes
+plugin prefix         fix suffix
+
+= xmip.rename_cmip6_axes
+```
+
+- The plugin name defines the `xmip` namespace prefix.
+- The fix name defines the `rename_cmip6_axes` suffix.
+- The plugin still owns the implementation, tests, and domain knowledge.
 
 Woodpecker provides registration, discovery, execution, results, and provenance.
 
@@ -125,7 +130,7 @@ Woodpecker provides registration, discovery, execution, results, and provenance.
 # 8. Stable identifiers form the common contract
 
 ```text
-xmip.broadcast_lon_lat
+xmip.rename_cmip6_axes
 woodpecker.normalize_longitude_convention
 
 xmip.cmip6_preprocessing       # recipe
