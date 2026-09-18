@@ -291,15 +291,15 @@ The shared work is the contract and the connections between projects.
 
 # 16. Questions for Milano
 
+- Can **data producers contribute fixes through GitHub**?
+- Can data producers and service developers **collaborate on plugin code and review**?
 - Can existing fix libraries expose selected functions as Woodpecker plugins?
 - Which identifiers should ESGF Errata and other portals reference?
-- Who owns and reviews each project or dataset namespace?
-- What metadata should accompany every published fix and recipe?
-- Which common functions belong in the thin core?
+- Who maintains each project or dataset plugin?
 
 ## A practical first step
 
-**Expose one existing project fix through a plugin** and reference its stable ID from a recipe or Errata example.
+Choose **one known dataset issue** and let a data producer and service developer implement and test the plugin fix together through GitHub.
 
 ---
 
