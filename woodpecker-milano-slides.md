@@ -12,7 +12,7 @@ Milano, 2026
 
 # 2. Why the name Woodpecker?
 
-A woodpecker lives in the forest and picks insects out of trees. It helps to keep the trees healthy without replacing the forest or taking ownership of the trees.
+A woodpecker lives in the forest and picks insects out of trees. It helps to keep the forest healthy.
 
 | Forest image | Climate-data ecosystem |
 | --- | --- |
