@@ -99,9 +99,9 @@ flowchart LR
 # 7. The plugin owns the climate-data knowledge
 
 ```python
-class TimeMetadata(FixFunction):
-    prefix = "cmip6_decadal"
-    suffix = "time_metadata"
+class BroadcastLonLat(FixFunction):
+    prefix = "xmip"
+    suffix = "broadcast_lon_lat"
 
     def apply(self, dataset, dry_run=True):
         ...
@@ -121,12 +121,10 @@ Woodpecker provides registration, discovery, execution, results, and provenance.
 # 8. Stable identifiers form the common contract
 
 ```text
-cmip6_decadal.time_metadata
-atlas.encoding_cleanup
-xmip.cmip6_preprocessing
+xmip.broadcast_lon_lat
+woodpecker.normalize_longitude_convention
 
-c3s.cmip6_decadal        # recipe
-c3s.atlas                # recipe
+xmip.cmip6_preprocessing       # recipe
 ```
 
 The identifier is independent of the calling environment.
@@ -191,14 +189,14 @@ The plugin remains the authoritative implementation.
 ```python
 import woodpecker
 
-recipe = woodpecker.recipe.get("c3s.cmip6_decadal")
+recipe = woodpecker.recipe.get("xmip.cmip6_preprocessing")
 result = woodpecker.recipe.apply(dataset, recipe, dry_run=False)
 ```
 
 ## Command line
 
 ```bash
-woodpecker apply ./data --recipe-id c3s.cmip6_decadal
+woodpecker apply ./data --recipe-id xmip.cmip6_preprocessing
 ```
 
 Both routes use the same identifiers, plugins, and recipes.
@@ -229,14 +227,11 @@ flowchart LR
 
 ```yaml
 recipes:
-  - id: c3s.cmip6_decadal
+  - id: xmip.cmip6_preprocessing
     steps:
-      - id: cmip6_decadal.calendar_normalization
-        phase: prepare
-      - id: cmip6_decadal.time_metadata
-        phase: apply
-      - id: cmip6_decadal.publish_metadata
-        phase: finalize
+      - id: woodpecker.rename_variables
+      - id: xmip.broadcast_lon_lat
+      - id: woodpecker.normalize_longitude_convention
 ```
 
 - A recipe combines fixes for a defined workflow.
@@ -251,11 +246,11 @@ recipes:
 
 | Plugin or example | Focus |
 | --- | --- |
-| Atlas | C3S Atlas adaptations |
-| CMIP6 Decadal | C3S decadal preparation and adaptation |
-| CMIP6 | CMIP6-specific fixes |
-| CMIP7 | CMIP7 and ESA-CCI examples |
-| xMIP demonstration | Exposes xMIP-style preprocessing as Woodpecker fixes and recipes |
+| Atlas | Production adaptations for the Copernicus Climate Data Store |
+| CMIP6 Decadal | Production Decadal adaptations for the Copernicus Climate Data Store |
+| CMIP6 | Dummy plugin used as a placeholder |
+| ESMValTool CMIP7 example | CMIP7 and ESA-CCI examples based on the ESMValTool fixer prototype |
+| xMIP | xMIP-style CMIP6 preprocessing exposed as Woodpecker fixes and recipes |
 
 These plugins do not define the limit of Woodpecker.
 
