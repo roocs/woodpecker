@@ -2,7 +2,7 @@
 
 ## A common interface for climate-data fixes
 
-Woodpecker is a **lightweight Python interface** for discovering, combining, and applying climate-data fixes supplied by its **core and plugins**.
+Woodpecker is a **lightweight Python interface** for discovering, combining, and **applying climate-data fixes** supplied by its **core and plugins**.
 
 <https://github.com/roocs/woodpecker>
 
@@ -31,7 +31,7 @@ The name describes the intended role: work within the existing ecosystem and rep
 
 # 3. Climate-data fixes already exist
 
-Many projects have developed useful repair and standardization code:
+**Many projects** have developed useful **repair** and standardization code:
 
 - [xMIP](https://github.com/jbusecke/xMIP) cleans and organizes MIP data for analysis in the Pangeo ecosystem.
 - [ESMValTool's fixer prototype](https://github.com/ESMValGroup/fixer-prototype) explores configurable fixes with CMIP7 and ESA-CCI plugins.
@@ -110,6 +110,9 @@ class RenameCmip6Axes(FixFunction):
         ...
 ```
 
+- A plugin fix derives from the Woodpecker **`FixFunction` base class**.
+- Its **`apply()` method performs the repair**.
+
 The **stable fix ID** combines two parts:
 
 | Plugin prefix | Fix suffix | Stable fix ID |
@@ -166,7 +169,7 @@ The same fix or recipe can be referenced by:
 
 The portal can point to a **maintained, executable definition** instead of reproducing repair instructions.
 
-- ESGF Errata: <https://errata.esgf.io/static/index.html>
+- **ESGF Errata:** <https://errata.esgf.io/static/index.html>
 - Woodpecker fix IDs: <https://roocs.github.io/woodpecker/fixes.html>
 
 ---
@@ -298,7 +301,21 @@ The shared work is the contract and the connections between projects.
 
 ---
 
-# 17. Woodpecker
+# 17. Summary
+
+- Woodpecker provides a **thin common interface**, not one universal fixes library.
+- **Independent plugins** contain the project-specific and dataset-specific knowledge.
+- Every fix has a **stable `prefix.suffix` identifier** and implements the `FixFunction` pattern.
+- **Recipes combine fixes** and can be used through Python, the CLI, Rook, or other services.
+- **ESGF Errata and other portals** can reference maintained, executable fix definitions.
+
+## Main goal
+
+**Work together through a shared pattern while projects keep ownership of their fixes.**
+
+---
+
+# 18. Woodpecker
 
 ## One interface, many fix implementations
 
