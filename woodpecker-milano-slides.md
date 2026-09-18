@@ -1,81 +1,85 @@
 # Woodpecker
 
-## Small, precise fixes for climate data
+## A common interface for climate-data fixes
 
-One shared place for known data repairs
+Thin core, project-specific plugins, stable references
 
 Milano, 2026
 
 ---
 
-# Climate data often needs small repairs
+# Climate-data fixes already exist
 
-- A dataset may be scientifically useful but still contain metadata, coordinate, calendar, encoding, or format issues.
-- Processing services need these issues corrected before subsetting, concatenation, regridding, or analysis.
-- Teams often implement the same repair independently in services, scripts, and notebooks.
-- Those implementations drift and become difficult to review, test, and reuse.
+Many projects have developed useful repair and standardization code:
 
-**The result:** fragmented knowledge and repeated maintenance.
+- xMIP cleans and organizes MIP data for analysis in the Pangeo ecosystem.
+- ESMValTool's `fixer-prototype` explores configurable fixes with CMIP7 and ESA-CCI plugins.
+- Services and projects maintain further fixes in local libraries, scripts, and workflows.
 
----
+These implementations reflect different data, communities, and use cases. That specialization is useful.
 
-# A shared package for known fixes
-
-Woodpecker provides a small Python API and command-line interface to:
-
-- check a dataset for known issues
-- preview proposed changes with a dry run
-- apply selected fixes in a defined order
-- record what changed as provenance
-
-Woodpecker keeps the repair logic separate from the processing service that uses it.
-
-> Small, precise fixes for climate data.
+The problem is the lack of a small common contract for finding, referencing, and running them.
 
 ---
 
-# The Woodpecker workflow
+# Woodpecker does not replace the fix ecosystem
 
-```mermaid
-flowchart LR
-    D["Dataset"] --> S["Select recipe"]
-    S --> C["Check"]
-    C --> P["Preview"]
-    P --> A["Apply fixes"]
-    A --> O["Repaired dataset<br/>and provenance"]
-```
+Woodpecker does not aim to become the single fixing library for every climate-data project.
 
-- Selection can use an explicit recipe ID, dataset metadata, or input paths.
-- Preview shows the planned changes without modifying the data.
-- Apply performs the repair and can write W3C PROV-JSON.
+It provides:
+
+- a thin interface layer
+- a small set of common functions
+- plugin discovery
+- stable identifiers for fixes and recipes
+- a Python API and command-line interface
+- checking, dry-run previews, execution, and provenance
+
+The plugins contain most of the domain-specific work.
 
 ---
 
-# Fixes, recipes, and plugins
+# Thin core, independent plugins
 
 ```mermaid
 flowchart TD
-    R["Recipe"] --> F1["Fix 1"]
-    R --> F2["Fix 2"]
-    R --> F3["Fix 3"]
-    P["Dataset-family plugin"] --> R
-    P --> F1
-    P --> F2
-    P --> F3
+    U["Woodpecker API and CLI"] --> C["Thin core"]
+    C --> P1["Project plugin A"]
+    C --> P2["Dataset plugin B"]
+    C --> P3["Use-case plugin C"]
+    P1 --> L1["Own fix logic"]
+    P2 --> L2["Existing library"]
+    P3 --> L3["Local adaptations"]
 ```
 
-**Fix**  
-One small, deterministic check or repair with a stable identifier.
+Plugins may be narrow and project-specific. They may implement fixes directly or adapt existing libraries.
 
-**Recipe**  
-An ordered workflow of fixes, options, matching rules, and supporting links.
-
-**Plugin**  
-The fixes and recipes owned by a dataset community or project.
+Woodpecker gives each plugin the same entry point without taking ownership away from its maintainers.
 
 ---
 
-# A fix has a small author contract
+# A small common vocabulary
+
+**Fix**  
+One check or repair exposed through a stable identifier.
+
+**Recipe**  
+An ordered set of fixes, options, matching rules, and supporting links.
+
+**Plugin**  
+A separately owned package that provides fixes and recipes for a project, dataset family, or use case.
+
+```mermaid
+flowchart LR
+    P["Plugin"] --> F["Fixes"]
+    P --> R["Recipes"]
+    R --> F
+    W["Woodpecker"] --> P
+```
+
+---
+
+# The plugin owns the climate-data knowledge
 
 ```python
 class TimeMetadata(FixFunction):
@@ -87,24 +91,134 @@ class TimeMetadata(FixFunction):
     def apply(self, dataset, dry_run=True) -> bool: ...
 ```
 
-- `matches()` identifies relevant datasets quickly.
-- `check()` reports the problem.
-- `apply()` performs one defined repair.
-- The stable ID is `cmip6_decadal.time_metadata`.
-- A synthetic dataset test documents the expected behaviour.
+The plugin provides:
 
-The framework stays small. Dataset knowledge remains visible in the fix.
+- the scientific and technical knowledge
+- the implementation
+- matching rules and options
+- tests and maintenance
+
+Woodpecker provides registration, discovery, execution, results, and provenance.
 
 ---
 
-# Recipes turn individual fixes into workflows
+# Stable identifiers form the common contract
+
+```text
+cmip6_decadal.time_metadata
+atlas.encoding_cleanup
+xmip.cmip6_preprocessing
+
+c3s.cmip6_decadal        # recipe
+c3s.atlas                # recipe
+```
+
+The identifier is independent of the calling environment.
+
+The same fix or recipe can be referenced by:
+
+- a Python workflow
+- a processing service such as Rook
+- a command-line call
+- an ESGF Errata record or another portal
+- documentation and tests
+
+The portal does not need to reproduce the repair instructions. It can point to a maintained, executable definition.
+
+- ESGF Errata: <https://errata.esgf.io/static/index.html>
+- Woodpecker fix IDs: <https://roocs.github.io/woodpecker/fixes.html>
+
+---
+
+# The fix browser makes identifiers visible
+
+The Woodpecker documentation includes an interactive overview of all registered fixes:
+
+- search by ID, name, category, dataset, or source
+- distinguish core fixes from plugin-provided fixes
+- inspect descriptions, severity, labels, aliases, and package sources
+- link directly to a fix through its stable anchor
+
+Example:
+
+```text
+https://roocs.github.io/woodpecker/fixes.html#woodpecker.normalize_tas_units_to_kelvin
+```
+
+This browser is a demonstration of how a portal, an Errata entry, or documentation can refer to one precise fix.
+
+---
+
+# From an ESGF Errata record to an executable fix
+
+```mermaid
+flowchart TD
+    E["ESGF Errata record"] --> I["Stable fix or recipe ID"]
+    B["Woodpecker fix browser"] --> I
+    I --> W["Woodpecker API or CLI"]
+    W --> P["Installed plugin"]
+    P --> F["Check, apply, provenance"]
+```
+
+This creates a link between issue documentation and executable repair logic:
+
+1. The Errata record identifies the affected data.
+2. It references a stable fix or recipe ID.
+3. The Woodpecker documentation makes the ID and its source discoverable.
+4. Woodpecker resolves that ID through an installed plugin.
+5. A user or service can check, preview, and apply the repair.
+
+The plugin remains the authoritative implementation.
+
+---
+
+# One interface for local and service use
+
+## Python library
+
+```python
+import woodpecker
+
+recipe = woodpecker.recipe.get("c3s.cmip6_decadal")
+findings = woodpecker.recipe.check(dataset, recipe)
+preview = woodpecker.recipe.apply(dataset, recipe, dry_run=True)
+result = woodpecker.recipe.apply(dataset, recipe, dry_run=False)
+```
+
+## Command line
+
+```bash
+woodpecker check ./data --recipe-id c3s.cmip6_decadal
+woodpecker apply ./data --recipe-id c3s.cmip6_decadal --dry-run
+```
+
+Both routes use the same identifiers, plugins, and recipes.
+
+---
+
+# Rook uses Woodpecker as a library
+
+```mermaid
+flowchart LR
+    D["Input data"] --> W["Woodpecker recipe"]
+    W --> R["Rook processing"]
+    R --> O["CDS output"]
+```
+
+- Woodpecker prepares known dataset issues through the Python API.
+- Rook continues with generic operations such as subset, concatenate, or regrid.
+- Dataset-specific behaviour stays outside the generic processing code.
+- The same recipe remains available outside Rook through the CLI or another Python workflow.
+
+**Woodpecker prepares the data. Rook operates on it.**
+
+---
+
+# Recipes describe a use case without centralizing its fixes
 
 ```yaml
 recipes:
   - id: c3s.cmip6_decadal
-    match:
-      attrs:
-        project_id: CMIP6
     steps:
       - id: cmip6_decadal.calendar_normalization
         phase: prepare
@@ -114,115 +228,69 @@ recipes:
         phase: finalize
 ```
 
-Recipe phases describe when a repair runs:
-
-- `prepare`: before concatenation or aggregation
-- `apply`: normal adaptation steps
-- `finalize`: post-processing and publication metadata
-
-Recipes can live in JSON or YAML and can use catalogue, JSON, DuckDB, or automatic discovery backends.
+- A recipe combines fixes for a defined workflow.
+- The fixes can come from one or several plugins.
+- Plugins retain their own namespaces and release cycles.
+- JSON and YAML make recipes portable and reviewable.
+- Catalogue, JSON, and DuckDB stores support different deployment needs.
 
 ---
 
-# Dataset knowledge stays with its community
+# Current plugins demonstrate the pattern
 
-```mermaid
-flowchart TD
-    W["Woodpecker core"] --> A["Atlas plugin"]
-    W --> D["CMIP6 Decadal plugin"]
-    W --> C["CMIP6 and CMIP7 plugins"]
-    A --> U["Rook, workflows, notebooks"]
-    D --> U
-    C --> U
-```
+| Plugin or example | Focus |
+| --- | --- |
+| Atlas | C3S Atlas adaptations |
+| CMIP6 Decadal | C3S decadal preparation and adaptation |
+| CMIP6 | CMIP6-specific fixes |
+| CMIP7 | CMIP7 and ESA-CCI examples |
+| xMIP demonstration | Exposes xMIP-style preprocessing as Woodpecker fixes and recipes |
 
-- The core supplies registration, selection, recipes, execution, I/O, and provenance.
-- Plugins contain dataset-family knowledge.
-- Rook applies Woodpecker recipes before generic climate-data operations.
-- The same fixes can also run from the CLI, Python, notebooks, or other services.
+These plugins do not define the limit of Woodpecker.
 
-**Woodpecker prepares the data. Rook operates on it.**
+Other projects can provide independent plugins while keeping their own code, scope, governance, and users.
 
 ---
 
-# The current plugin landscape
-
-| Dataset family | Namespace | Fixes | Recipes |
-| --- | --- | ---: | ---: |
-| Atlas | `atlas` | 2 | 1 |
-| CMIP6 | `cmip6` | 1 | 0 |
-| CMIP6 Decadal | `cmip6_decadal` | 15 | 1 |
-| CMIP7 | `cmip7` | 3 | 2 |
-| xMIP demonstration | `xmip` | 13 | 2 |
-
-These plugins show the intended division of responsibility. Woodpecker supplies the common mechanism; climate-data specialists supply and review the dataset knowledge.
-
-The catalogue can grow without adding project-specific behaviour to every consuming service.
-
----
-
-# One contribution can replace several workarounds
-
-```mermaid
-flowchart LR
-    I["Known data issue"] --> F["Small fix and test"]
-    F --> P["Shared plugin"]
-    P --> R["Reusable recipe"]
-    R --> U["Services and users"]
-```
-
-A typical contribution:
-
-1. Describe one known dataset issue.
-2. Add or update one fix function.
-3. Add a small synthetic test.
-4. Reference the fix from the appropriate recipe.
-5. Submit the change for review by the relevant community.
-
-The review happens once, close to the people who understand the data.
-
----
-
-# A common fixes package needs a community
+# Collaboration without one central fixes library
 
 > It would be really great if we could all work together on the fixes package to avoid developing fragmented fixes solutions again.
 
-Woodpecker offers a concrete place for that collaboration:
+A common Woodpecker interface allows cooperation without forcing every project into one implementation:
 
-- stable identifiers for fixes and recipes
-- explicit ownership through dataset-family plugins
-- reviewable Python implementations
-- tests that preserve shared knowledge
-- reusable execution from services and local tools
-- provenance for applied repairs
+- projects continue to own their fix logic
+- plugins expose that logic through a shared pattern
+- stable identifiers make fixes discoverable and referenceable
+- recipes combine fixes for specific workflows
+- services and users call them through the same interface
 
-The main requirement is participation from the climate-data communities that know the issues.
+The shared work is the contract and the connections between projects.
 
 ---
 
-# Discussion in Milano
+# Questions for Milano
 
-## Questions for the community
+- Can existing fix libraries expose selected functions as Woodpecker plugins?
+- Which identifiers should ESGF Errata and other portals reference?
+- Who owns and reviews each project or dataset namespace?
+- What metadata should accompany every published fix and recipe?
+- Which common functions belong in the thin core?
 
-- Which existing fixes should move into shared plugins?
-- Who can review fixes for each dataset family?
-- Which projects already maintain overlapping repair logic?
-- What information should accompany a fix or recipe?
-- Which additional dataset families need plugins?
+## A practical first step
 
-## First practical step
-
-Choose one known issue with duplicated implementations and contribute one tested Woodpecker fix.
+Expose one existing project fix through a plugin and reference its stable ID from a recipe or Errata example.
 
 ---
 
 # Woodpecker
 
-## Shared fixes, maintained with the data communities
+## One interface, many fix implementations
 
-- Repository: <https://github.com/roocs/woodpecker>
+- Woodpecker: <https://github.com/roocs/woodpecker>
 - Documentation: <https://roocs.github.io/woodpecker/>
-- Package: `pip install roocs-woodpecker`
+- Fix browser: <https://roocs.github.io/woodpecker/fixes.html>
+- ESGF Errata: <https://errata.esgf.io/static/index.html>
+- xMIP: <https://github.com/jbusecke/xMIP>
+- ESMValTool fixer prototype: <https://github.com/ESMValGroup/fixer-prototype>
 
-**Small, precise fixes for climate data.**
-
+`pip install roocs-woodpecker`
