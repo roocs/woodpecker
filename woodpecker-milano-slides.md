@@ -237,6 +237,8 @@ Matching, separate checks, and dry-run previews are also available when needed.
 
 # 13. Rook uses Woodpecker as a library
 
+[**Rook**](https://github.com/roocs/rook) is a service for **remote operations on large climate datasets**. It is used by the **Copernicus Climate Data Store** and is being considered as a processing service for **ESGF-NG**.
+
 ```mermaid
 flowchart LR
     D["Input data"] --> W["Woodpecker recipe"]
