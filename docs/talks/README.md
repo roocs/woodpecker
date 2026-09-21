@@ -83,7 +83,9 @@ a diagram and a small amount of text. Detailed material is numbered A1–A16 aft
 | Total | 5 minutes | 9 minutes |
 
 For the short version, walk through the temperature example: 20 °C becomes
-293.15 K, then point out the selected fix ID in the CLI command. The command updates
+293.15 K. Show the abbreviated `FixFunction.apply()` implementation, then join
+the core-package prefix and class-derived suffix to form the ID used by the CLI.
+The sketch assumes matching Celsius input and omits registration and metadata. The command updates
 `tas.nc`; adding `--dry-run` previews the change. The example uses the built-in
 `woodpecker.normalize_tas_units_to_kelvin` fix, with no domain plugin needed.
 

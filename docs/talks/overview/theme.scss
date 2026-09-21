@@ -76,3 +76,12 @@ $code-block-bg: #dceef8;
 .reveal .slide > h1 { margin-bottom: 0.55em; }
 
 .reveal .diagram-wide .cell-output-display .mermaid-svg { max-height: 470px; }
+
+// Keep the implementation, ID parts and CLI together in the short core example.
+.reveal #a-core-fix-celsius-to-kelvin {
+  .cell-output-display .mermaid-svg { max-height: 110px; }
+  > p { font-size: 0.8em; margin: 0.3em 0; }
+  pre { margin: 0.35em 0; }
+  pre code { line-height: 1.2; }
+  table { margin: 0.4em 0; font-size: 0.8em; }
+}

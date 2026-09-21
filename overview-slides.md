@@ -37,20 +37,34 @@ flowchart LR
 
 # 2. A core fix: Celsius to Kelvin
 
-Example: `tas.nc` contains temperature in Celsius; the workflow expects Kelvin.
-
 ```mermaid
 flowchart LR
     D["tas: 20 °C"] --> F["Core fix: Celsius to Kelvin"]
     F --> O["tas: 293.15 K"]
 ```
 
+**Implementation sketch** — Celsius input already checked; registration and metadata omitted.
+
+```python
+class NormalizeTasUnitsToKelvin(FixFunction):
+    def apply(self, dataset, dry_run=True):
+        if not dry_run:
+            tas = dataset["tas"]
+            tas.data = tas.data + 273.15
+            tas.attrs["units"] = "K"
+        return True
+```
+
+| Prefix (core package) | Suffix (from class name) |
+| --- | --- |
+| `woodpecker` | `normalize_tas_units_to_kelvin` |
+
 ```bash
 woodpecker apply tas.nc \
   --select woodpecker.normalize_tas_units_to_kelvin
 ```
 
-Updates **values and units** in `tas.nc`. Add `--dry-run` to preview.
+**ID = prefix.suffix.** Updates `tas.nc`; add `--dry-run` to preview.
 
 ---
 
