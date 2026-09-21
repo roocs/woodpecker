@@ -67,8 +67,8 @@ Check clipping, diagram labels, image loading, and unintended line breaks.
 
 ## Milano delivery (5–10 minutes)
 
-The main talk is the title page plus five content slides. Stop at **Summary and
-next step**; the appendix is for questions and follow-up, not the timed talk.
+The main talk is the title page plus five content slides. Stop at **Summary: a common API, shared
+work**; the appendix is for questions and follow-up, not the timed talk.
 The reviewed title page is retained. Each of the five main content slides uses
 a diagram and a small amount of text. Detailed material is numbered A1–A16 after an appendix divider.
 
@@ -79,7 +79,7 @@ a diagram and a small amount of text. Detailed material is numbered A1–A16 aft
 | 2. The problem: fragmented fixes | 50 seconds | 90 seconds |
 | 3. What does Woodpecker provide? | 60 seconds | 120 seconds |
 | 4. A core fix: Celsius to Kelvin | 70 seconds | 120 seconds |
-| 5. Summary and next step | 60 seconds | 90 seconds |
+| 5. Summary: a common API, shared work | 60 seconds | 90 seconds |
 | Total | 5 minutes | 9 minutes |
 
 Briefly name xMIP, the ESMValTool fixer prototype, and project scripts as earlier
@@ -93,6 +93,10 @@ the core-package prefix and class-derived suffix to form the ID used by the CLI.
 The sketch assumes matching Celsius input and omits registration and metadata. The command updates
 `tas.nc`; adding `--dry-run` previews the change. The example uses the built-in
 `woodpecker.normalize_tas_units_to_kelvin` fix, with no domain plugin needed.
+
+Close by distinguishing the technical solution (a common API) from the hope of
+data producers and service providers developing, reviewing, and maintaining fix
+plugins together on GitHub.
 
 For the extended version, spend more time on recipe reuse and the proposed joint
 plugin fix; leave roughly a minute for a question. Rook's use for Copernicus CDS

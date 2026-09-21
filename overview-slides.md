@@ -114,18 +114,22 @@ woodpecker apply tas.nc \
 
 ---
 
-# 5. Summary and next step
+# 5. Summary: a common API, shared work
 
-**A shared interface connects independently maintained fixes to reusable workflows.**
+**Technical solution:** independent fix plugins use a common API.
 
 ```mermaid
 flowchart LR
-    P["Data producer"] --> F["Plugin fix"]
-    D["Service developer"] --> F
-    F --> R["Reusable recipe"]
+    P["Data producers"] --> G["Fix plugins on GitHub"]
+    S["Service providers"] --> G
+    G --> W["Woodpecker common API"]
+    W --> R["Reusable fixes across workflows"]
+    style G fill:#dceef8,stroke:#457b9d,stroke-width:2px
 ```
 
-**Next step:** implement and test **one known dataset fix together** on GitHub.
+**The hope:** data producers and service providers **develop, review, and maintain fix plugins together on GitHub**.
+
+**First step:** choose one known dataset issue and collaborate on its plugin fix.
 
 <https://github.com/roocs/woodpecker>
 
