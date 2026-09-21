@@ -21,17 +21,18 @@ Milano, 2026
 
 # 1. What is Woodpecker?
 
-A **lightweight Python interface** to discover, combine, and apply climate-data fixes.
+A **lightweight Python interface** for applying climate-data fixes.
 
 ```mermaid
 flowchart LR
-    D["Climate dataset"] --> W["Woodpecker: check and apply"]
-    P["Core and plugin fixes"] --> W
-    W --> O["Prepared dataset"]
+    D["Climate dataset with an issue: tas in °C"] --> W["Woodpecker: apply a fix"]
+    P["Core and project fixes: common API"] --> W
+    W --> O["Corrected climate dataset: tas in K"]
+    style W fill:#dceef8,stroke:#457b9d,stroke-width:2px
 ```
 
-- Repair issues such as **temperature units, coordinate names, and metadata**.
-- Use the same fixes through a **Python API or command line**.
+- **Example:** temperature is in Celsius; the workflow needs Kelvin.
+- **Core and project fixes** follow the same API and can be applied through Python or the CLI.
 - Already used by **Rook** for **Copernicus CDS fixes**.
 
 ---
@@ -48,9 +49,10 @@ flowchart LR
     E["Fixer prototype"] --> I
     S["Local scripts"] --> I
     I --> W["Extra integration for each workflow"]
+    style I fill:#fff3bf,stroke:#b7791f,stroke-width:3px,color:#111827
 ```
 
-Useful fixes exist, but **finding, referencing, and reusing them across projects is hard**.
+**Different interfaces are the main obstacle:** each workflow needs its own integration to reuse existing fixes.
 
 > It would be really great if we could all work together on the fixes package to avoid developing fragmented fixes solutions again.
 >
