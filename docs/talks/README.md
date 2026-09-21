@@ -76,11 +76,16 @@ a diagram and a small amount of text. Detailed material is numbered A1–A16 aft
 | --- | --- | --- |
 | Title | 20 seconds | 30 seconds |
 | 1. What is Woodpecker? | 40 seconds | 90 seconds |
-| 2. A core fix: Celsius to Kelvin | 70 seconds | 120 seconds |
-| 3. Why a common interface? | 50 seconds | 90 seconds |
-| 4. Independent plugins, shared access | 60 seconds | 120 seconds |
+| 2. The problem: fragmented fixes | 50 seconds | 90 seconds |
+| 3. What does Woodpecker provide? | 60 seconds | 120 seconds |
+| 4. A core fix: Celsius to Kelvin | 70 seconds | 120 seconds |
 | 5. Summary and next step | 60 seconds | 90 seconds |
 | Total | 5 minutes | 9 minutes |
+
+Briefly name xMIP, the ESMValTool fixer prototype, and project scripts as earlier
+efforts. Use Bouwe Andela’s quote, retained from the supplied source, to explain
+the collaboration goal. Introduce the shared contract and independent ownership
+before showing the concrete fix.
 
 For the short version, walk through the temperature example: 20 °C becomes
 293.15 K. Show the abbreviated `FixFunction.apply()` implementation, then join

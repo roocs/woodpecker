@@ -21,21 +21,63 @@ Milano, 2026
 
 # 1. What is Woodpecker?
 
-A **lightweight Python interface** for applying climate-data fixes.
+A **lightweight Python interface** to discover, combine, and apply climate-data fixes.
 
 ```mermaid
 flowchart LR
-    D["Climate data"] --> W["Woodpecker"]
+    D["Climate dataset"] --> W["Woodpecker: check and apply"]
     P["Core and plugin fixes"] --> W
-    W --> O["Prepared data"]
+    W --> O["Prepared dataset"]
 ```
 
-- Discover and apply fixes through a **Python API or CLI**.
+- Repair issues such as **temperature units, coordinate names, and metadata**.
+- Use the same fixes through a **Python API or command line**.
 - Already used by **Rook** for **Copernicus CDS fixes**.
 
 ---
 
-# 2. A core fix: Celsius to Kelvin
+# 2. The problem: fragmented fixes
+
+- [**xMIP**](https://github.com/jbusecke/xMIP): CMIP preprocessing for Pangeo workflows.
+- [**ESMValTool fixer prototype**](https://github.com/ESMValGroup/fixer-prototype): configurable fixes with CMIP7 and ESA-CCI examples.
+- **Project and service scripts**: repairs maintained in local workflows.
+
+```mermaid
+flowchart LR
+    X["xMIP"] --> I["Different interfaces"]
+    E["Fixer prototype"] --> I
+    S["Local scripts"] --> I
+    I --> W["Extra integration for each workflow"]
+```
+
+Useful fixes exist, but **finding, referencing, and reusing them across projects is hard**.
+
+> It would be really great if we could all work together on the fixes package to avoid developing fragmented fixes solutions again.
+>
+> — Bouwe Andela, ESMValTool
+
+---
+
+# 3. What does Woodpecker provide?
+
+**A common interface to independently maintained fixes.**
+
+```mermaid
+flowchart LR
+    U["Python API and CLI"] --> C["Woodpecker core"]
+    C --> P["Project plugins"]
+    P --> F["Fixes and recipes"]
+```
+
+- **Common contract:** a `FixFunction` class and stable `prefix.suffix` IDs.
+- **Independent plugins:** projects keep their code, expertise, and ownership.
+- **Recipes:** combine fixes; Woodpecker handles discovery, checks, previews, and provenance.
+
+The core connects implementations; **domain-specific repair logic stays with the plugins**.
+
+---
+
+# 4. A core fix: Celsius to Kelvin
 
 ```mermaid
 flowchart LR
@@ -65,34 +107,6 @@ woodpecker apply tas.nc \
 ```
 
 **ID = prefix.suffix.** Updates `tas.nc`; add `--dry-run` to preview.
-
----
-
-# 3. Why a common interface?
-
-```mermaid
-flowchart LR
-    X["xMIP"] --> W["Woodpecker interface"]
-    E["ESMValTool"] --> W
-    P["Project fixes"] --> W
-    W --> U["Users and services"]
-```
-
-- **Reuse existing fixes** across workflows.
-- Projects keep their **expertise and ownership**.
-
----
-
-# 4. Independent plugins, shared access
-
-```mermaid
-flowchart LR
-    W["Woodpecker API and CLI"] --> P["Project plugins"]
-    P --> F["Fixes and recipes"]
-```
-
-- **Plugins** expose each project's repair logic.
-- **Stable IDs** name fixes; **recipes** combine them.
 
 ---
 

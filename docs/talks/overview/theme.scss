@@ -85,3 +85,11 @@ $code-block-bg: #dceef8;
   pre code { line-height: 1.2; }
   table { margin: 0.4em 0; font-size: 0.8em; }
 }
+
+// Prior work and the motivating quote share one problem slide.
+.reveal #the-problem-fragmented-fixes {
+  .cell-output-display .mermaid-svg { max-height: 250px; }
+  > ul { font-size: 0.9em; }
+  > p { margin: 0.35em 0; }
+  blockquote { font-size: 0.85em; margin: 0.5em 0; padding: 0.25em 0.5em; }
+}
