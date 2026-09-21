@@ -64,3 +64,26 @@ its license are documented in `overview/assets/README.md`.
 After content changes, inspect all HTML slides and DeckTape PDF pages, especially
 the title slide, tall diagrams, long identifiers, and dense bullet lists.
 Check clipping, diagram labels, image loading, and unintended line breaks.
+
+## Milano delivery (5–10 minutes)
+
+The main talk is the title page plus five content slides. Stop at **Summary and
+next step**; the appendix is for questions and follow-up, not the timed talk.
+The title and “What is Woodpecker?” introduction are retained from the reviewed
+version. Detailed material is numbered A1–A16 after an appendix divider.
+
+| Slide | 5-minute delivery | Extended delivery |
+| --- | --- | --- |
+| Title | 20 seconds | 30 seconds |
+| 1. What is Woodpecker? | 40 seconds | 90 seconds |
+| 2. Why a common interface? | 50 seconds | 90 seconds |
+| 3. Independent plugins, shared access | 70 seconds | 120 seconds |
+| 4. A concrete use case: Rook | 60 seconds | 120 seconds |
+| 5. Summary and next step | 60 seconds | 90 seconds |
+| Total | 5 minutes | 9 minutes |
+
+For the short version, explain the plugin idea and Rook example without opening
+code or discussing identifier syntax. For the extended version, use the extra
+time to explain ownership, recipe reuse, and the proposed joint plugin fix;
+leave roughly a minute for a question. Detailed API examples, the plugin list,
+and the proposed ESGF Errata connection remain available in the appendix.
