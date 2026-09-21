@@ -57,6 +57,11 @@ Notebook examples live in `docs/notebooks/` and are rendered by
 `mkdocs-jupyter` during the docs build. The notebooks use deterministic
 synthetic datasets so they can run in CI and in local docs builds.
 
+Only `docs/notebooks/*.ipynb` files are processed by `mkdocs-jupyter`. Presentation
+tooling in `docs/talks/` and generated files in `docs/_build/` are excluded from
+the site. Build presentations separately with `make -C docs/talks`; their Python
+scripts must not be executed as notebook cells.
+
 When adding or editing notebooks, prefer examples that exercise the public API
 and can run without external climate data files.
 

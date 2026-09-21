@@ -1,4 +1,8 @@
 site_name: Woodpecker Fixes
+# Presentations have their own build; never execute or publish their local assets.
+exclude_docs: |
+  /talks/
+  /_build/
 theme:
   name: material
   features:
@@ -25,6 +29,8 @@ markdown_extensions:
 plugins:
   - search
   - mkdocs-jupyter:
+      include:
+        - notebooks/*.ipynb
       execute: true
       allow_errors: false
       kernel_name: python3
