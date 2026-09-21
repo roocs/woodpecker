@@ -143,6 +143,41 @@ def style_text(shape, size=23, *, title=False):
             if element.tag == tag("p:ph"):
                 parent.remove(element)
 
+    if shape.tag == tag("p:sp"):
+        make_text_box(shape)
+
+
+def make_text_box(shape):
+    """Make detached placeholders self-contained for PowerPoint importers.
+
+    Placeholder geometry normally comes from the slide layout. Once p:ph is
+    removed, explicitly identify a text box and provide its geometry; otherwise
+    importers can discard the shape even though its text and bounds are present.
+    """
+    child(child(shape, "p:nvSpPr"), "p:cNvSpPr").set("txBox", "1")
+    props = child(shape, "p:spPr")
+    for element in list(props):
+        if element.tag in {
+            tag("a:prstGeom"),
+            tag("a:custGeom"),
+            tag("a:noFill"),
+            tag("a:solidFill"),
+            tag("a:gradFill"),
+            tag("a:blipFill"),
+            tag("a:pattFill"),
+            tag("a:grpFill"),
+            tag("a:ln"),
+        }:
+            props.remove(element)
+    child(ET.SubElement(props, tag("a:prstGeom"), prst="rect"), "a:avLst")
+    ET.SubElement(props, tag("a:noFill"))
+    child(ET.SubElement(props, tag("a:ln")), "a:noFill")
+    order_children(
+        props,
+        "a:xfrm a:custGeom a:prstGeom a:noFill a:solidFill a:gradFill "
+        "a:blipFill a:pattFill a:grpFill a:ln a:effectLst a:effectDag a:scene3d a:sp3d a:extLst",
+    )
+
 
 def layout(shapes, index):
     titles = [s for s in shapes if is_title(s)]
