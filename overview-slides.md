@@ -60,20 +60,22 @@ Useful fixes exist, but **finding, referencing, and reusing them across projects
 
 # 3. What does Woodpecker provide?
 
-**A common interface to independently maintained fixes.**
+**A thin common API for independent plugins.**
 
 ```mermaid
 flowchart LR
-    U["Python API and CLI"] --> C["Woodpecker core"]
-    C --> P["Project plugins"]
-    P --> F["Fixes and recipes"]
+    X["xMIP plugin"] --> I["Woodpecker API"]
+    E["ESMValTool plugin"] --> I
+    P["Other project plugins"] --> I
+    I --> W["Python, CLI and services"]
+    style I fill:#dceef8,stroke:#457b9d,stroke-width:2px
 ```
 
-- **Common contract:** a `FixFunction` class and stable `prefix.suffix` IDs.
-- **Independent plugins:** projects keep their code, expertise, and ownership.
-- **Recipes:** combine fixes; Woodpecker handles discovery, checks, previews, and provenance.
+- **Common structure:** plugins implement fixes as subclasses of `FixFunction`.
+- **Maintainable fixes:** express repair logic as focused, testable fix implementations.
+- **Independent scope:** each plugin decides what to fix and how; Woodpecker discovers and runs it through the shared API.
 
-The core connects implementations; **domain-specific repair logic stays with the plugins**.
+**Projects own their fixes; Woodpecker provides the common interface.**
 
 ---
 
