@@ -1,0 +1,73 @@
+/*-- scss:defaults --*/
+$body-bg: #fff;
+$body-color: #222;
+$link-color: #457b9d;
+$font-family-sans-serif: Arial, Helvetica, sans-serif;
+$presentation-font-size-root: 32px;
+$presentation-heading-color: #457b9d;
+$presentation-heading-font: $font-family-sans-serif;
+$presentation-heading-line-height: 1.15;
+$presentation-h1-font-size: 1.65em;
+$presentation-h2-font-size: 1.2em;
+$code-block-font-size: 0.75em;
+$code-block-bg: #dceef8;
+
+/*-- scss:rules --*/
+.reveal {
+  a { text-decoration: underline; }
+  p, ul { margin-bottom: 0.5em; }
+  pre { box-shadow: none; }
+  pre code { max-height: none; }
+  .cell-output-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  .cell-output-display > div, .cell-output-display figure, .cell-output-display figure > div { width: 100%; margin: 0; }
+  .cell-output-display p:empty { display: none; }
+  // Static SVG images keep their viewBox ratio and isolated diagram typography.
+  .cell-output-display .mermaid-svg {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
+    max-height: 440px;
+  }
+  img { object-fit: contain; }
+}
+
+// Tall diagrams occupy a dedicated column; text keeps its original order.
+.reveal .diagram-side {
+  > :not(h1):not(.cell) { max-width: 49%; }
+  > .cell {
+    position: absolute;
+    right: 0;
+    top: 115px;
+    width: 48%;
+    .cell-output-display { height: 710px; }
+    .mermaid-svg { max-height: 710px; }
+  }
+}
+.reveal .diagram-small .cell-output-display .mermaid-svg { max-height: 330px; }
+.reveal .slide-number { font-size: 20px; color: #444; background: transparent; }
+
+@media print {
+  * { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+}
+
+// Preserve all source content while giving the naming slide a photo column.
+.reveal #why-the-name-woodpecker {
+  > p, > table { max-width: 66%; }
+  > .quarto-figure { position: absolute; right: 0; top: 125px; width: 30%; }
+  img { max-height: 360px; margin: 0; }
+  figure { margin: 0; }
+  figcaption { font-size: 0.55em; text-align: center; }
+  > p:has(em) { position: absolute; right: 0; top: 590px; width: 30%; font-size: 0.55em; }
+  table { font-size: 0.85em; margin-left: 0; }
+}
+.reveal table { font-size: 0.9em; }
+.reveal blockquote { width: 95%; box-shadow: none; background: #f3f4f6; }
+.reveal .slide > h1 { margin-bottom: 0.55em; }
+
+.reveal .diagram-wide .cell-output-display .mermaid-svg { max-height: 470px; }
