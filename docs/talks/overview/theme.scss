@@ -1,0 +1,95 @@
+/*-- scss:defaults --*/
+$body-bg: #fff;
+$body-color: #222;
+$link-color: #457b9d;
+$font-family-sans-serif: Arial, Helvetica, sans-serif;
+$presentation-font-size-root: 32px;
+$presentation-heading-color: #457b9d;
+$presentation-heading-font: $font-family-sans-serif;
+$presentation-heading-line-height: 1.15;
+$presentation-h1-font-size: 1.65em;
+$presentation-h2-font-size: 1.2em;
+$code-block-font-size: 0.75em;
+$code-block-bg: #dceef8;
+
+/*-- scss:rules --*/
+.reveal {
+  a { text-decoration: underline; }
+  p, ul { margin-bottom: 0.5em; }
+  pre { box-shadow: none; }
+  pre code { max-height: none; }
+  .cell-output-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  .cell-output-display > div, .cell-output-display figure, .cell-output-display figure > div { width: 100%; margin: 0; }
+  .cell-output-display p:empty { display: none; }
+  // Static SVG images keep their viewBox ratio and isolated diagram typography.
+  .cell-output-display .mermaid-svg {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
+    max-height: 440px;
+  }
+  img { object-fit: contain; }
+}
+
+// Tall diagrams occupy a dedicated column; text keeps its original order.
+.reveal .diagram-side {
+  > :not(h1):not(.cell) { max-width: 49%; }
+  > .cell {
+    position: absolute;
+    right: 0;
+    top: 115px;
+    width: 48%;
+    .cell-output-display { height: 710px; }
+    .mermaid-svg { max-height: 710px; }
+  }
+}
+.reveal .diagram-small .cell-output-display .mermaid-svg { max-height: 330px; }
+.reveal .slide-number { font-size: 20px; color: #444; background: transparent; }
+
+@media print {
+  * { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+}
+
+// Title composition follows the Rook deck: credits left, bird photo right.
+.reveal #woodpecker {
+  > h1 { font-size: 2.4em; margin-bottom: 0.25em; }
+  > h2 { font-size: 1.3em; }
+  > p { max-width: 62%; }
+  > p:first-of-type { margin-top: 85px; }
+  > p:nth-of-type(2) { line-height: 1.5; margin-top: 35px; }
+  > p:nth-of-type(3) { margin-top: 45px; font-size: 0.85em; }
+  > p:nth-of-type(4) { margin-top: 40px; font-size: 0.8em; color: #555; }
+  > .quarto-figure { position: absolute; right: 0; top: 200px; width: 31%; }
+  img { max-height: 420px; margin: 0; }
+  figure { margin: 0; }
+  figcaption { font-size: 0.55em; text-align: center; }
+  > p:has(em) { position: absolute; right: 0; top: 700px; width: 31%; font-size: 0.55em; line-height: 1.4; text-align: center; }
+}
+.reveal table { font-size: 0.9em; }
+.reveal blockquote { width: 95%; box-shadow: none; background: #f3f4f6; }
+.reveal .slide > h1 { margin-bottom: 0.55em; }
+
+.reveal .diagram-wide .cell-output-display .mermaid-svg { max-height: 470px; }
+
+// Keep the implementation, ID parts and CLI together in the short core example.
+.reveal #a-core-fix-celsius-to-kelvin {
+  .cell-output-display .mermaid-svg { max-height: 110px; }
+  > p { font-size: 0.8em; margin: 0.3em 0; }
+  pre { margin: 0.35em 0; }
+  pre code { line-height: 1.2; }
+  table { margin: 0.4em 0; font-size: 0.8em; }
+}
+
+// Prior work and the motivating quote share one problem slide.
+.reveal #the-problem-fragmented-fixes {
+  .cell-output-display .mermaid-svg { max-height: 250px; }
+  > ul { font-size: 0.9em; }
+  > p { margin: 0.35em 0; }
+  blockquote { font-size: 0.85em; margin: 0.5em 0; padding: 0.25em 0.5em; }
+}
