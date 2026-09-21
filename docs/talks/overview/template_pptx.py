@@ -9,7 +9,7 @@ import posixpath
 import zipfile
 from xml.etree import ElementTree as ET
 
-from style_pptx import NS, REL, child, emu, place, tag, xml_bytes
+from style_pptx import NS, REL, child, emu, order_children, place, tag, xml_bytes
 
 
 def related(files, path, kind):
@@ -285,7 +285,15 @@ def code_panel(shape, box, points, profile):
     # A darker shade of the reference background, independent of its exact palette.
     background = profile["background"]
     darker = "".join(f"{round(int(background[i : i + 2], 16) * 0.55):02X}" for i in (0, 2, 4))
+    no_fill = props.find("a:noFill", NS)
+    if no_fill is not None:
+        props.remove(no_fill)
     child(props, "a:solidFill")[:] = [ET.Element(tag("a:srgbClr"), val=darker)]
+    order_children(
+        props,
+        "a:xfrm a:custGeom a:prstGeom a:noFill a:solidFill a:gradFill "
+        "a:blipFill a:pattFill a:grpFill a:ln a:effectLst a:effectDag a:scene3d a:sp3d a:extLst",
+    )
     body = shape.find("p:txBody", NS)
     child(body, "a:bodyPr").attrib.update(
         lIns=emu(0.18), rIns=emu(0.18), tIns=emu(0.1), bIns=emu(0.1)
