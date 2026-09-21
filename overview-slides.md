@@ -1,35 +1,37 @@
-# 1. Woodpecker
+# Woodpecker
 
 ## A common interface for climate-data fixes
 
-Woodpecker is a **lightweight Python interface** for discovering, combining, and **applying climate-data fixes** supplied by its **core and plugins**.
+**Presenter:** Ag Stephens (CEDA/STFC)
+
+**Contributors:**  
+Carsten Ehbrecht (DKRZ)  
+Bouwe Andela (ESMValTool)  
+Rhys Evans (STFC)
 
 <https://github.com/roocs/woodpecker>
 
 Milano, 2026
 
----
-
-# 2. Why the name Woodpecker?
-
-A woodpecker is a **bird** that lives in the forest and picks insects out of trees. It helps to **keep the forest healthy**.
-
 [![Male pileated woodpecker foraging on a tree](https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/PileatedWoodpeckerFeedingonTree%2C_crop.jpg/1280px-PileatedWoodpeckerFeedingonTree%2C_crop.jpg)](https://commons.wikimedia.org/wiki/File:PileatedWoodpeckerFeedingonTree,_crop.jpg)
 
 *Photo: Joshlaymon, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:PileatedWoodpeckerFeedingonTree,_crop.jpg), [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).*
 
-| Forest image | Climate-data ecosystem |
-| --- | --- |
-| Forest | Projects, services, and data communities |
-| Trees | Climate datasets |
-| Bugs | Known data issues |
-| Woodpecker | Small, precise fixes |
+---
 
-The name describes the intended role: work within the existing ecosystem and repair specific problems.
+# 1. What is Woodpecker?
+
+Woodpecker is a **lightweight Python interface** for discovering, combining, and **applying climate-data fixes** supplied by its **core and plugins**.
+
+- Discover fixes and recipes through a **common interface**.
+- Apply them through a **Python API or command line**.
+- Keep domain-specific knowledge in **independent plugins**.
+
+Like its namesake picking bugs from trees, Woodpecker makes **small, precise repairs** within the climate-data ecosystem.
 
 ---
 
-# 3. Climate-data fixes already exist
+# 2. Climate-data fixes already exist
 
 **Many projects** have developed useful **repair** and standardization code:
 
@@ -43,7 +45,7 @@ The problem is the lack of a **small common contract** for finding, referencing,
 
 ---
 
-# 4. Woodpecker does not replace the fix ecosystem
+# 3. Woodpecker does not replace the fix ecosystem
 
 Woodpecker **does not aim to become the single fixing library** for every climate-data project.
 
@@ -60,7 +62,7 @@ The **plugins contain most of the domain-specific work**.
 
 ---
 
-# 5. Thin core, independent plugins
+# 4. Thin core, independent plugins
 
 ```mermaid
 flowchart TD
@@ -79,7 +81,7 @@ Woodpecker gives each plugin the **same entry point** while its maintainers keep
 
 ---
 
-# 6. A small common vocabulary
+# 5. A small common vocabulary
 
 **Fix**  
 One check or repair exposed through a stable identifier.
@@ -100,7 +102,7 @@ flowchart LR
 
 ---
 
-# 7. Plugins provide fixes and their namespace
+# 6. Plugins provide fixes and their namespace
 
 ```python
 cclass RenameCmip6Axes(FixFunction):
@@ -126,7 +128,7 @@ Woodpecker provides registration, discovery, execution, results, and provenance.
 
 ---
 
-# 8. Recipes combine fixes for a use case
+# 7. Recipes combine fixes for a use case
 
 ```yaml
 recipes:
@@ -145,7 +147,7 @@ recipes:
 
 ---
 
-# 9. Stable identifiers form the common contract
+# 8. Stable identifiers form the common contract
 
 ```text
 xmip.rename_cmip6_axes
@@ -171,7 +173,7 @@ The portal can point to a **maintained, executable definition** instead of repro
 
 ---
 
-# 10. The fix browser makes identifiers visible
+# 9. The fix browser makes identifiers visible
 
 The Woodpecker documentation includes an interactive overview of all registered fixes:
 
@@ -186,7 +188,7 @@ This browser is a demonstration of how a portal, an Errata entry, or documentati
 
 ---
 
-# 11. From an ESGF Errata record to an executable fix
+# 10. From an ESGF Errata record to an executable fix
 
 ```mermaid
 flowchart TD
@@ -209,7 +211,7 @@ The plugin remains the authoritative implementation.
 
 ---
 
-# 12. One interface for local and service use
+# 11. One interface for local and service use
 
 ## Python library
 
@@ -232,7 +234,7 @@ Matching, separate checks, and dry-run previews are also available when needed.
 
 ---
 
-# 13. Rook uses Woodpecker as a library
+# 12. Rook uses Woodpecker as a library
 
 [**Rook**](https://github.com/roocs/rook) is a service for **remote operations on large climate datasets**. It is used by the **Copernicus Climate Data Store** and is being considered as a processing service for **ESGF-NG**.
 
@@ -252,7 +254,7 @@ flowchart LR
 
 ---
 
-# 14. Current plugins demonstrate the pattern
+# 13. Current plugins demonstrate the pattern
 
 | Plugin or example | Focus |
 | --- | --- |
@@ -268,7 +270,7 @@ Other projects can provide independent plugins while keeping their own code, sco
 
 ---
 
-# 15. Collaboration without one central fixes library
+# 14. Collaboration without one central fixes library
 
 > **It would be really great if we could all work together on the fixes package to avoid developing fragmented fixes solutions again.**
 >
@@ -286,7 +288,7 @@ The shared work is the contract and the connections between projects.
 
 ---
 
-# 16. Questions for Milano
+# 15. Questions for Milano
 
 - Can **data producers contribute fixes through GitHub**?
 - Can data producers and service developers **collaborate on plugin code and review**?
@@ -300,7 +302,7 @@ Choose **one known dataset issue** and let a data producer and service developer
 
 ---
 
-# 17. Summary
+# 16. Summary
 
 - Woodpecker provides a **thin common interface**, not one universal fixes library.
 - **Independent plugins** contain the project-specific and dataset-specific knowledge.
@@ -314,7 +316,7 @@ Choose **one known dataset issue** and let a data producer and service developer
 
 ---
 
-# 18. Woodpecker
+# 17. Woodpecker
 
 ## One interface, many fix implementations
 

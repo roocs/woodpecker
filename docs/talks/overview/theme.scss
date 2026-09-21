@@ -56,15 +56,20 @@ $code-block-bg: #dceef8;
   * { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
 }
 
-// Preserve all source content while giving the naming slide a photo column.
-.reveal #why-the-name-woodpecker {
-  > p, > table { max-width: 66%; }
-  > .quarto-figure { position: absolute; right: 0; top: 125px; width: 30%; }
-  img { max-height: 360px; margin: 0; }
+// Title composition follows the Rook deck: credits left, bird photo right.
+.reveal #woodpecker {
+  > h1 { font-size: 2.4em; margin-bottom: 0.25em; }
+  > h2 { font-size: 1.3em; }
+  > p { max-width: 62%; }
+  > p:first-of-type { margin-top: 85px; }
+  > p:nth-of-type(2) { line-height: 1.5; margin-top: 35px; }
+  > p:nth-of-type(3) { margin-top: 45px; font-size: 0.85em; }
+  > p:nth-of-type(4) { margin-top: 40px; font-size: 0.8em; color: #555; }
+  > .quarto-figure { position: absolute; right: 0; top: 200px; width: 31%; }
+  img { max-height: 420px; margin: 0; }
   figure { margin: 0; }
   figcaption { font-size: 0.55em; text-align: center; }
-  > p:has(em) { position: absolute; right: 0; top: 590px; width: 30%; font-size: 0.55em; }
-  table { font-size: 0.85em; margin-left: 0; }
+  > p:has(em) { position: absolute; right: 0; top: 700px; width: 31%; font-size: 0.55em; line-height: 1.4; text-align: center; }
 }
 .reveal table { font-size: 0.9em; }
 .reveal blockquote { width: 95%; box-shadow: none; background: #f3f4f6; }

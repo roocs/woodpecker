@@ -57,10 +57,10 @@ base64 image. Native SVG text stays isolated from Reveal/PDF CSS. `keep-md` is
 required because the filter reads Quarto's intermediate SVG output.
 
 `overview/theme.scss` controls layout without changing slide content. Tall diagrams
-use a separate column, horizontal diagrams have a height limit, and the naming
-slide places the photo and credit beside the text. The original photograph and
+use a separate column, horizontal diagrams have a height limit, and the title
+slide places the photo and attribution beside the presenter and contributor credits. The original photograph and
 its license are documented in `overview/assets/README.md`.
 
 After content changes, inspect all HTML slides and DeckTape PDF pages, especially
-the photo/table slide, tall diagrams, long identifiers, and dense bullet lists.
+the title slide, tall diagrams, long identifiers, and dense bullet lists.
 Check clipping, diagram labels, image loading, and unintended line breaks.
