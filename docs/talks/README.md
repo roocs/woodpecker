@@ -76,14 +76,18 @@ a diagram and a small amount of text. Detailed material is numbered A1–A16 aft
 | --- | --- | --- |
 | Title | 20 seconds | 30 seconds |
 | 1. What is Woodpecker? | 40 seconds | 90 seconds |
-| 2. Why a common interface? | 50 seconds | 90 seconds |
-| 3. Independent plugins, shared access | 70 seconds | 120 seconds |
-| 4. A concrete use case: Rook | 60 seconds | 120 seconds |
+| 2. A core fix: Celsius to Kelvin | 70 seconds | 120 seconds |
+| 3. Why a common interface? | 50 seconds | 90 seconds |
+| 4. Independent plugins, shared access | 60 seconds | 120 seconds |
 | 5. Summary and next step | 60 seconds | 90 seconds |
 | Total | 5 minutes | 9 minutes |
 
-For the short version, explain the plugin idea and Rook example without opening
-code or discussing identifier syntax. For the extended version, use the extra
-time to explain ownership, recipe reuse, and the proposed joint plugin fix;
-leave roughly a minute for a question. Detailed API examples, the plugin list,
-and the proposed ESGF Errata connection remain available in the appendix.
+For the short version, walk through the temperature example: 20 °C becomes
+293.15 K, then point out the selected fix ID in the CLI command. The command updates
+`tas.nc`; adding `--dry-run` previews the change. The example uses the built-in
+`woodpecker.normalize_tas_units_to_kelvin` fix, with no domain plugin needed.
+
+For the extended version, spend more time on recipe reuse and the proposed joint
+plugin fix; leave roughly a minute for a question. Rook's use for Copernicus CDS
+fixes is mentioned briefly on slide 1. The fuller Rook example, API details,
+plugin list, and proposed ESGF Errata connection remain in the appendix.

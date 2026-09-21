@@ -31,11 +31,30 @@ flowchart LR
 ```
 
 - Discover and apply fixes through a **Python API or CLI**.
-- Like the bird picking bugs from trees: **small, precise repairs**.
+- Already used by **Rook** for **Copernicus CDS fixes**.
 
 ---
 
-# 2. Why a common interface?
+# 2. A core fix: Celsius to Kelvin
+
+Example: `tas.nc` contains temperature in Celsius; the workflow expects Kelvin.
+
+```mermaid
+flowchart LR
+    D["tas: 20 °C"] --> F["Core fix: Celsius to Kelvin"]
+    F --> O["tas: 293.15 K"]
+```
+
+```bash
+woodpecker apply tas.nc \
+  --select woodpecker.normalize_tas_units_to_kelvin
+```
+
+Updates **values and units** in `tas.nc`. Add `--dry-run` to preview.
+
+---
+
+# 3. Why a common interface?
 
 ```mermaid
 flowchart LR
@@ -50,7 +69,7 @@ flowchart LR
 
 ---
 
-# 3. Independent plugins, shared access
+# 4. Independent plugins, shared access
 
 ```mermaid
 flowchart LR
@@ -60,20 +79,6 @@ flowchart LR
 
 - **Plugins** expose each project's repair logic.
 - **Stable IDs** name fixes; **recipes** combine them.
-
----
-
-# 4. A concrete use case: Rook
-
-```mermaid
-flowchart LR
-    D["Input data"] --> W["Woodpecker recipe"]
-    W --> R["Rook processing"]
-    R --> O["CDS output"]
-```
-
-- **Woodpecker fixes** dataset issues; **Rook processes** the data.
-- The same recipe works in **local Python workflows and the CLI**.
 
 ---
 
