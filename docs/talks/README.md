@@ -36,16 +36,31 @@ With the tools' environment active, run:
 cd docs/talks
 make slides-html   # standalone Reveal.js HTML
 make slides-pdf    # rebuild HTML, then export PDF with DeckTape
+make slides-pptx   # six styled PowerPoint slides (no custom template or appendix)
 make slides        # both formats
 make slides-clean  # delete only docs/_build/talks/overview/
 ```
 
 From the repository root, use `make -C docs/talks slides` (or another target above).
 The root Makefile does not expose slide targets. Generated `slides.qmd`,
-`slides.revealjs.md`, `slides.html`, `slides.pdf`, and Quarto support files stay in
+`slides-main.qmd`, intermediate Markdown, `slides.html`, `slides.pdf`,
+`slides.pptx`, and Quarto support files stay in
 `docs/_build/talks/overview/`, already ignored by `.gitignore`. Open `slides.html`
 directly in a browser; its scripts, styles, diagrams, and photo are embedded.
 The source hyperlinks remain links to external sites.
+
+PPTX export includes exactly six slides: the title and five main sections, stopping
+before `# Appendix` in the canonical Markdown. HTML and PDF retain the full appendix.
+PowerPoint uses the existing Quarto/Chromium tools and does not require DeckTape's
+PDF export step or a custom PowerPoint template. Quarto writes `slides-raw.pptx`,
+then `overview/style_pptx.py` combines its continuation slides and applies explicit
+16:9 layouts, Arial text, blue headings, and proportional image sizing. This step
+uses only Python's standard library. Text, hyperlinks, code, and the table remain
+editable; Mermaid diagrams are embedded PNG images. The layouts are designed for
+the six main sections and report an error if the expected object structure changes.
+The Reveal.js theme and HTML diagram filter apply only to HTML/PDF.
+Review the PowerPoint layout before presenting, especially dense slides.
+The `slides` target continues to build HTML and PDF only.
 
 ## Rendering and styling
 

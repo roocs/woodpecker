@@ -1,5 +1,6 @@
 """Generate the Woodpecker Quarto input without changing the canonical Markdown."""
 
+import argparse
 import json
 import re
 import sys
@@ -12,10 +13,10 @@ FRONT_MATTER = """---
 pagetitle: "Woodpecker — Milano 2026"
 fig-responsive: true
 keep-md: true
-filters:
-  - ../../../talks/overview/svg.lua
 format:
   revealjs:
+    filters:
+      - ../../../talks/overview/svg.lua
     theme:
       - simple
       - ../../../talks/overview/theme.scss
@@ -32,6 +33,9 @@ format:
     mermaid-format: svg
     code-overflow: wrap
     auto-stretch: false
+  pptx:
+    slide-level: 1
+    mermaid-format: png
 ---
 
 """
@@ -151,8 +155,14 @@ def add_layout(markdown: str) -> str:
     return "".join(lines)
 
 
-def transform(markdown: str) -> str:
-    """Add Reveal.js metadata, convert Mermaid cells and annotate layouts."""
+def transform(markdown: str, *, main_only: bool = False) -> str:
+    """Add format metadata, convert Mermaid cells and annotate layouts."""
+    if main_only:
+        sections = re.split(r"^# Appendix\s*$", markdown, maxsplit=1, flags=re.MULTILINE)
+        if len(sections) != 2:
+            raise ValueError("Main-slide export requires a '# Appendix' heading")
+        # Drop the separator before the appendix to avoid an empty final slide.
+        markdown = re.sub(r"\n---\s*$", "\n", sections[0])
     body = mermaid_fences(markdown, convert=True, configure=True)
     body = add_layout(body)
     # Keep the source URL and attribution untouched; use the same photo offline.
@@ -167,7 +177,7 @@ def transform(markdown: str) -> str:
     return result
 
 
-def build(source: Path = SOURCE, output: Path = OUTPUT) -> Path:
+def build(source: Path = SOURCE, output: Path = OUTPUT, *, main_only: bool = False) -> Path:
     """Write deterministic Quarto input after checking the required source files."""
     for path, description in (
         (source, "Canonical Markdown source"),
@@ -175,7 +185,7 @@ def build(source: Path = SOURCE, output: Path = OUTPUT) -> Path:
     ):
         if not path.is_file():
             raise FileNotFoundError(f"{description} is missing: {path}")
-    result = transform(source.read_text(encoding="utf-8"))
+    result = transform(source.read_text(encoding="utf-8"), main_only=main_only)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(result, encoding="utf-8")
     return output
@@ -183,8 +193,14 @@ def build(source: Path = SOURCE, output: Path = OUTPUT) -> Path:
 
 def main() -> int:
     """Report actionable build errors without a Python traceback."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--main-only", action="store_true", help="omit the appendix for PowerPoint")
+    args = parser.parse_args()
     try:
-        output = build()
+        output = build(
+            output=OUTPUT.with_name("slides-main.qmd") if args.main_only else OUTPUT,
+            main_only=args.main_only,
+        )
     except (OSError, ValueError) as error:
         print(f"Slides: {error}", file=sys.stderr)
         return 1
