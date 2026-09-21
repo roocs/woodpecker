@@ -155,7 +155,7 @@ def add_layout(markdown: str) -> str:
     return "".join(lines)
 
 
-def transform(markdown: str, *, main_only: bool = False) -> str:
+def transform(markdown: str, *, main_only: bool = False, template: Path | None = None) -> str:
     """Add format metadata, convert Mermaid cells and annotate layouts."""
     if main_only:
         sections = re.split(r"^# Appendix\s*$", markdown, maxsplit=1, flags=re.MULTILINE)
@@ -164,6 +164,16 @@ def transform(markdown: str, *, main_only: bool = False) -> str:
         # Drop the separator before the appendix to avoid an empty final slide.
         markdown = re.sub(r"\n---\s*$", "\n", sections[0])
     body = mermaid_fences(markdown, convert=True, configure=True)
+    if template is not None:
+        from template_pptx import read_template
+
+        if not main_only:
+            raise ValueError("PowerPoint templates apply only to the main-slide export")
+        _, _, profile = read_template(template)
+        configuration = json.loads(MERMAID_CONFIG.removeprefix("%%{init: ").removesuffix("}%%\n"))
+        configuration["themeCSS"] = "background: #" + profile["background"] + ";"
+        configuration["themeVariables"]["lineColor"] = "#" + profile["foreground"]
+        body = body.replace(MERMAID_CONFIG, "%%{init: " + json.dumps(configuration) + "}%%\n")
     body = add_layout(body)
     # Keep the source URL and attribution untouched; use the same photo offline.
     body = body.replace(
@@ -177,7 +187,13 @@ def transform(markdown: str, *, main_only: bool = False) -> str:
     return result
 
 
-def build(source: Path = SOURCE, output: Path = OUTPUT, *, main_only: bool = False) -> Path:
+def build(
+    source: Path = SOURCE,
+    output: Path = OUTPUT,
+    *,
+    main_only: bool = False,
+    template: Path | None = None,
+) -> Path:
     """Write deterministic Quarto input after checking the required source files."""
     for path, description in (
         (source, "Canonical Markdown source"),
@@ -185,7 +201,7 @@ def build(source: Path = SOURCE, output: Path = OUTPUT, *, main_only: bool = Fal
     ):
         if not path.is_file():
             raise FileNotFoundError(f"{description} is missing: {path}")
-    result = transform(source.read_text(encoding="utf-8"), main_only=main_only)
+    result = transform(source.read_text(encoding="utf-8"), main_only=main_only, template=template)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(result, encoding="utf-8")
     return output
@@ -195,11 +211,15 @@ def main() -> int:
     """Report actionable build errors without a Python traceback."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--main-only", action="store_true", help="omit the appendix for PowerPoint")
+    parser.add_argument(
+        "--template", type=Path, help="match diagram background to a private template"
+    )
     args = parser.parse_args()
     try:
         output = build(
             output=OUTPUT.with_name("slides-main.qmd") if args.main_only else OUTPUT,
             main_only=args.main_only,
+            template=args.template,
         )
     except (OSError, ValueError) as error:
         print(f"Slides: {error}", file=sys.stderr)

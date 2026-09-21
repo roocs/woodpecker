@@ -36,7 +36,7 @@ With the tools' environment active, run:
 cd docs/talks
 make slides-html   # standalone Reveal.js HTML
 make slides-pdf    # rebuild HTML, then export PDF with DeckTape
-make slides-pptx   # six styled PowerPoint slides (no custom template or appendix)
+make slides-pptx   # six PowerPoint slides, using the private template when available
 make slides        # both formats
 make slides-clean  # delete only docs/_build/talks/overview/
 ```
@@ -61,6 +61,29 @@ the six main sections and report an error if the expected object structure chang
 The Reveal.js theme and HTML diagram filter apply only to HTML/PDF.
 Review the PowerPoint layout before presenting, especially dense slides.
 The `slides` target continues to build HTML and PDF only.
+
+### Optional private PowerPoint template
+
+Keep the one-slide reference at `docs/talks/templates/futura_black.potx`.
+The entire `templates/` directory is ignored by Git and survives `slides-clean`.
+`slides-pptx` automatically uses this file when present. Its actual slide layout,
+master, logo, background, and fonts are reused by `overview/template_pptx.py`;
+the diagrams receive a matching background and larger placements. The Python and
+shell examples use editable, padded code panels with syntax highlighting.
+No template assets are copied into
+tracked files. Generated presentations contain the template artwork and stay in
+the ignored build directory. HTML and PDF are unaffected.
+
+The current template adapter expects a single selected slide on a 13⅓ × 7½ inch
+widescreen canvas. It fits the six main slides above the template footer. Fonts
+named in the template need to be installed for exact typography.
+
+```sh
+make -C docs/talks slides-pptx PPTX_TEMPLATE=                  # default light styling
+make -C docs/talks slides-pptx PPTX_TEMPLATE=/path/to/slide.potx
+```
+
+Without the private file, builds continue to use the default light styling.
 
 ## Rendering and styling
 

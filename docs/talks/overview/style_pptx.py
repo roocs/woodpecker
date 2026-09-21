@@ -199,7 +199,7 @@ def layout(shapes, index):
     return [title, *bodies, *pictures, *tables]
 
 
-def style_pptx(source, output):
+def style_pptx(source, output, template=None):
     with zipfile.ZipFile(source) as archive:
         files = {name: archive.read(name) for name in archive.namelist()}
     presentation = ET.fromstring(files["ppt/presentation.xml"])
@@ -276,6 +276,11 @@ def style_pptx(source, output):
                 if color is not None:
                     color[:] = [ET.Element(tag("a:srgbClr"), val="457B9D")]
             files[name] = xml_bytes(theme)
+    if template is not None:
+        from template_pptx import apply_template
+
+        files = apply_template({n: d for n, d in files.items() if n not in removed}, template)
+        removed.clear()
     with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
         for name, data in files.items():
             if name not in removed:
@@ -287,5 +292,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--template", type=Path, help="private one-slide PPTX or POTX reference")
     args = parser.parse_args()
-    style_pptx(args.source, args.output)
+    style_pptx(args.source, args.output, args.template)

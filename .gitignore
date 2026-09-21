@@ -71,6 +71,10 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+# Private presentation templates and other local slide assets
+docs/talks/local/
+docs/talks/templates/
+
 # PyBuilder
 .pybuilder/
 target/
