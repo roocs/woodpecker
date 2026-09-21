@@ -69,8 +69,8 @@ Check clipping, diagram labels, image loading, and unintended line breaks.
 
 The main talk is the title page plus five content slides. Stop at **Summary and
 next step**; the appendix is for questions and follow-up, not the timed talk.
-The title and “What is Woodpecker?” introduction are retained from the reviewed
-version. Detailed material is numbered A1–A16 after an appendix divider.
+The reviewed title page is retained. Each of the five main content slides uses
+a diagram and a small amount of text. Detailed material is numbered A1–A16 after an appendix divider.
 
 | Slide | 5-minute delivery | Extended delivery |
 | --- | --- | --- |

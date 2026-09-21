@@ -21,25 +21,32 @@ Milano, 2026
 
 # 1. What is Woodpecker?
 
-Woodpecker is a **lightweight Python interface** for discovering, combining, and **applying climate-data fixes** supplied by its **core and plugins**.
+A **lightweight Python interface** for applying climate-data fixes.
 
-- Discover fixes and recipes through a **common interface**.
-- Apply them through a **Python API or command line**.
-- Keep domain-specific knowledge in **independent plugins**.
+```mermaid
+flowchart LR
+    D["Climate data"] --> W["Woodpecker"]
+    P["Core and plugin fixes"] --> W
+    W --> O["Prepared data"]
+```
 
-Like its namesake picking bugs from trees, Woodpecker makes **small, precise repairs** within the climate-data ecosystem.
+- Discover and apply fixes through a **Python API or CLI**.
+- Like the bird picking bugs from trees: **small, precise repairs**.
 
 ---
 
 # 2. Why a common interface?
 
-Useful fixes already exist in **xMIP, ESMValTool, and project-specific code**.
+```mermaid
+flowchart LR
+    X["xMIP"] --> W["Woodpecker interface"]
+    E["ESMValTool"] --> W
+    P["Project fixes"] --> W
+    W --> U["Users and services"]
+```
 
-- Finding and reusing them across workflows takes extra integration work.
-- Projects need to retain their own expertise and maintenance responsibilities.
-- Woodpecker provides a **shared way to discover and run those fixes**.
-
-**Keep the existing fix ecosystem; connect it through a small common interface.**
+- **Reuse existing fixes** across workflows.
+- Projects keep their **expertise and ownership**.
 
 ---
 
@@ -51,17 +58,12 @@ flowchart LR
     P --> F["Fixes and recipes"]
 ```
 
-- **Plugins** expose a project's repair logic while its maintainers keep ownership.
-- **Stable identifiers** let different tools refer to the same fix.
-- **Recipes** combine fixes for a particular dataset or workflow.
-
-Users and services access them through the **same interface**.
+- **Plugins** expose each project's repair logic.
+- **Stable IDs** name fixes; **recipes** combine them.
 
 ---
 
 # 4. A concrete use case: Rook
-
-Rook uses Woodpecker as a Python library to prepare climate data for processing.
 
 ```mermaid
 flowchart LR
@@ -70,24 +72,23 @@ flowchart LR
     R --> O["CDS output"]
 ```
 
-- Woodpecker applies **dataset-specific fixes**.
-- Rook handles operations such as **subset, concatenate, and regrid**.
-- The same recipe can also run in a **local Python workflow or CLI**.
-
-**Woodpecker prepares the data. Rook operates on it.**
+- **Woodpecker fixes** dataset issues; **Rook processes** the data.
+- The same recipe works in **local Python workflows and the CLI**.
 
 ---
 
 # 5. Summary and next step
 
-- **One common interface** for discovering and applying climate-data fixes.
-- **Independent plugins** keep expertise and ownership with each project.
-- **Reusable recipes** connect those fixes to local workflows and services.
+**A shared interface connects independently maintained fixes to reusable workflows.**
 
-## A first collaboration for Milano
+```mermaid
+flowchart LR
+    P["Data producer"] --> F["Plugin fix"]
+    D["Service developer"] --> F
+    F --> R["Reusable recipe"]
+```
 
-Choose **one known dataset issue**. Let a data producer and a service developer
-implement and test a plugin fix together through GitHub.
+**Next step:** implement and test **one known dataset fix together** on GitHub.
 
 <https://github.com/roocs/woodpecker>
 
@@ -361,7 +362,7 @@ The shared work is the contract and the connections between projects.
 
 ---
 
-# A14. Questions for Milano
+# A14. Questions
 
 - Can **data producers contribute fixes through GitHub**?
 - Can data producers and service developers **collaborate on plugin code and review**?
