@@ -190,7 +190,9 @@ flowchart TD
     P3 --> L3["Copernicus Climate Data Store"]
 ```
 
-Plugins may be narrow and project-specific. They may implement fixes directly or adapt existing libraries.
+Plugins implement focused, testable **`FixFunction` subclasses** and may be narrow and project-specific.
+
+Each project controls its fixes, dependencies, and scope.
 
 Woodpecker gives each plugin the **same entry point** while its maintainers keep control of the implementation.
 
@@ -219,8 +221,10 @@ flowchart LR
 
 # A5. Plugins provide fixes and their namespace
 
+Interface sketch; registration and metadata omitted.
+
 ```python
-cclass RenameCmip6Axes(FixFunction):
+class RenameCmip6Axes(FixFunction):
     def apply(self, dataset, dry_run=True): ...
 ```
 
@@ -235,8 +239,8 @@ The **stable fix ID** combines two parts:
 
 Woodpecker joins the prefix and suffix with a dot.
 
-- The **plugin name** defines the `xmip` namespace prefix.
-- The **fix name** defines the `rename_cmip6_axes` suffix.
+- The **prefix** defaults to the plugin package namespace: `xmip`.
+- The **suffix** comes from the class name or an explicit declaration.
 - The **plugin owns** the implementation, tests, and domain knowledge.
 
 Woodpecker provides registration, discovery, execution, results, and provenance.
@@ -244,6 +248,8 @@ Woodpecker provides registration, discovery, execution, results, and provenance.
 ---
 
 # A6. Recipes combine fixes for a use case
+
+Excerpt from the xMIP recipe; options and other steps omitted.
 
 ```yaml
 recipes:
@@ -303,21 +309,21 @@ This browser is a demonstration of how a portal, an Errata entry, or documentati
 
 ---
 
-# A9. From an ESGF Errata record to an executable fix
+# A9. Proposed link from ESGF Errata to a fix
 
 ```mermaid
 flowchart TD
-    E["ESGF Errata record"] --> I["Stable fix or recipe ID"]
+    E["ESGF Errata record"] -.-> I["Stable fix or recipe ID"]
     B["Woodpecker fix browser"] --> I
     I --> W["Woodpecker API or CLI"]
     W --> P["Installed plugin"]
     P --> F["Check, apply, provenance"]
 ```
 
-This creates a link between issue documentation and executable repair logic:
+A **proposed integration** between issue documentation and executable repair logic:
 
 1. The **Errata record** identifies the affected data.
-2. It references a **stable fix or recipe ID**.
+2. It could reference a **stable fix or recipe ID**.
 3. The fix browser makes the **ID and its source discoverable**.
 4. Woodpecker resolves the ID through an **installed plugin**.
 5. A user or service can **check, preview, and apply** the repair.
@@ -327,6 +333,8 @@ The plugin remains the authoritative implementation.
 ---
 
 # A10. One interface for local and service use
+
+The xMIP plugin is installed; `dataset` is an xarray dataset.
 
 ## Python library
 
@@ -340,7 +348,8 @@ result = woodpecker.recipe.apply(dataset, recipe, dry_run=False)
 ## Command line
 
 ```bash
-woodpecker apply ./data --recipe-id xmip.cmip6_preprocessing
+woodpecker apply ./data --store catalog \
+  --recipe-id xmip.cmip6_preprocessing
 ```
 
 Both routes use the **same identifiers, plugins, and recipes**.
@@ -389,7 +398,7 @@ Other projects can provide independent plugins while keeping their own code, sco
 
 > **It would be really great if we could all work together on the fixes package to avoid developing fragmented fixes solutions again.**
 >
-> — Bouwe, ESMValTool developer
+> — Bouwe Andela, ESMValTool
 
 A common Woodpecker interface allows cooperation without forcing every project into one implementation:
 
@@ -399,21 +408,21 @@ A common Woodpecker interface allows cooperation without forcing every project i
 - **recipes combine** fixes for specific workflows
 - **services and users** call them through the same interface
 
-The shared work is the contract and the connections between projects.
+The aim is for **data producers and service providers to develop, review, and maintain fix plugins together on GitHub**.
 
 ---
 
 # A14. Questions
 
 - Can **data producers contribute fixes through GitHub**?
-- Can data producers and service developers **collaborate on plugin code and review**?
-- Can existing fix libraries expose selected functions as Woodpecker plugins?
+- Can data producers and service providers **collaborate on plugin code and review**?
+- Can projects implement their fixes as focused, maintainable `FixFunction` subclasses?
 - Which identifiers should ESGF Errata and other portals reference?
 - Who maintains each project or dataset plugin?
 
 ## A practical first step
 
-Choose **one known dataset issue** and let a data producer and service developer implement and test the plugin fix together through GitHub.
+Choose **one known dataset issue** and let a data producer and service provider implement and test the plugin fix together through GitHub.
 
 ---
 
