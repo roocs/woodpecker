@@ -26,7 +26,7 @@ format:
 
 # Woodpecker overview {#woodpecker}
 
-## A common interface for climate-data fixes
+## A common interface for climate-data adaptations
 
 **Contributors:**  
 Ag Stephens (CEDA/STFC)  
@@ -44,7 +44,9 @@ Rhys Evans (STFC)
 
 # 1. What is Woodpecker? {.diagram-small}
 
-A **lightweight Python interface** for applying climate-data fixes.
+A **lightweight Python interface** for applying climate-data adaptations.
+
+A **fix** can correct a known issue or adapt data to service requirements.
 
 ```{mermaid}
 %%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
@@ -61,7 +63,25 @@ flowchart LR
 
 ---
 
-# 2. The problem: fragmented fixes {.diagram-small}
+# 2. Woodpecker's value for CDS
+
+## Already in use through Rook
+
+Woodpecker replaces adaptations embedded in **Rook and daops** with independently tested and released plugins.
+
+**Production use:** CMIP6 Decadal and Atlas adaptations for the CDS.
+
+## Value for a wider CDS context
+
+- **No additional service:** a lightweight Python package runs within existing workflows.
+- **Reuse:** the same plugins can serve Rook, other Python applications, and command-line processing.
+- **Clear ownership:** dataset specialists maintain adaptations separately from service code.
+
+**Opportunity:** reduce duplicated adaptation code and maintenance effort across CDS workflows.
+
+---
+
+# 3. The problem: fragmented fixes {.diagram-small}
 
 - [**xMIP**](https://github.com/jbusecke/xMIP): CMIP preprocessing for Pangeo workflows.
 - [**ESMValTool fixer prototype**](https://github.com/ESMValGroup/fixer-prototype): configurable fixes with CMIP7 and ESA-CCI examples.
@@ -85,7 +105,7 @@ flowchart LR
 
 ---
 
-# 3. What does Woodpecker provide? {.diagram-small}
+# 4. What does Woodpecker provide? {.diagram-small}
 
 **A thin common API for independent plugins.**
 
@@ -107,7 +127,7 @@ flowchart LR
 
 ---
 
-# 4. A core fix: Celsius to Kelvin {.diagram-small}
+# 5. A core fix: Celsius to Kelvin {.diagram-small}
 
 ```{mermaid}
 %%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
@@ -141,7 +161,7 @@ woodpecker apply tas.nc \
 
 ---
 
-# 5. Summary: a common API, shared work {.diagram-small}
+# 6. Summary: a common API, shared work {.diagram-small}
 
 **Technical solution:** independent fix plugins use a common API.
 
@@ -160,6 +180,22 @@ flowchart LR
 **First step:** choose one known dataset issue and collaborate on its plugin fix.
 
 <https://github.com/roocs/woodpecker>
+
+---
+
+# 7. Outlook: broader use within CDS
+
+## Next opportunity: the CMIP6 Decadal data update
+
+**Data producers and service providers** review the existing adaptations together, update the plugin through GitHub, and test a release for operational use.
+
+## Broader CDS use to explore
+
+- **More datasets:** add plugins with the relevant data producers and agree maintenance ownership.
+- **Other CDS workflows:** pilot reuse beyond Rook and validate outputs and operational requirements.
+- **Discoverable adaptations:** explore catalogue and ESGF Errata references using stable fix identifiers.
+
+**Discussion for CDS:** which workflow and dataset family should we assess first, and who can work with us on it?
 
 ---
 
@@ -230,7 +266,7 @@ Woodpecker gives each plugin the **same entry point** while its maintainers keep
 # A4. A small common vocabulary {.diagram-small}
 
 **Fix**  
-One check or repair exposed through a stable identifier.
+One named data adaptation exposed through a stable identifier. It may correct an issue or meet service requirements.
 
 **Recipe**  
 An ordered set of fixes, options, matching rules, and supporting links.
@@ -402,6 +438,7 @@ flowchart LR
 ```
 
 - **Woodpecker prepares** known dataset issues through the Python API.
+- Fixes and recipes **replace legacy adaptations embedded in Rook and daops**.
 - **Rook continues** with generic operations such as subset, concatenate, or regrid.
 - **Dataset-specific behaviour stays outside** the generic processing code.
 - The same recipe remains available outside Rook through the CLI or another Python workflow.
