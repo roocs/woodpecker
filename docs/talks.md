@@ -19,5 +19,4 @@ The version prepared for Milano 2026, including the technical appendix.
 <a class="md-button md-button--primary" href="milano-2026/" target="_blank" rel="noopener noreferrer">View slides ↗</a>
 <a class="md-button" href="milano-2026/slides.pdf" target="_blank" rel="noopener noreferrer">Open PDF ↗</a>
 
-The overview starts from the Milano deck and may evolve independently. Event
-talks retain their own stable URLs and are not replaced by newer presentations.
+Event talks retain their own stable URLs and are not replaced by newer presentations.

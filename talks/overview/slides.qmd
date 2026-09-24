@@ -24,20 +24,17 @@ format:
     auto-stretch: false
 ---
 
-# Woodpecker
+# Woodpecker overview {#woodpecker}
 
 ## A common interface for climate-data fixes
 
-**Presenter:** Ag Stephens (CEDA/STFC)
-
 **Contributors:**  
+Ag Stephens (CEDA/STFC)  
 Carsten Ehbrecht (DKRZ)  
 Bouwe Andela (ESMValTool)  
 Rhys Evans (STFC)
 
 <https://github.com/roocs/woodpecker>
-
-Project overview
 
 [![Male pileated woodpecker foraging on a tree](../shared/assets/woodpecker.jpg)](https://commons.wikimedia.org/wiki/File:PileatedWoodpeckerFeedingonTree,_crop.jpg)
 
