@@ -22,8 +22,13 @@ no TeX or private template is needed. Install tools once with network access:
 
 ```sh
 conda activate woodpecker
-make -C docs/talks install-pdf
+make -C docs/talks install-all
 ```
+
+`install` installs only the basics for HTML slides (Quarto and Node).
+`install-pdf` adds PDF support (DeckTape and its browser), including the basics.
+`install-all` installs the basics and every extension; currently PDF is the only
+extension, so it runs `install-pdf`.
 
 Alternatively install Quarto 1.9.38 and Node 22 separately, then run
 `npm install --global decktape@3.16.1`. On Linux the browser also needs its usual

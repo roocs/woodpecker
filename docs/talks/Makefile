@@ -6,7 +6,7 @@ DECKTAPE ?= decktape
 DECKTAPE_FLAGS ?=
 
 .DEFAULT_GOAL := help
-.PHONY: help slides slides-html slides-pdf publish slides-clean install install-pdf
+.PHONY: help slides slides-html slides-pdf check-pdf publish slides-clean install install-pdf install-all
 
 help:
 	@echo "Woodpecker talk targets:"
@@ -16,8 +16,9 @@ help:
 	@echo "  slides        Build both HTML and PDF"
 	@echo "  publish       Build and stage HTML/PDF for MkDocs (no deployment)"
 	@echo "  slides-clean  Remove generated talk outputs and staging files"
-	@echo "  install       Install Quarto and Node in the active woodpecker Conda environment"
-	@echo "  install-pdf   Install HTML tools plus DeckTape and its browser"
+	@echo "  install       Install basics for HTML slides (Quarto and Node)"
+	@echo "  install-pdf   Install basics plus PDF support (DeckTape and its browser)"
+	@echo "  install-all   Install basics and all extensions (currently PDF support)"
 	@echo "Run 'make docs' from the repository root to build the complete site."
 
 slides-html:
@@ -26,7 +27,14 @@ slides-html:
 		(cd "$(BUILD)/$$talk" && sh "$(TALKS_DIR)/quarto.sh" render slides.qmd --to revealjs --output index.html); \
 	done
 
-slides-pdf: slides-html
+check-pdf:
+	@command -v "$(DECKTAPE)" >/dev/null 2>&1 || { \
+		echo "Slides: DeckTape is missing. With woodpecker activated, run:" >&2; \
+		echo '  make -C "$(TALKS_DIR)" install-pdf' >&2; \
+		exit 1; \
+	}
+
+slides-pdf: check-pdf slides-html
 	@set -e; for talk in $(TALKS); do \
 		$(DECKTAPE) reveal --size 1600x900 --load-pause 2000 --pause 1000 $(DECKTAPE_FLAGS) "$(BUILD)/$$talk/index.html" "$(BUILD)/$$talk/slides.pdf"; \
 	done
@@ -46,3 +54,5 @@ install:
 
 install-pdf: install
 	npm install --global --prefix "$$CONDA_PREFIX" decktape@3.16.1
+
+install-all: install-pdf

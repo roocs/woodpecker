@@ -22,7 +22,7 @@ pip install -e ".[docs]"
 
 ## Build The Site
 
-Install the slide toolchain with `make -C docs/talks install-pdf` in the active
+Install the complete slide toolchain with `make -C docs/talks install-all` in the active
 Woodpecker Conda environment (Quarto 1.9.38, Node 22 and DeckTape 3.16.1).
 See [the talks README](https://github.com/roocs/woodpecker/blob/main/docs/talks/README.md)
 for other environments.
