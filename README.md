@@ -69,6 +69,7 @@ Use `woodpecker.apply(...)`, `woodpecker.recipe.apply(...)`, and
 - [Concepts](https://roocs.github.io/woodpecker/concepts/)
 - [Recipes](https://roocs.github.io/woodpecker/recipes/)
 - [CLI](https://roocs.github.io/woodpecker/cli/)
+- [Talks](https://roocs.github.io/woodpecker/talks/)
 - [Contributing](https://roocs.github.io/woodpecker/CONTRIBUTING_GUIDE/)
 
 ## Project Map
@@ -76,6 +77,7 @@ Use `woodpecker.apply(...)`, `woodpecker.recipe.apply(...)`, and
 - `woodpecker/`: core API, CLI, recipes, fixes, stores, and results.
 - `plugins/`: bundled dataset-family plugins.
 - `docs/`: MkDocs pages and generated references.
+- `talks/`: editable Quarto talks, shared assets, and slide tooling.
 - `tests/`: unit and integration tests.
 - `scripts/`: docs and catalog generators.
 
@@ -87,5 +89,8 @@ make lint
 make test
 make docs
 ```
+
+`make docs` includes HTML and PDF talks. Install the
+[slide toolchain](talks/README.md#toolchain) before building the complete site.
 
 Woodpecker is licensed under the terms in [LICENSE](LICENSE).

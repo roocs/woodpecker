@@ -1,6 +1,6 @@
 # Woodpecker photo
 
-`woodpecker.jpg` is the original photograph used in `overview-slides.md`:
+`woodpecker.jpg` is the original photograph used in both Quarto slide sources:
 
 - Author: Joshlaymon
 - Source: https://commons.wikimedia.org/wiki/File:PileatedWoodpeckerFeedingonTree,_crop.jpg

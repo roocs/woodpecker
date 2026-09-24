@@ -1,3 +1,29 @@
+---
+pagetitle: "Woodpecker — Overview"
+fig-responsive: true
+keep-md: true
+format:
+  revealjs:
+    filters:
+      - ../shared/svg.lua
+    theme:
+      - simple
+      - ../shared/theme.scss
+    slide-level: 1
+    transition: none
+    slide-number: true
+    show-slide-number: all
+    embed-resources: true
+    width: 1600
+    height: 900
+    margin: 0.06
+    center: false
+    pdf-max-pages-per-slide: 1
+    mermaid-format: svg
+    code-overflow: wrap
+    auto-stretch: false
+---
+
 # Woodpecker
 
 ## A common interface for climate-data fixes
@@ -11,19 +37,20 @@ Rhys Evans (STFC)
 
 <https://github.com/roocs/woodpecker>
 
-Milano, 2026
+Project overview
 
-[![Male pileated woodpecker foraging on a tree](https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/PileatedWoodpeckerFeedingonTree%2C_crop.jpg/1280px-PileatedWoodpeckerFeedingonTree%2C_crop.jpg)](https://commons.wikimedia.org/wiki/File:PileatedWoodpeckerFeedingonTree,_crop.jpg)
+[![Male pileated woodpecker foraging on a tree](../shared/assets/woodpecker.jpg)](https://commons.wikimedia.org/wiki/File:PileatedWoodpeckerFeedingonTree,_crop.jpg)
 
 *Photo: Joshlaymon, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:PileatedWoodpeckerFeedingonTree,_crop.jpg), [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).*
 
 ---
 
-# 1. What is Woodpecker?
+# 1. What is Woodpecker? {.diagram-small}
 
 A **lightweight Python interface** for applying climate-data fixes.
 
-```mermaid
+```{mermaid}
+%%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
 flowchart LR
     D["Climate dataset with an issue: tas in °C"] --> W["Woodpecker: apply a fix"]
     P["Core and project fixes: common API"] --> W
@@ -37,13 +64,14 @@ flowchart LR
 
 ---
 
-# 2. The problem: fragmented fixes
+# 2. The problem: fragmented fixes {.diagram-small}
 
 - [**xMIP**](https://github.com/jbusecke/xMIP): CMIP preprocessing for Pangeo workflows.
 - [**ESMValTool fixer prototype**](https://github.com/ESMValGroup/fixer-prototype): configurable fixes with CMIP7 and ESA-CCI examples.
 - **Project and service scripts**: repairs maintained in local workflows.
 
-```mermaid
+```{mermaid}
+%%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
 flowchart LR
     X["xMIP"] --> I["Different interfaces"]
     E["Fixer prototype"] --> I
@@ -60,11 +88,12 @@ flowchart LR
 
 ---
 
-# 3. What does Woodpecker provide?
+# 3. What does Woodpecker provide? {.diagram-small}
 
 **A thin common API for independent plugins.**
 
-```mermaid
+```{mermaid}
+%%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
 flowchart LR
     X["xMIP plugin"] --> I["Woodpecker API"]
     E["ESMValTool plugin"] --> I
@@ -81,9 +110,10 @@ flowchart LR
 
 ---
 
-# 4. A core fix: Celsius to Kelvin
+# 4. A core fix: Celsius to Kelvin {.diagram-small}
 
-```mermaid
+```{mermaid}
+%%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
 flowchart LR
     D["tas: 20 °C"] --> F["Core fix: Celsius to Kelvin"]
     F --> O["tas: 293.15 K"]
@@ -114,11 +144,12 @@ woodpecker apply tas.nc \
 
 ---
 
-# 5. Summary: a common API, shared work
+# 5. Summary: a common API, shared work {.diagram-small}
 
 **Technical solution:** independent fix plugins use a common API.
 
-```mermaid
+```{mermaid}
+%%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
 flowchart LR
     P["Data producers"] --> G["Fix plugins on GitHub"]
     S["Service providers"] --> G
@@ -177,9 +208,10 @@ The **plugins contain most of the domain-specific work**.
 
 ---
 
-# A3. Thin core, independent plugins
+# A3. Thin core, independent plugins {.diagram-wide}
 
-```mermaid
+```{mermaid}
+%%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
 flowchart TD
     U["Woodpecker API and CLI"] --> C["Thin core"]
     C --> P1["xMIP plugin"]
@@ -198,7 +230,7 @@ Woodpecker gives each plugin the **same entry point** while its maintainers keep
 
 ---
 
-# A4. A small common vocabulary
+# A4. A small common vocabulary {.diagram-small}
 
 **Fix**  
 One check or repair exposed through a stable identifier.
@@ -209,7 +241,8 @@ An ordered set of fixes, options, matching rules, and supporting links.
 **Plugin**  
 A separately owned package that provides fixes and recipes for a project, dataset family, or use case.
 
-```mermaid
+```{mermaid}
+%%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
 flowchart LR
     P["Plugin"] --> F["Fixes"]
     P --> R["Recipes"]
@@ -309,9 +342,10 @@ This browser is a demonstration of how a portal, an Errata entry, or documentati
 
 ---
 
-# A9. Proposed link from ESGF Errata to a fix
+# A9. Proposed link from ESGF Errata to a fix {.diagram-side}
 
-```mermaid
+```{mermaid}
+%%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
 flowchart TD
     E["ESGF Errata record"] -.-> I["Stable fix or recipe ID"]
     B["Woodpecker fix browser"] --> I
@@ -358,11 +392,12 @@ Matching, separate checks, and dry-run previews are also available when needed.
 
 ---
 
-# A11. Rook uses Woodpecker as a library
+# A11. Rook uses Woodpecker as a library {.diagram-small}
 
 [**Rook**](https://github.com/roocs/rook) is a service for **remote operations on large climate datasets**. It is used by the **Copernicus Climate Data Store** and is being considered as a processing service for **ESGF-NG**.
 
-```mermaid
+```{mermaid}
+%%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
 flowchart LR
     D["Input data"] --> W["Woodpecker recipe"]
     W --> R["Rook processing"]

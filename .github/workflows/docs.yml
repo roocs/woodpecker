@@ -2,36 +2,53 @@ name: Build and Deploy Docs
 
 on:
   push:
+    branches: [main]
     paths:
-      - "woodpecker/fixes/**"
       - "woodpecker/**"
       - "plugins/**"
       - "scripts/**"
       - "docs/**"
+      - "talks/**"
       - "tests/integration/recipes/**"
       - "Makefile"
       - "mkdocs.yml"
+      - ".github/workflows/docs.yml"
       - "pyproject.toml"
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "environment.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "woodpecker/**"
+      - "plugins/**"
+      - "scripts/**"
+      - "docs/**"
+      - "talks/**"
+      - "tests/integration/recipes/**"
+      - "Makefile"
+      - "mkdocs.yml"
+      - ".github/workflows/docs.yml"
+      - "pyproject.toml"
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "environment.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: docs-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   docs-build:
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -47,26 +64,37 @@ jobs:
           uv pip install --python "$PYTHON_BIN" -e ".[docs]"
           uv pip install --python "$PYTHON_BIN" -e plugins/woodpecker-atlas-plugin -e plugins/woodpecker-cmip6-plugin -e plugins/woodpecker-cmip6-decadal-plugin -e plugins/woodpecker-cmip7-plugin -e plugins/woodpecker-xmip-plugin
 
-      - name: Generate fix catalog (MD/JSON)
-        run: python scripts/generate_fix_catalog.py
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: "1.9.38"
 
-      - name: Generate recipe catalog (MD/JSON)
-        run: python scripts/generate_recipe_catalog.py
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
 
-      - name: Generate interactive fixes page
-        run: python scripts/generate_fix_webpage.py
+      - name: Install PDF toolchain
+        run: npm install --global decktape@3.16.1
 
-      - name: Build MkDocs site
-        run: NO_MKDOCS_2_WARNING=1 mkdocs build --strict
+      - name: Build and check complete site (docs and talks)
+        env:
+          # Use Chromium without its sandbox on the hosted Linux runner.
+          DECKTAPE_FLAGS: --chrome-arg=--no-sandbox
+        run: make docs docs-check-browser
 
       - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: site
 
   docs-deploy:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: docs-build
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -75,6 +103,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

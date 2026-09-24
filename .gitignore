@@ -68,12 +68,12 @@ instance/
 # Scrapy stuff:
 .scrapy
 
-# Sphinx documentation
-docs/_build/
+# Generated slide workspace
+/talks/_build/
 
 # Private presentation templates and other local slide assets
-docs/talks/local/
-docs/talks/templates/
+talks/local/
+talks/templates/
 
 # PyBuilder
 .pybuilder/
@@ -212,3 +212,12 @@ __marimo__/
 
 # MacOS
 .DS_Store
+
+# Quarto outputs (QMD sources and shared assets remain tracked)
+/talks/*/*.html
+/talks/*/*.pdf
+/talks/*/*.pptx
+/talks/*/*.revealjs.md
+/talks/**/*_files/
+/talks/**/.quarto/
+/talks/**/_freeze/
