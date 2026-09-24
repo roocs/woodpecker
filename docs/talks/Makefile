@@ -1,12 +1,24 @@
 # Run directly with make -C docs/talks, or through the root Makefile.
 TALKS_DIR := $(CURDIR)
-BUILD := $(abspath ../_build/talks)
+BUILD := $(abspath _build)
 TALKS := $(patsubst %/slides.qmd,%,$(wildcard */slides.qmd))
 DECKTAPE ?= decktape
 DECKTAPE_FLAGS ?=
 
-.DEFAULT_GOAL := slides
-.PHONY: slides slides-html slides-pdf publish slides-clean install install-pdf
+.DEFAULT_GOAL := help
+.PHONY: help slides slides-html slides-pdf publish slides-clean install install-pdf
+
+help:
+	@echo "Woodpecker talk targets:"
+	@echo "  help          Show this target overview (default)"
+	@echo "  slides-html   Render all talks as standalone Reveal.js HTML"
+	@echo "  slides-pdf    Render HTML, then export PDFs with DeckTape"
+	@echo "  slides        Build both HTML and PDF"
+	@echo "  publish       Build and stage HTML/PDF for MkDocs (no deployment)"
+	@echo "  slides-clean  Remove generated talk outputs and staging files"
+	@echo "  install       Install Quarto and Node in the active woodpecker Conda environment"
+	@echo "  install-pdf   Install HTML tools plus DeckTape and its browser"
+	@echo "Run 'make docs' from the repository root to build the complete site."
 
 slides-html:
 	python build.py prepare

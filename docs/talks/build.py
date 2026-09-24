@@ -6,7 +6,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 TALKS = Path(__file__).resolve().parent
-BUILD = TALKS.parent / "_build/talks"
+BUILD = TALKS / "_build"
 
 
 class DeckAssets(HTMLParser):

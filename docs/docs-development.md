@@ -67,7 +67,7 @@ synthetic datasets so they can run in CI and in local docs builds.
 Only `docs/notebooks/*.ipynb` files are processed by `mkdocs-jupyter`. Quarto
 sources, shared assets and tools live in `docs/talks/` and are excluded from the
 site; only the Talks page and generated HTML/PDF are copied by MkDocs. Temporary
-Quarto files live in ignored `docs/_build/talks/`.
+Quarto files live in ignored `docs/talks/_build/`.
 
 When adding or editing notebooks, prefer examples that exercise the public API
 and can run without external climate data files.

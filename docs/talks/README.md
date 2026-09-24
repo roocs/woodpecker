@@ -47,7 +47,7 @@ The slide targets are also available as `make -C docs/talks slides-html`,
 `slides-pdf`, `slides`, and `slides-clean`. `DECKTAPE` and `DECKTAPE_FLAGS` can
 be overridden for an existing local installation.
 
-Rendering runs on copies under ignored `docs/_build/talks/`. `make docs` stages
+Rendering runs on copies under ignored `docs/talks/_build/`. `make docs` stages
 only `index.html` and `slides.pdf` into each source directory before MkDocs
 builds. HTML embeds the photo, SVG diagrams, CSS and JavaScript, so the
 decks work under the GitHub Pages `/woodpecker/` prefix without companion files.

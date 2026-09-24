@@ -6,7 +6,6 @@ exclude_docs: |
   !/talks/index.md
   !/talks/*/index.html
   !/talks/*/slides.pdf
-  /_build/
 theme:
   name: material
   features:
