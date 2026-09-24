@@ -66,14 +66,14 @@ browser. Plain `mkdocs serve` previews documentation only, without the decks.
 
 ## Published paths and future talks
 
-The normal [Talks page](../docs/talks/index.md) links to:
+The normal [Talks page](../docs/talks.md) links to:
 
 - `https://roocs.github.io/woodpecker/talks/overview/` (`index.html`, `slides.pdf`)
 - `https://roocs.github.io/woodpecker/talks/milano-2026/` (`index.html`, `slides.pdf`)
 
 For another event, add `<event-name>/slides.qmd` with the same relative shared
 asset paths and self-contained Reveal.js configuration, then add its links to
-`docs/talks/index.md`. The Makefile discovers `*/slides.qmd` automatically. Keep directory
+`docs/talks.md`. The Makefile discovers `*/slides.qmd` automatically. Keep directory
 names stable once published. Changes under `docs/` or `talks/` trigger the single docs
 workflow, which uploads the complete `site/` and deploys it from `main`.
 
