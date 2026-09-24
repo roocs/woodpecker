@@ -24,20 +24,17 @@ format:
     auto-stretch: false
 ---
 
-# Woodpecker
+# Woodpecker overview {#woodpecker}
 
-## A common interface for climate-data fixes
-
-**Presenter:** Ag Stephens (CEDA/STFC)
+## A common interface for climate-data adaptations
 
 **Contributors:**  
+Ag Stephens (CEDA/STFC)  
 Carsten Ehbrecht (DKRZ)  
 Bouwe Andela (ESMValTool)  
 Rhys Evans (STFC)
 
 <https://github.com/roocs/woodpecker>
-
-Project overview
 
 [![Male pileated woodpecker foraging on a tree](../shared/assets/woodpecker.jpg)](https://commons.wikimedia.org/wiki/File:PileatedWoodpeckerFeedingonTree,_crop.jpg)
 
@@ -47,7 +44,9 @@ Project overview
 
 # 1. What is Woodpecker? {.diagram-small}
 
-A **lightweight Python interface** for applying climate-data fixes.
+A **lightweight Python interface** for applying climate-data adaptations.
+
+A **fix** can correct a known issue or adapt data to service requirements.
 
 ```{mermaid}
 %%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
@@ -144,7 +143,29 @@ woodpecker apply tas.nc \
 
 ---
 
-# 5. Summary: a common API, shared work {.diagram-small}
+# 5. Woodpecker in the CDS {.diagram-small}
+
+**Already in Rook:** shared plugins replace adaptations built into the service.
+
+```{mermaid}
+%%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
+flowchart LR
+    D["CMIP6 Decadal plugin"] --> W["Woodpecker"]
+    A["Atlas plugin"] --> W
+    W --> R["Rook: in production"]
+    W -.-> C["Other CDS workflows: to explore"]
+    style W fill:#dceef8,stroke:#457b9d,stroke-width:2px
+```
+
+- **No extra service:** runs inside existing workflows.
+- **Next:** review Decadal adaptations with data producers for the data update.
+- **Opportunity:** reuse the same plugins elsewhere in CDS.
+
+**Where in CDS should we try this next?**
+
+---
+
+# 6. Summary: a common API, shared work {.diagram-small}
 
 **Technical solution:** independent fix plugins use a common API.
 
@@ -160,7 +181,7 @@ flowchart LR
 
 **The hope:** data producers and service providers **develop, review, and maintain fix plugins together on GitHub**.
 
-**First step:** choose one known dataset issue and collaborate on its plugin fix.
+**First step for CDS:** data producers and service providers review and test the CMIP6 Decadal adaptations together for the upcoming data update.
 
 <https://github.com/roocs/woodpecker>
 
@@ -233,7 +254,7 @@ Woodpecker gives each plugin the **same entry point** while its maintainers keep
 # A4. A small common vocabulary {.diagram-small}
 
 **Fix**  
-One check or repair exposed through a stable identifier.
+One named data adaptation exposed through a stable identifier. It may correct an issue or meet service requirements.
 
 **Recipe**  
 An ordered set of fixes, options, matching rules, and supporting links.
@@ -405,6 +426,7 @@ flowchart LR
 ```
 
 - **Woodpecker prepares** known dataset issues through the Python API.
+- Fixes and recipes **replace legacy adaptations embedded in Rook and daops**.
 - **Rook continues** with generic operations such as subset, concatenate, or regrid.
 - **Dataset-specific behaviour stays outside** the generic processing code.
 - The same recipe remains available outside Rook through the CLI or another Python workflow.
