@@ -22,7 +22,12 @@ pip install -e ".[docs]"
 
 ## Build The Site
 
-Build the generated docs artifacts and run a strict MkDocs build:
+Install the slide toolchain with `make -C docs/talks install-pdf` in the active
+Woodpecker Conda environment (Quarto 1.9.38, Node 22 and DeckTape 3.16.1).
+See [the talks README](https://github.com/roocs/woodpecker/blob/main/docs/talks/README.md)
+for other environments.
+
+Build the generated docs artifacts, HTML/PDF talks, and a strict MkDocs site:
 
 ```bash
 make docs
@@ -34,7 +39,9 @@ Serve the site locally:
 make docs-serve
 ```
 
-Both targets regenerate references before running MkDocs.
+Both targets render and stage the talks and regenerate references before running
+MkDocs. After editing a QMD, rerun the target to refresh its rendered outputs.
+`make docs-clean` removes the generated site and talk outputs.
 
 ## Generated Artifacts
 
@@ -57,10 +64,10 @@ Notebook examples live in `docs/notebooks/` and are rendered by
 `mkdocs-jupyter` during the docs build. The notebooks use deterministic
 synthetic datasets so they can run in CI and in local docs builds.
 
-Only `docs/notebooks/*.ipynb` files are processed by `mkdocs-jupyter`. Presentation
-tooling in `docs/talks/` and generated files in `docs/_build/` are excluded from
-the site. Build presentations separately with `make -C docs/talks`; their Python
-scripts must not be executed as notebook cells.
+Only `docs/notebooks/*.ipynb` files are processed by `mkdocs-jupyter`. Quarto
+sources, shared assets and tools live in `docs/talks/` and are excluded from the
+site; only the Talks page and generated HTML/PDF are copied by MkDocs. Temporary
+Quarto files live in ignored `docs/_build/talks/`.
 
 When adding or editing notebooks, prefer examples that exercise the public API
 and can run without external climate data files.
@@ -70,7 +77,7 @@ and can run without external climate data files.
 The docs build runs MkDocs in strict mode:
 
 ```bash
-NO_MKDOCS_2_WARNING=1 mkdocs build --strict
+make docs
 ```
 
 Strict mode treats warnings as failures. This is useful for catching broken

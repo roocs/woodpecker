@@ -11,6 +11,7 @@ on:
       - "tests/integration/recipes/**"
       - "Makefile"
       - "mkdocs.yml"
+      - ".github/workflows/docs.yml"
       - "pyproject.toml"
   workflow_dispatch:
 
@@ -47,17 +48,21 @@ jobs:
           uv pip install --python "$PYTHON_BIN" -e ".[docs]"
           uv pip install --python "$PYTHON_BIN" -e plugins/woodpecker-atlas-plugin -e plugins/woodpecker-cmip6-plugin -e plugins/woodpecker-cmip6-decadal-plugin -e plugins/woodpecker-cmip7-plugin -e plugins/woodpecker-xmip-plugin
 
-      - name: Generate fix catalog (MD/JSON)
-        run: python scripts/generate_fix_catalog.py
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: "1.9.38"
 
-      - name: Generate recipe catalog (MD/JSON)
-        run: python scripts/generate_recipe_catalog.py
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
 
-      - name: Generate interactive fixes page
-        run: python scripts/generate_fix_webpage.py
+      - name: Install PDF toolchain
+        run: npm install --global decktape@3.16.1
 
-      - name: Build MkDocs site
-        run: NO_MKDOCS_2_WARNING=1 mkdocs build --strict
+      - name: Build complete site (docs and talks)
+        run: make docs
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

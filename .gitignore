@@ -212,3 +212,12 @@ __marimo__/
 
 # MacOS
 .DS_Store
+
+# Quarto outputs (QMD sources and shared assets remain tracked)
+/docs/talks/*/*.html
+/docs/talks/*/*.pdf
+/docs/talks/*/*.pptx
+/docs/talks/*/*.revealjs.md
+/docs/talks/**/*_files/
+/docs/talks/**/.quarto/
+/docs/talks/**/_freeze/

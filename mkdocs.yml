@@ -1,7 +1,11 @@
 site_name: Woodpecker Fixes
-# Presentations have their own build; never execute or publish their local assets.
+# Only the Talks landing page and self-contained HTML/PDF decks are published.
+site_url: https://roocs.github.io/woodpecker/
 exclude_docs: |
-  /talks/
+  /talks/**
+  !/talks/index.md
+  !/talks/*/index.html
+  !/talks/*/slides.pdf
   /_build/
 theme:
   name: material
@@ -31,6 +35,8 @@ plugins:
   - mkdocs-jupyter:
       include:
         - notebooks/*.ipynb
+      ignore:
+        - "*.revealjs.md"
       execute: true
       allow_errors: false
       kernel_name: python3
@@ -58,6 +64,7 @@ nav:
       - Atlas Recipe: notebooks/atlas_recipe_example.ipynb
       - ESA CCI Recipe: notebooks/esa_cci_recipe_example.ipynb
       - xMIP Plugin Demo: notebooks/xmip_plugin_demo.ipynb
+  - Talks: talks/index.md
   - Contributing:
       - Guide: CONTRIBUTING_GUIDE.md
       - Docs Development: docs-development.md

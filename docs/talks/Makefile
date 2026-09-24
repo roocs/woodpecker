@@ -1,60 +1,36 @@
-# Presentation builds are independent of the root development Makefile.
-# Invoke with make -C docs/talks, or run make from this directory.
+# Run directly with make -C docs/talks, or through the root Makefile.
 TALKS_DIR := $(CURDIR)
-SLIDES_DIR := $(TALKS_DIR)/../_build/talks/overview
-PPTX_TEMPLATE ?= $(wildcard $(TALKS_DIR)/templates/futura_black.potx)
-PPTX_TEMPLATE_ARGS = $(if $(PPTX_TEMPLATE),--template "$(PPTX_TEMPLATE)")
+BUILD := $(abspath ../_build/talks)
+TALKS := $(patsubst %/slides.qmd,%,$(wildcard */slides.qmd))
+DECKTAPE ?= decktape
+DECKTAPE_FLAGS ?=
 
-.DEFAULT_GOAL := help
-.PHONY: help
+.DEFAULT_GOAL := slides
+.PHONY: slides slides-html slides-pdf publish slides-clean install install-pdf
 
-help: ## list presentation build targets
-	@echo "Woodpecker overview presentation targets:"
-	@echo "  slides-html   Build Reveal.js HTML"
-	@echo "  slides-pdf    Build HTML and export PDF with DeckTape"
-	@echo "  slides-pptx   Build six styled, editable PowerPoint slides"
-	@echo "  slides        Build HTML and PDF"
-	@echo "  slides-clean  Remove only the Woodpecker generated output"
-	@echo "  install       Add HTML tools to the existing woodpecker environment"
-	@echo "  install-pdf   Add HTML tools, DeckTape and Chrome to woodpecker"
+slides-html:
+	python build.py prepare
+	@set -e; for talk in $(TALKS); do \
+		(cd "$(BUILD)/$$talk" && sh "$(TALKS_DIR)/quarto.sh" render slides.qmd --to revealjs --output index.html); \
+	done
 
-.PHONY: install install-pdf check-woodpecker
+slides-pdf: slides-html
+	@set -e; for talk in $(TALKS); do \
+		$(DECKTAPE) reveal --size 1600x900 --load-pause 2000 --pause 1000 $(DECKTAPE_FLAGS) "$(BUILD)/$$talk/index.html" "$(BUILD)/$$talk/slides.pdf"; \
+	done
 
-check-woodpecker:
-	@command -v conda >/dev/null 2>&1 || { echo "Slides: conda is missing. Install Conda and add it to PATH first." >&2; exit 1; }
-	@test "$$CONDA_DEFAULT_ENV" = woodpecker && test -n "$$CONDA_PREFIX" || { echo "Slides: run 'conda activate woodpecker' before installing slide tools." >&2; exit 1; }
+slides: slides-pdf
 
-install: check-woodpecker ## add HTML tools to the active woodpecker environment
-	conda env update --name woodpecker --file "$(TALKS_DIR)/environment.yml"
-	sh "$(TALKS_DIR)/quarto.sh" --version
-	node --version
+publish: slides
+	python build.py publish
 
-install-pdf: install ## add the PDF exporter and its browser
+slides-clean:
+	python build.py clean
+
+install:
+	@test "$$CONDA_DEFAULT_ENV" = woodpecker && test -n "$$CONDA_PREFIX" || { echo "Activate the woodpecker Conda environment first." >&2; exit 1; }
+	conda env update --name woodpecker --file environment.yml
+	sh quarto.sh --version
+
+install-pdf: install
 	npm install --global --prefix "$$CONDA_PREFIX" decktape@3.16.1
-	"$$CONDA_PREFIX/bin/decktape" version
-
-.PHONY: slides-html slides-pdf slides-pptx slides slides-clean
-
-slides-html: ## generate the Woodpecker Reveal.js presentation
-	python "$(TALKS_DIR)/overview/build_slides.py"
-	sh "$(TALKS_DIR)/quarto.sh" render "$(SLIDES_DIR)/slides.qmd" --to revealjs
-
-slides-pptx: ## generate main slides as PowerPoint, optionally using a private template
-	python "$(TALKS_DIR)/overview/build_slides.py" --main-only $(PPTX_TEMPLATE_ARGS)
-	cd "$(SLIDES_DIR)" && sh "$(TALKS_DIR)/quarto.sh" render slides-main.qmd --to pptx --output slides-raw.pptx
-	python "$(TALKS_DIR)/overview/style_pptx.py" "$(SLIDES_DIR)/slides-raw.pptx" "$(SLIDES_DIR)/slides.pptx" $(PPTX_TEMPLATE_ARGS)
-
-slides-pdf: slides-html ## export the Woodpecker slides with DeckTape
-	@if command -v decktape >/dev/null 2>&1; then \
-		decktape reveal --size 1600x900 --load-pause 2000 --pause 1000 "$(SLIDES_DIR)/slides.html" "$(SLIDES_DIR)/slides.pdf"; \
-	elif command -v npx >/dev/null 2>&1; then \
-		npx --offline --no-install decktape version >/dev/null 2>&1 || { echo "Slides: npx cannot run an existing DeckTape. Install DeckTape explicitly first; the build never downloads packages." >&2; exit 1; }; \
-		npx --offline --no-install decktape reveal --size 1600x900 --load-pause 2000 --pause 1000 "$(SLIDES_DIR)/slides.html" "$(SLIDES_DIR)/slides.pdf"; \
-	else \
-		echo "Slides: DeckTape is missing. Install decktape, or Node/npm with an existing DeckTape available to npx." >&2; exit 1; \
-	fi
-
-slides: slides-pdf ## build both Woodpecker HTML and PDF slides
-
-slides-clean: ## remove only generated Woodpecker presentation files
-	rm -rf "$(SLIDES_DIR)/"

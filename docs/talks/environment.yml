@@ -5,6 +5,6 @@ name: woodpecker
 channels:
   - conda-forge
 dependencies:
-  - quarto >=1.6,<2
+  - quarto =1.9.38
   # Includes npm/npx; use Node 22 LTS for DeckTape and Puppeteer.
   - nodejs >=22,<23

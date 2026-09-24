@@ -31,6 +31,9 @@ Other setup paths:
 | Build docs | `make docs` |
 | Serve docs | `make docs-serve` |
 
+The docs targets also render HTML and PDF talks. Install the
+[slide toolchain](https://github.com/roocs/woodpecker/blob/main/docs/talks/README.md#toolchain) before running them.
+
 ## Useful CLI Checks
 
 ```bash
