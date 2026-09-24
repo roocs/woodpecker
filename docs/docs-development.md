@@ -101,3 +101,23 @@ exist until assembly; `talks/build.py verify` checks those links after copying.
 - `talks/_build/`: ignored temporary slide workspace.
 - `site/`: ignored complete publication output.
 - `scripts/`: docs generation scripts.
+
+## CI and browser checks
+
+The single `Build and Deploy Docs` workflow builds changes to docs, talks, build
+tooling and package dependencies on pull requests to `main` and pushes to `main`.
+It installs Quarto 1.9.38, Node 22 and DeckTape 3.16.1, then runs:
+
+```sh
+make docs docs-check-browser
+```
+
+The browser check uses DeckTape's Puppeteer installation and serves the assembled
+site temporarily under `/woodpecker/`. It checks the Talks tab, slide/PDF links,
+new-tab targets (including the Interactive Fix Browser), Reveal.js startup and
+image loading. To check an existing local build, run `make docs-check-browser`.
+
+Only successful `main` builds upload and deploy the complete Pages artifact.
+Pull requests have read-only permissions and cannot deploy. Deployment is
+serialized separately from PR builds. CI disables Chromium's sandbox on the
+hosted Linux runner; local browser checks use its default sandbox.

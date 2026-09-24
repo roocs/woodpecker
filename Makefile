@@ -1,4 +1,4 @@
-.PHONY: help install install-uv install-plugins install-plugins-uv dev dev-uv format lint lint-fix check test docs docs-serve talks talks-html talks-pdf talks-clean docs-clean list-fixes
+.PHONY: help install install-uv install-plugins install-plugins-uv dev dev-uv format lint lint-fix check test docs docs-check-browser docs-serve talks talks-html talks-pdf talks-clean docs-clean list-fixes
 
 CHECK_PATH ?= .
 PYTHON ?= $(shell python -c 'import sys; print(sys.executable)')
@@ -23,6 +23,7 @@ help:
 	@echo "  make check      - run fix checks (default path: .)"
 	@echo "  make test       - run pytest test suite"
 	@echo "  make docs       - build complete site, including HTML/PDF talks"
+	@echo "  make docs-check-browser - check the built site in Chromium"
 	@echo "  make docs-serve - build and serve the complete site at localhost:8000"
 	@echo "  make talks      - render all talks to HTML and PDF"
 	@echo "  make talks-html / talks-pdf - render slide formats"
@@ -86,6 +87,9 @@ docs: talks
 	NO_MKDOCS_2_WARNING=1 mkdocs build --strict
 	python talks/build.py publish
 	python talks/build.py verify
+
+docs-check-browser:
+	node scripts/check_docs_browser.cjs
 
 docs-serve: docs
 	python -m http.server 8000 --bind 127.0.0.1 --directory site
