@@ -64,16 +64,68 @@ Generated output is ignored by Git; never commit HTML, PDFs or intermediates.
 It has no automatic rebuild: rerun `make docs` after edits, then refresh the
 browser. Plain `mkdocs serve` previews documentation only, without the decks.
 
+## Emergency PowerPoint export (not part of the build)
+
+PPTX support would need a separate export path and a manual layout review.
+Quarto can write PowerPoint directly; DeckTape exports PDF only. Start from the
+same QMD source, keeping generated files in `_build/`.
+
+For a one-off experiment, activate the environment with `make -C talks install-all`
+already completed, then run these commands from the repository root:
+
+```sh
+make talks-html
+(
+  cd talks/_build/overview
+  sh ../../quarto.sh render slides.qmd --to pptx \
+    -M slide-level:1 -M mermaid-format:png --output slides.pptx
+)
+```
+
+Replace `overview` with `milano-2026` for that event. This is a suggested recovery
+procedure, not a tested or supported PPTX target. The next slide build or clean
+removes `_build/`, so copy any manually refined presentation elsewhere first.
+
+To make this a maintained feature:
+
+- Add a `pptx` entry alongside `revealjs` in the QMD format settings, with
+  `slide-level: 1` and `mermaid-format: png`. Keep `shared/svg.lua` and the SCSS
+  theme scoped to `revealjs`: the filter emits HTML and cannot style PowerPoint.
+  Mermaid images still require the installed browser; diagrams will be images,
+  not editable PowerPoint shapes.
+- Optionally supply a widescreen `.pptx` through `reference-doc` to set fonts,
+  colors and slide masters. A `.potx` file is not a drop-in substitute: save an
+  appropriate `.pptx` reference and follow the required layout names in the
+  [Quarto PowerPoint guide](https://quarto.org/docs/presentations/powerpoint.html).
+  Keep private templates under ignored `talks/templates/`.
+- Review every slide in PowerPoint or LibreOffice. Reveal.js CSS, absolute
+  positioning and diagram layout classes do not carry over. Dense slides can
+  split or overflow; check code, tables, image placement, fonts and the appendix.
+  Text may be editable, but matching the HTML design needs additional work.
+- Add an explicit `slides-pptx` target and any optional dependencies. The former
+  `style_pptx.py` and `template_pptx.py` adapters are available in Git history under
+  `docs/talks/overview/`, but were tailored to the old six-slide main talk and
+  private template; they would need adaptation, not just restoration.
+- Keep PPTX local unless publication is deliberately added to the site assembly,
+  artifact checks, Talks page and CI. Existing HTML/PDF targets should continue
+  to work independently.
+
+If visual fidelity matters more than editability, an emergency alternative is
+one high-resolution image of each existing PDF page per PowerPoint slide. That
+requires a PDF rasterizer plus PowerPoint or an optional tool such as
+`python-pptx` to assemble the images. It preserves the PDF layout, but text and
+diagrams become non-editable images and links/animations are lost.
+
 ## Published paths and future talks
 
-The normal [Talks page](../docs/talks/index.md) links to:
+The normal [Talks page](../docs/talks.md) links to:
 
 - `https://roocs.github.io/woodpecker/talks/overview/` (`index.html`, `slides.pdf`)
 - `https://roocs.github.io/woodpecker/talks/milano-2026/` (`index.html`, `slides.pdf`)
 
 For another event, add `<event-name>/slides.qmd` with the same relative shared
 asset paths and self-contained Reveal.js configuration, then add its links to
-`docs/talks/index.md`. The Makefile discovers `*/slides.qmd` automatically. Keep directory
+`docs/talks.md`. The Makefile discovers `*/slides.qmd` automatically. Keep directory
 names stable once published. Changes under `docs/` or `talks/` trigger the single docs
 workflow, which uploads the complete `site/` and deploys it from `main`.
 

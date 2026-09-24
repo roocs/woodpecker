@@ -69,7 +69,7 @@ synthetic datasets so they can run in CI and in local docs builds.
 
 Only `docs/notebooks/*.ipynb` files are processed by `mkdocs-jupyter`. Quarto
 sources, shared assets and tools live outside the MkDocs source tree in `talks/`.
-The Talks landing page is `docs/talks/index.md`; finished HTML/PDF decks are copied
+The Talks landing page is `docs/talks.md`; finished HTML/PDF decks are copied
 into the site after MkDocs builds. Temporary Quarto files live in ignored
 `talks/_build/`.
 
@@ -96,7 +96,7 @@ exist until assembly; `talks/build.py verify` checks those links after copying.
 - `docs/OVERVIEW.md`: short conceptual overview for the docs site.
 - `docs/*.md`: hand-written docs pages and generated references.
 - `docs/notebooks/`: executed example notebooks.
-- `docs/talks/index.md`: public Talks landing page.
+- `docs/talks.md`: public Talks landing page.
 - `talks/`: Quarto sources, shared assets and slide tooling.
 - `talks/_build/`: ignored temporary slide workspace.
 - `site/`: ignored complete publication output.
