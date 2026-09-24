@@ -143,21 +143,25 @@ woodpecker apply tas.nc \
 
 ---
 
-# 5. Woodpecker in the CDS
+# 5. Woodpecker in the CDS {.diagram-small}
 
-## Already in production through Rook
+**Already in Rook:** shared plugins replace adaptations built into the service.
 
-**CMIP6 Decadal and Atlas plugins** replace adaptations embedded in Rook and daops with independently tested and released code.
+```{mermaid}
+%%{init: {"flowchart": {"htmlLabels": false, "subGraphTitleMargin": {"bottom": 8, "top": 0}}, "fontFamily": "Arial", "fontSize": 24, "htmlLabels": false, "sequence": {"actorFontSize": 24, "fontSize": 24, "messageFontSize": 24, "mirrorActors": false, "noteFontSize": 24}, "theme": "base", "themeVariables": {"actorBkg": "#f3f4f6", "actorBorder": "#6b7280", "actorTextColor": "#111827", "clusterBkg": "#f3f4f6", "clusterBorder": "#6b7280", "edgeLabelBackground": "#ffffff", "fontFamily": "Arial", "fontSize": "24px", "lineColor": "#6b7280", "primaryBorderColor": "#6b7280", "primaryColor": "#f3f4f6", "primaryTextColor": "#111827", "secondaryColor": "#dceef8", "signalColor": "#6b7280", "signalTextColor": "#111827", "tertiaryColor": "#fff3bf"}}}%%
+flowchart LR
+    D["CMIP6 Decadal plugin"] --> W["Woodpecker"]
+    A["Atlas plugin"] --> W
+    W --> R["Rook: in production"]
+    W -.-> C["Other CDS workflows: to explore"]
+    style W fill:#dceef8,stroke:#457b9d,stroke-width:2px
+```
 
-- **No additional service:** Woodpecker runs as a Python package within existing workflows.
-- **Reusable adaptations:** the same plugins can support other Python applications and command-line processing.
+- **No extra service:** runs inside existing workflows.
+- **Next:** review Decadal adaptations with data producers for the data update.
+- **Opportunity:** reuse the same plugins elsewhere in CDS.
 
-## Next steps and broader use
-
-- **CMIP6 Decadal update:** data producers and service providers review and test the existing adaptations together.
-- **Beyond Rook:** identify another CDS workflow to assess reuse, integration needs, and maintenance ownership.
-
-**Discussion:** where else in CDS could shared adaptations be useful?
+**Where in CDS should we try this next?**
 
 ---
 
