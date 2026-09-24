@@ -1,8 +1,12 @@
 site_name: Woodpecker Fixes
 site_url: https://roocs.github.io/woodpecker/
+extra_javascript:
+  - javascripts/external-tools.js
 theme:
   name: material
   features:
+    - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.indexes
     - navigation.top
@@ -13,6 +17,11 @@ theme:
     - scheme: default
       primary: teal
       accent: blue
+extra:
+  social:
+    - icon: material/presentation
+      link: https://roocs.github.io/woodpecker/talks/
+      name: Talks — slides and PDFs
 markdown_extensions:
   - admonition
   - attr_list
@@ -55,8 +64,8 @@ nav:
       - Atlas Recipe: notebooks/atlas_recipe_example.ipynb
       - ESA CCI Recipe: notebooks/esa_cci_recipe_example.ipynb
       - xMIP Plugin Demo: notebooks/xmip_plugin_demo.ipynb
-  - Talks: talks/index.md
   - Contributing:
       - Guide: CONTRIBUTING_GUIDE.md
       - Docs Development: docs-development.md
       - User Friendliness Ideas: user-friendliness.md
+  - Talks: talks/index.md

@@ -3,6 +3,8 @@
 Woodpecker checks, previews, and applies known climate-data fixes through
 recipes, fix ids, a Python API, and a CLI.
 
+[Explore talks and slides](talks/index.md){ .md-button .md-button--primary }
+
 ```mermaid
 flowchart LR
     D["Dataset"] --> C["check"]
