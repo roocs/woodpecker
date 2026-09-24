@@ -181,7 +181,7 @@ flowchart LR
 
 **The hope:** data producers and service providers **develop, review, and maintain fix plugins together on GitHub**.
 
-**First step:** choose one known dataset issue and collaborate on its plugin fix.
+**First step for CDS:** data producers and service providers review and test the CMIP6 Decadal adaptations together for the upcoming data update.
 
 <https://github.com/roocs/woodpecker>
 
