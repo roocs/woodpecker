@@ -23,7 +23,7 @@ help:
 	@echo "  make check      - run fix checks (default path: .)"
 	@echo "  make test       - run pytest test suite"
 	@echo "  make docs       - build complete site, including HTML/PDF talks"
-	@echo "  make docs-serve - generate docs artifacts and serve MkDocs"
+	@echo "  make docs-serve - build and serve the complete site at localhost:8000"
 	@echo "  make talks      - render all talks to HTML and PDF"
 	@echo "  make talks-html / talks-pdf - render slide formats"
 	@echo "  make docs-clean - remove generated site and talk outputs"
@@ -65,34 +65,30 @@ test:
 	pytest -v
 
 talks-html:
-	$(MAKE) -C docs/talks slides-html
+	$(MAKE) -C talks slides-html
 
 talks-pdf:
-	$(MAKE) -C docs/talks slides-pdf
+	$(MAKE) -C talks slides-pdf
 
 talks:
-	$(MAKE) -C docs/talks slides
+	$(MAKE) -C talks slides
 
 talks-clean:
-	$(MAKE) -C docs/talks slides-clean
+	$(MAKE) -C talks slides-clean
 
 docs-clean: talks-clean
 	python -c 'import shutil; shutil.rmtree("site", ignore_errors=True); shutil.rmtree(".cache/mkdocs-jupyter", ignore_errors=True)'
 
 docs: talks
-	python docs/talks/build.py publish
 	python scripts/generate_fix_catalog.py
 	python scripts/generate_recipe_catalog.py
 	python scripts/generate_fix_webpage.py
 	NO_MKDOCS_2_WARNING=1 mkdocs build --strict
-	python docs/talks/build.py verify
+	python talks/build.py publish
+	python talks/build.py verify
 
-docs-serve: talks
-	python docs/talks/build.py publish
-	python scripts/generate_fix_catalog.py
-	python scripts/generate_recipe_catalog.py
-	python scripts/generate_fix_webpage.py
-	NO_MKDOCS_2_WARNING=1 mkdocs serve
+docs-serve: docs
+	python -m http.server 8000 --bind 127.0.0.1 --directory site
 
 list-fixes:
 	woodpecker list-fixes

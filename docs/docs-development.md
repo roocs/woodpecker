@@ -22,9 +22,9 @@ pip install -e ".[docs]"
 
 ## Build The Site
 
-Install the complete slide toolchain with `make -C docs/talks install-all` in the active
+Install the complete slide toolchain with `make -C talks install-all` in the active
 Woodpecker Conda environment (Quarto 1.9.38, Node 22 and DeckTape 3.16.1).
-See [the talks README](https://github.com/roocs/woodpecker/blob/main/docs/talks/README.md)
+See [the talks README](https://github.com/roocs/woodpecker/blob/main/talks/README.md)
 for other environments.
 
 Build the generated docs artifacts, HTML/PDF talks, and a strict MkDocs site:
@@ -39,8 +39,11 @@ Serve the site locally:
 make docs-serve
 ```
 
-Both targets render and stage the talks and regenerate references before running
-MkDocs. After editing a QMD, rerun the target to refresh its rendered outputs.
+Both targets render the talks, regenerate references and build MkDocs, then copy
+the finished decks into `site/talks/` and verify the complete site.
+`make docs-serve` serves `site/` at `http://localhost:8000` without automatic
+rebuilds. After editing sources, run `make docs` again and refresh the browser.
+Plain `mkdocs serve` previews only the documentation, without the slide decks.
 `make docs-clean` removes the generated site and talk outputs.
 
 ## Generated Artifacts
@@ -65,9 +68,10 @@ Notebook examples live in `docs/notebooks/` and are rendered by
 synthetic datasets so they can run in CI and in local docs builds.
 
 Only `docs/notebooks/*.ipynb` files are processed by `mkdocs-jupyter`. Quarto
-sources, shared assets and tools live in `docs/talks/` and are excluded from the
-site; only the Talks page and generated HTML/PDF are copied by MkDocs. Temporary
-Quarto files live in ignored `docs/talks/_build/`.
+sources, shared assets and tools live outside the MkDocs source tree in `talks/`.
+The Talks landing page is `docs/talks/index.md`; finished HTML/PDF decks are copied
+into the site after MkDocs builds. Temporary Quarto files live in ignored
+`talks/_build/`.
 
 When adding or editing notebooks, prefer examples that exercise the public API
 and can run without external climate data files.
@@ -82,7 +86,8 @@ make docs
 
 Strict mode treats warnings as failures. This is useful for catching broken
 links, missing nav entries, and Markdown pages that do not resolve correctly
-inside the `docs/` tree.
+inside the `docs/` tree. The Talks page uses HTML links for decks that do not
+exist until assembly; `talks/build.py verify` checks those links after copying.
 
 ## Source Layout
 
@@ -91,4 +96,8 @@ inside the `docs/` tree.
 - `docs/OVERVIEW.md`: short conceptual overview for the docs site.
 - `docs/*.md`: hand-written docs pages and generated references.
 - `docs/notebooks/`: executed example notebooks.
+- `docs/talks/index.md`: public Talks landing page.
+- `talks/`: Quarto sources, shared assets and slide tooling.
+- `talks/_build/`: ignored temporary slide workspace.
+- `site/`: ignored complete publication output.
 - `scripts/`: docs generation scripts.

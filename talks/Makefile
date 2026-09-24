@@ -1,4 +1,4 @@
-# Run directly with make -C docs/talks, or through the root Makefile.
+# Run directly with make -C talks, or through the root Makefile.
 TALKS_DIR := $(CURDIR)
 BUILD := $(abspath _build)
 TALKS := $(patsubst %/slides.qmd,%,$(wildcard */slides.qmd))
@@ -14,7 +14,7 @@ help:
 	@echo "  slides-html   Render all talks as standalone Reveal.js HTML"
 	@echo "  slides-pdf    Render HTML, then export PDFs with DeckTape"
 	@echo "  slides        Build both HTML and PDF"
-	@echo "  publish       Build and stage HTML/PDF for MkDocs (no deployment)"
+	@echo "  publish       Build and copy HTML/PDF into an existing site/ (no deployment)"
 	@echo "  slides-clean  Remove generated talk outputs and staging files"
 	@echo "  install       Install basics for HTML slides (Quarto and Node)"
 	@echo "  install-pdf   Install basics plus PDF support (DeckTape and its browser)"

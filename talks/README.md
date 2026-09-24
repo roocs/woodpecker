@@ -22,7 +22,7 @@ no TeX or private template is needed. Install tools once with network access:
 
 ```sh
 conda activate woodpecker
-make -C docs/talks install-all
+make -C talks install-all
 ```
 
 `install` installs only the basics for HTML slides (Quarto and Node).
@@ -44,33 +44,37 @@ make talks-html   # all standalone Reveal.js decks
 make talks-pdf    # HTML first, then PDF using DeckTape
 make talks        # both formats
 make docs         # talks + generated references + strict MkDocs build in site/
-make docs-serve   # build talks, then serve with MkDocs; rerun after QMD edits
-make docs-clean   # remove generated site, staged decks and temporary talk builds and notebook cache
+make docs-serve   # build and serve the complete site at http://localhost:8000
+make docs-clean   # remove generated site, slide workspace and notebook cache
 ```
 
-The slide targets are also available as `make -C docs/talks slides-html`,
+The slide targets are also available as `make -C talks slides-html`,
 `slides-pdf`, `slides`, and `slides-clean`. `DECKTAPE` and `DECKTAPE_FLAGS` can
 be overridden for an existing local installation.
 
-Rendering runs on copies under ignored `docs/talks/_build/`. `make docs` stages
-only `index.html` and `slides.pdf` into each source directory before MkDocs
-builds. HTML embeds the photo, SVG diagrams, CSS and JavaScript, so the
-decks work under the GitHub Pages `/woodpecker/` prefix without companion files.
-Sources and build tools are excluded from MkDocs. `make docs` also checks the
-final talk links, PDF headers, embedded HTML assets and published file list. Generated output is ignored
-by Git; never commit HTML, PDFs or Quarto intermediates.
+Rendering runs on copies under ignored `talks/_build/`. `make docs` renders the
+talks, builds MkDocs, then copies only `index.html` and `slides.pdf` into
+`site/talks/<talk>/`. Nothing is staged inside `docs/` or the source directories.
+HTML embeds the photo, SVG diagrams, CSS and JavaScript, so the decks work under
+the GitHub Pages `/woodpecker/` prefix without companion files. The build checks
+final talk links, PDF headers, embedded HTML assets and the published file list.
+Generated output is ignored by Git; never commit HTML, PDFs or intermediates.
+
+`make docs-serve` serves the assembled `site/` at `http://localhost:8000`.
+It has no automatic rebuild: rerun `make docs` after edits, then refresh the
+browser. Plain `mkdocs serve` previews documentation only, without the decks.
 
 ## Published paths and future talks
 
-The normal [Talks page](index.md) links to:
+The normal [Talks page](../docs/talks/index.md) links to:
 
 - `https://roocs.github.io/woodpecker/talks/overview/` (`index.html`, `slides.pdf`)
 - `https://roocs.github.io/woodpecker/talks/milano-2026/` (`index.html`, `slides.pdf`)
 
 For another event, add `<event-name>/slides.qmd` with the same relative shared
 asset paths and self-contained Reveal.js configuration, then add its links to
-`index.md`. The Makefile discovers `*/slides.qmd` automatically. Keep directory
-names stable once published. Changes under `docs/` trigger the single docs
+`docs/talks/index.md`. The Makefile discovers `*/slides.qmd` automatically. Keep directory
+names stable once published. Changes under `docs/` or `talks/` trigger the single docs
 workflow, which uploads the complete `site/` and deploys it from `main`.
 
 The presentation design is adapted from Rook's Milano deck: white background,

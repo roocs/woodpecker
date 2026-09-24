@@ -1,11 +1,5 @@
 site_name: Woodpecker Fixes
-# Only the Talks landing page and self-contained HTML/PDF decks are published.
 site_url: https://roocs.github.io/woodpecker/
-exclude_docs: |
-  /talks/**
-  !/talks/index.md
-  !/talks/*/index.html
-  !/talks/*/slides.pdf
 theme:
   name: material
   features:
@@ -34,8 +28,6 @@ plugins:
   - mkdocs-jupyter:
       include:
         - notebooks/*.ipynb
-      ignore:
-        - "*.revealjs.md"
       execute: true
       allow_errors: false
       kernel_name: python3

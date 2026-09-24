@@ -69,11 +69,11 @@ instance/
 .scrapy
 
 # Generated slide workspace
-/docs/talks/_build/
+/talks/_build/
 
 # Private presentation templates and other local slide assets
-docs/talks/local/
-docs/talks/templates/
+talks/local/
+talks/templates/
 
 # PyBuilder
 .pybuilder/
@@ -214,10 +214,10 @@ __marimo__/
 .DS_Store
 
 # Quarto outputs (QMD sources and shared assets remain tracked)
-/docs/talks/*/*.html
-/docs/talks/*/*.pdf
-/docs/talks/*/*.pptx
-/docs/talks/*/*.revealjs.md
-/docs/talks/**/*_files/
-/docs/talks/**/.quarto/
-/docs/talks/**/_freeze/
+/talks/*/*.html
+/talks/*/*.pdf
+/talks/*/*.pptx
+/talks/*/*.revealjs.md
+/talks/**/*_files/
+/talks/**/.quarto/
+/talks/**/_freeze/

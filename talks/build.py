@@ -7,6 +7,7 @@ from pathlib import Path
 
 TALKS = Path(__file__).resolve().parent
 BUILD = TALKS / "_build"
+SITE = TALKS.parent / "site/talks"
 
 
 class DeckAssets(HTMLParser):
@@ -23,7 +24,7 @@ class DeckAssets(HTMLParser):
 
 
 def verify(sources):
-    site = TALKS.parents[1] / "site/talks"
+    site = SITE
     landing = (site / "index.html").read_text(encoding="utf-8")
     expected = {site / "index.html"}
     for source in sources:
@@ -55,9 +56,6 @@ def main():
         raise SystemExit("No talk sources found")
     if args.action in {"prepare", "clean"}:
         shutil.rmtree(BUILD, ignore_errors=True)
-        for source in sources:
-            for name in ("index.html", "slides.pdf"):
-                (source.parent / name).unlink(missing_ok=True)
     if args.action == "prepare":
         shutil.copytree(TALKS / "shared", BUILD / "shared")
         for source in sources:
@@ -76,9 +74,13 @@ def main():
                 ),
             )
     elif args.action == "publish":
+        if not (SITE / "index.html").is_file():
+            raise SystemExit("Build MkDocs before assembling the talks in site/")
         for source in sources:
+            destination = SITE / source.parent.name
+            destination.mkdir(parents=True, exist_ok=True)
             for name in ("index.html", "slides.pdf"):
-                shutil.copy2(BUILD / source.parent.name / name, source.parent / name)
+                shutil.copy2(BUILD / source.parent.name / name, destination / name)
     elif args.action == "verify":
         verify(sources)
 

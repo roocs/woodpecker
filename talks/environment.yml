@@ -1,5 +1,5 @@
 # Additional tools for the existing woodpecker environment, not a standalone service.
-# From docs/talks: make install
+# From talks: make install
 # DeckTape is installed with npm afterwards; see README.md.
 name: woodpecker
 channels:

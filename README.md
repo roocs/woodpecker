@@ -77,7 +77,7 @@ Use `woodpecker.apply(...)`, `woodpecker.recipe.apply(...)`, and
 - `woodpecker/`: core API, CLI, recipes, fixes, stores, and results.
 - `plugins/`: bundled dataset-family plugins.
 - `docs/`: MkDocs pages and generated references.
-- `docs/talks/`: editable Quarto talks, shared assets, and slide tooling.
+- `talks/`: editable Quarto talks, shared assets, and slide tooling.
 - `tests/`: unit and integration tests.
 - `scripts/`: docs and catalog generators.
 
@@ -91,6 +91,6 @@ make docs
 ```
 
 `make docs` includes HTML and PDF talks. Install the
-[slide toolchain](docs/talks/README.md#toolchain) before building the complete site.
+[slide toolchain](talks/README.md#toolchain) before building the complete site.
 
 Woodpecker is licensed under the terms in [LICENSE](LICENSE).

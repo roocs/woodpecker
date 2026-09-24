@@ -8,6 +8,7 @@ on:
       - "plugins/**"
       - "scripts/**"
       - "docs/**"
+      - "talks/**"
       - "tests/integration/recipes/**"
       - "Makefile"
       - "mkdocs.yml"
